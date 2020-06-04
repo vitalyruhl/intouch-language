@@ -1,0 +1,92 @@
+{
+	"$schema": "./schema.json",
+	"name": "Intouch",
+	"comment":"Modified from the original Scott Spences (VSCode VBA) ",
+	"foldingStartMarker":"(?i:(THEN|while|For|#region)\\s*.*$)",
+  	"foldingStopMarker":"(?i:({#endregion|endif)\\s*.*$)",
+	
+	
+	"patterns": [
+		  {
+			"match":
+			  "(?i:\\b(IF|ENDIF|WHILE|FOR|RETURN|DIM|AS|DIM|AS|THEN|EXIT|EACH|STEP|OR|AND|NOT|IN|TO|MOD|SHL|SHR|RETURN|CALL)\\b)",
+			"name": "keyword.control.asp",
+			"comment":"vbi Regular Keywords"
+		  },
+		  {
+			"match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|AS|Abs)\\b)",
+			"name": "keyword.operator.asp",
+			"comment":"vbi Operatoren"
+		  },
+		  
+		  {
+			"match":
+			  "(\\s*\\b(discrete|integer|real|message|DISCRETE|INTEGER|REAL|MESSAGE)\\b\\s*)",
+			"name": "storage.type.asp",
+			"comment":"VBi Variablentypen"
+		  },
+		  {
+			"match": 
+			"(\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
+			"name": "storage.modifier.asp",
+			"comment":"IT-Funktionen"
+		  },
+		  {
+			"match": 
+			"(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|show|hide|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
+			"name": "storage.modifier.asp",
+			"comment":"IT-Funktionen-2"
+		  },
+		  {
+			"match": 
+			"(?i:\\s*\\b(NULL|EOF|AS|True|False|TRUE|FALSE)\\b)",
+			"name": "constant.language.asp"
+		  },
+		  {
+			"match": 
+			"(((?i:(Comment|Name|Reference)))\\b)", 
+			"name": "keyword.control.asp",
+			"comment":"Intouch Dotfields"
+		  },
+		  {
+			"match":
+			"(\\s*\\b(StringTrim|INIReadString|Text|StringInString)\\b\\s*)",
+			"name": "keyword.control.asp",
+			"comment":"Intouch String Funktionen"
+		  },
+		  {
+			"match":
+			"(\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
+			"name": "keyword.control.asp",
+			"comment":"Intouch SQL Funktionen"
+		  },
+		  {
+			"match":
+			"(\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
+			"name": "support.function.vb.asp",
+			"comment":"Eigene Funktionen im Grundprogramm"
+		  },
+		  
+		  {
+			"match":
+			  "!|\\$|%|&|=|<=|>=|<>|<|>|!|^|&&|\\|\\b",
+			"name": "keyword.operator.js"
+		  }	  
+	],
+	"repository": {
+		"strings": {
+			"name": "string.quoted.double.intouch",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.intouch",
+					"match": "\\\\."
+				}
+			]
+		}
+		
+	},
+	"scopeName": "source.vbi"
+}
+

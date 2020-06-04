@@ -1,0 +1,61 @@
+{
+    "name": "intouch-language",
+    "displayName": "VSCode Intouch-Language",
+    "description": "Intouch-Basic language syntax highlighting support and code snippets for VSCode",
+    "version": "0.0.1",
+    "icon": "images/logo.png",
+    "publisher": "vitalyruhl",
+    "engines": {
+        "vscode": "^1.45.0"
+    },
+    "repository": {
+		"type": "git",
+		"url": "https://github.com/vitalyruhl/intouch-language.git"
+	},
+    "categories": [
+        "Programming Languages",
+        "Formatters",
+		"Snippets"
+    ],
+    "keywords": [ 
+		"Intouch",
+		"Invensys",
+		"Wonderware",
+		"formatter"
+	],
+    "contributes": {
+        "languages": [{
+            "id": "intouch",
+            "aliases": ["Intouch", "intouch"],
+            "extensions": [".vbi",".vi"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "intouch",
+            "scopeName": "source.vbi",
+            "path": "./syntaxes/intouch.tmLanguage.json"
+        }],
+        "snippets": [
+			{
+				"language": "vba",
+				"path": "./snippets/vbi.json"
+            }
+        ],
+        "configuration": {
+			"type": "object",
+			"title": "Intouch-Language Configuration",
+			"properties": {                
+				
+				"it.debug": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable debugmodus."
+				}
+			}
+		}
+
+    },
+	"__metadata": {
+		"publisherDisplayName": "Vitaly Ruhl"
+	}
+}
