@@ -24,7 +24,7 @@ it is not finished yet. who wants to help can get in touch ...
 
 
 
-<p align="center">
+<p align="center" bgcolor:=#3f3f3f>
   <br />
   <a title="Intouch" href="https://factorysoftware.de/"><img src="https://factorysoftware.de/resources/uploads/2020/02/wonderware-germany-austria.png" alt="Intouch" /></a>   
 </p>
@@ -52,9 +52,9 @@ it is not finished yet. who wants to help can get in touch ...
 
 
 # Help
-<table align="center" width="100%" border="0">
+<table align="center" width="100%" border="0" bgcolor:=#3f3f3f>
   <tr>
-    <td align="center" width="100%" border="0">
+    <td align="center" width="100%" border="0" >
       <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
       <input type="hidden" name="cmd" value="_s-xclick" />
       <input type="hidden" name="hosted_button_id" value="Q3XSPVFAPSKMJ" />
