@@ -1,8 +1,11 @@
 # Intouch-Language README
 
 
-# What's new in Intouch-Language
 
+## t is not finished yet.
+### who wants to help can get in touch ...
+
+# What's new in Intouch-Language
 * Adds **Keywords**
 * Update grammar
 
