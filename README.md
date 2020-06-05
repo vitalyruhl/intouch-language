@@ -1,13 +1,26 @@
 # Intouch-Language README
 
 
+<p align="center">
+  <br />
+  <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/logo.png" alt="Intouch-Language Logo" width="70%" /></a>
+</p>
 
-## t is not finished yet.
-### who wants to help can get in touch ...
+
+
+<!-- 
+[![Marketplace Version](https://vsmarketplacebadge.apphb.com/version/spences10.vba.svg)](https://marketplace.visualstudio.com/items?itemName=spences10.vba)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs/spences10.vba.svg)](https://marketplace.visualstudio.com/items?itemName=spences10.vba)
+[![Rating](https://vsmarketplacebadge.apphb.com/rating/spences10.vba.svg)](https://marketplace.visualstudio.com/items?itemName=spences10.vba)
+-->
+
+
+```
+## it is not finished yet. who wants to help can get in touch ...
+```
 
 # What's new in Intouch-Language
-* Adds **Keywords**
-* Update grammar
+- Adds **Keywords**
 
 ## Support
 
@@ -28,7 +41,8 @@
 
 Intouch is a Programming language for Invensys Intouch Applications
 
-
+# Install:
+ copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
 <!--
 ![syntax](https://github.com/alefragnani/vscode-language-pascal/raw/master/images/vscode-pascal-syntax.png)
 
