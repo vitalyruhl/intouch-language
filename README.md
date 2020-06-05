@@ -7,14 +7,6 @@
 </p>
 
 
-
-<!-- 
-[![Marketplace Version](https://vsmarketplacebadge.apphb.com/version/spences10.vba.svg)](https://marketplace.visualstudio.com/items?itemName=spences10.vba)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs/spences10.vba.svg)](https://marketplace.visualstudio.com/items?itemName=spences10.vba)
-[![Rating](https://vsmarketplacebadge.apphb.com/rating/spences10.vba.svg)](https://marketplace.visualstudio.com/items?itemName=spences10.vba)
--->
-
-
 ```
 it is not finished yet. who wants to help can get in touch ...
 ```
@@ -40,8 +32,8 @@ it is not finished yet. who wants to help can get in touch ...
 # Example
 <table align="center" width="100%" border="0">
   <tr>
-    <td align="center" width="50%" border="0">
-     [Example]( https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/example.jpg)
+    <td align="center" border="0">
+    <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/example.jpg" alt="Example" width="60%" /></a>
     </td>
   </tr>
 </table>
@@ -57,11 +49,6 @@ it is not finished yet. who wants to help can get in touch ...
   <br />
   <br />
 </p>
-
-
-<!--
-![Install:](%USERPROFILE%\.vscode\extensions\intouch-language\)
--->
 
 
 # Help
@@ -103,7 +90,7 @@ it is not finished yet. who wants to help can get in touch ...
 
 
 # ToDo
-* **Bug**: Comments are not recognized --> 05.06.2020 fixed
+* **Bug**: Comments are not recognized --> 05.06.2020 fixed (V0.0.3)
 * **Bug**: Not all strigs are recognized
 
 
