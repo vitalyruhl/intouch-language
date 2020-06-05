@@ -148,7 +148,7 @@
             "type": "string",
             "enum": [
               "comment",
-              "comment.block",
+              "comment.block", 
               "comment.block.documentation",
               "comment.line",
               "comment.line.double-dash",

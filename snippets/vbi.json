@@ -1,7 +1,7 @@
 {
   "Boolean": {
     "prefix": "Dimb",
-    "body": ["Dim bol${1:varName} As Boolean;"],
+    "body": ["Dim bol${1:varName} As Discrete;"],
     "description": "Boolean declaration"
   },
   "Integer": {
@@ -20,18 +20,16 @@
     "body": [
       "If ${1:expression} Then",
       "\t",
-      "ElseIf ${1:expression} Then",
-      "\t",
       "Else",
       "\t",
       "EndIf;",
       "\t",
       "EndIf;"
     ],
-    "description": "If ElseIf Else code block"
+    "description": "If Else code block"
   },
   "If2": {
-    "prefix": "If",
+    "prefix": "If#",
     "body": [
       "If ${1:expression} Then",
       "\t",

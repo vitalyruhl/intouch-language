@@ -1,92 +1,172 @@
 {
 	"$schema": "./schema.json",
 	"name": "Intouch",
-	"comment":"Modified from the original Scott Spences (VSCode VBA) ",
-	"foldingStartMarker":"(?i:(THEN|while|For|#region)\\s*.*$)",
-  	"foldingStopMarker":"(?i:({#endregion|endif)\\s*.*$)",
-	
-	
+	"comment": "Modified from the original Scott Spences (VSCode VBA) [https://github.com/spences10/vscode-vba#syntax-highlighting] ",
+	"foldingStartMarker": "(?i:(THEN|while|For|{region)(\\s*.*$|\\b))",
+	"foldingStopMarker": "(?i:({endregion|endif;)(\\s*.*$|\\b))",
 	"patterns": [
-		  {
-			"match":
-			  "(?i:\\b(IF|ENDIF|WHILE|FOR|RETURN|DIM|AS|DIM|AS|THEN|EXIT|EACH|STEP|OR|AND|NOT|IN|TO|MOD|SHL|SHR|RETURN|CALL)\\b)",
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comment"
+		},
+		{
+			"match": "(?i:\\b(IF|ENDIF|WHILE|FOR|RETURN|DIM|AS|DIM|AS|THEN|EXIT|EACH|STEP|OR|AND|NOT|IN|TO|MOD|SHL|SHR|RETURN|CALL)\\b)",
 			"name": "keyword.control.asp",
-			"comment":"vbi Regular Keywords"
-		  },
-		  {
+			"comment": "vbi Regular Keywords"
+		},
+		{
 			"match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|AS|Abs)\\b)",
 			"name": "keyword.operator.asp",
-			"comment":"vbi Operatoren"
-		  },
-		  
-		  {
-			"match":
-			  "(\\s*\\b(discrete|integer|real|message|DISCRETE|INTEGER|REAL|MESSAGE)\\b\\s*)",
+			"comment": "vbi Operatoren"
+		},
+		{
+			"match": "(\\s*\\b(discrete|integer|real|message|DISCRETE|INTEGER|REAL|MESSAGE)\\b\\s*)",
 			"name": "storage.type.asp",
-			"comment":"VBi Variablentypen"
-		  },
-		  {
-			"match": 
-			"(\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
+			"comment": "VBi Variablentypen"
+		},
+		{
+			"match": "(\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
 			"name": "storage.modifier.asp",
-			"comment":"IT-Funktionen"
-		  },
-		  {
-			"match": 
-			"(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|show|hide|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
+			"comment": "IT-Funktionen"
+		},
+		{
+			"match": "(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|show|hide|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
 			"name": "storage.modifier.asp",
-			"comment":"IT-Funktionen-2"
-		  },
-		  {
-			"match": 
-			"(?i:\\s*\\b(NULL|EOF|AS|True|False|TRUE|FALSE)\\b)",
+			"comment": "IT-Funktionen-2"
+		},
+		{
+			"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False|TRUE|FALSE)\\b)",
 			"name": "constant.language.asp"
-		  },
-		  {
-			"match": 
-			"(((?i:(Comment|Name|Reference)))\\b)", 
+		},
+		{
+			"match": "(((?i:(Comment|Name|Reference)))\\b)",
 			"name": "keyword.control.asp",
-			"comment":"Intouch Dotfields"
-		  },
-		  {
-			"match":
-			"(\\s*\\b(StringTrim|INIReadString|Text|StringInString)\\b\\s*)",
+			"comment": "Intouch Dotfields"
+		},
+		{
+			"match": "(\\s*\\b(StringTrim|INIReadString|Text|StringInString)\\b\\s*)",
 			"name": "keyword.control.asp",
-			"comment":"Intouch String Funktionen"
-		  },
-		  {
-			"match":
-			"(\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
+			"comment": "Intouch String Funktionen"
+		},
+		{
+			"match": "(\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
 			"name": "keyword.control.asp",
-			"comment":"Intouch SQL Funktionen"
-		  },
-		  {
-			"match":
-			"(\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
+			"comment": "Intouch SQL Funktionen"
+		},
+		{
+			"match": "(\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
 			"name": "support.function.vb.asp",
-			"comment":"Eigene Funktionen im Grundprogramm"
-		  },
-		  
-		  {
-			"match":
-			  "!|\\$|%|&|=|<=|>=|<>|<|>|!|^|&&|\\|\\b",
-			"name": "keyword.operator.js"
-		  }	  
-	],
-	"repository": {
-		"strings": {
-			"name": "string.quoted.double.intouch",
-			"begin": "\"",
-			"end": "\"",
+			"comment": "Eigene Funktionen im Grundprogramm"
+		},
+		{
+			"match": "\\n",
+			"name": "meta.ending-space"
+		},
+		{
+			"include": "#round-brackets"
+		},
+		{
+			"begin": "^(?=\\t)",
+			"end": "(?=[^\\t])",
+			"name": "meta.leading-space",
 			"patterns": [
 				{
-					"name": "constant.character.escape.intouch",
-					"match": "\\\\."
+					"captures": {
+						"1": {
+							"name": "meta.odd-tab.tabs"
+						},
+						"2": {
+							"name": "meta.even-tab.tabs"
+						}
+					},
+					"match": "(\\t)(\\t)?"
 				}
 			]
-		}
+		},
+		{
+			"begin": "^(?= )",
+			"end": "(?=[^ ])",
+			"name": "meta.leading-space",
+			"patterns": [
+				{
+					"captures": {
+						"1": {
+							"name": "meta.odd-tab.spaces"
+						},
+						"2": {
+							"name": "meta.even-tab.spaces"
+						}
+					},
+					"match": "(  )(  )?"
+				}
+			]
+		},
+		{
+			"captures": {
+				"1": {
+					"name": "storage.type.asp"
+				},
+				"2": {
+					"name": "variable.other.bfeac.asp"
+				},
+				"3": {
+					"name": "meta.separator.comma.asp"
+				}
+			},
+			"match": "(?i:(dim)\\s*(?:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)\\s*(,?)))",
+			"name": "variable.other.dim.asp",
+			"comment": "Weiss noch nicht was das hier soll..."
+		},
 		
-	},
-	"scopeName": "source.vbi"
-}
-
+			{
+				"match": "!|\\$|%|&|=|<=|>=|<>|<|>|!|^|&&|\\|\\b",
+				"name": "keyword.operator.js"
+			},
+			
+			{
+				"match": "(\\$)[a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?\\b\\s*",
+				"name": "variable.other.asp"
+			},
+			{
+				"match": "(?i:(?<=as )(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b))",
+				"name": "support.type.vb.asp"
+			},
+			{
+				"captures": {
+					"1": {
+						"name": "entity.name.function.asp"
+					}
+				},
+				"match": "(?i:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)(?=\\(\\)?))",
+				"name": "support.function.asp"
+			},
+			{
+				"match": "(?i:((?<=(\\+|=|-|\\&|\\\\|/|<|>|\\(|,))\\s*\\b([a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?)\\b(?!(\\(|\\.))|\\b([a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?)\\b(?=\\s*(\\+|=|-|\\&|\\\\|/|<|>|\\(|\\)))))",
+				"name": "variable.other.asp"
+			}
+		],
+		"repository": {
+			"strings": {
+				"name": "string.quoted.double.intouch",
+				"begin": "\"",
+				"end": "\"",
+				"patterns": [
+					{
+						"name": "constant.character.escape",
+						"match": "\\\\."
+					}
+				]
+			},
+			"comment": {
+				"name": "comment.block",
+				"begin": "{",
+				"end": "}"
+			}
+		},
+		"scopeName": "source.vbi"
+	}

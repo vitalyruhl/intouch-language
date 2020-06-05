@@ -2,7 +2,7 @@
     "name": "intouch-language",
     "displayName": "VSCode Intouch-Language",
     "description": "Intouch-Basic language syntax highlighting support and code snippets for VSCode",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "icon": "images/logo.png",
     "publisher": "vitalyruhl",
     "engines": {
@@ -37,7 +37,7 @@
         }],
         "snippets": [
 			{
-				"language": "vba",
+				"language": "vbi",
 				"path": "./snippets/vbi.json"
             }
         ],

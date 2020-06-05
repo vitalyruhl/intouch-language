@@ -3,7 +3,7 @@
 
 <p align="center">
   <br />
-  <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/logo.png" alt="Intouch-Language Logo" width="70%" /></a>
+  <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/logo.png" alt="Intouch-Language Logo" width="10%" /></a>
 </p>
 
 
@@ -16,55 +16,99 @@
 
 
 ```
-## it is not finished yet. who wants to help can get in touch ...
+it is not finished yet. who wants to help can get in touch ...
 ```
 
 # What's new in Intouch-Language
-- Adds **Keywords**
+- Add **Keywords**
+- Add some **Snippets**
 
-## Support
+* Save your code as `.vbi` or `.vi` for automatic Language recognition. 
 
-**Intouch-Language** is an open source extension created for **Visual Studio Code**. 
 
-<table align="center" width="60%" border="0">
+# Intouch-Language
+- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides `syntax highlighting` and `snippets` for Intouch Basic.
+- **Intouch** is a Programming language for Wonderware SCADA Intouch Applications.
+
+
+
+<p align="center">
+  <br />
+  <a title="Intouch" href="https://factorysoftware.de/"><img src="https://factorysoftware.de/resources/uploads/2020/02/wonderware-germany-austria.png" alt="Intouch" /></a>   
+</p>
+
+# Example
+<table align="center" width="100%" border="0">
   <tr>
-    <td>
-    </td>
-    <td>
-    </td>
-    <td>
+    <td align="center" width="50%" border="0">
+     [Example]( https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/example.jpg)
     </td>
   </tr>
 </table>
 
-# Intouch
-
-Intouch is a Programming language for Invensys Intouch Applications
 
 # Install:
- copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
+* copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
+
+
+
+
+<p align="center">
+  <br />
+  <br />
+</p>
+
+
 <!--
-![syntax](https://github.com/alefragnani/vscode-language-pascal/raw/master/images/vscode-pascal-syntax.png)
-
-
-### Format Code
-
-Check out [Pascal Formatter](https://github.com/alefragnani/vscode-pascal-formatter#features) documentation.
-
-## Code Navigation
-
-Navigate to any language element (methods, attributes, classes, interfaces, and so on) inside Pascal files. It supports native VS Code commands like:
-
-* Go to Symbol
-* Go to Definition
-* Peek Definition
-* Find All References
-
-> It uses GNU Global, a source code tagging system, which means that it has some limitations if you compare with an AST parsing.
-
+![Install:](%USERPROFILE%\.vscode\extensions\intouch-language\)
 -->
------------------------------------------------------------------------------------------------------------
 
+
+# Help
+<table align="center" width="100%" border="0">
+  <tr>
+    <td align="center" width="100%" border="0">
+      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+      <input type="hidden" name="cmd" value="_s-xclick" />
+      <input type="hidden" name="hosted_button_id" value="Q3XSPVFAPSKMJ" />
+      <input type="image" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Spenden mit dem PayPal-Button" />
+      <img alt="" border="0" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
+      </form>
+    </td>
+  </tr>
+</table>
+
+
+
+<p align="center">
+  <br />
+  <br />
+</p>
+
+
+# Snippets:
+* Dimb: Dim Boolean (Discrete)
+* Dimi: Dim Integer
+* Dims: Dim String (Message)
+* If# : If code block
+* Ife : If Else code block
+* log#: Log-Debug
+
+
+
+<p align="center">
+  <br />
+  <br />
+</p>
+
+
+# ToDo
+* **Bug**: Comments are not recognized --> 05.06.2020 fixed
+* **Bug**: Not all strigs are recognized
+
+
+-----------------------------------------------------------------------------------------------------------
+<!--
 ## Working with Markdown
 
 **Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
@@ -77,5 +121,5 @@ Navigate to any language element (methods, attributes, classes, interfaces, and 
 
 * [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
 * [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
+-->
 **Enjoy!**
