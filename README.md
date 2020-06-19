@@ -92,6 +92,10 @@ it is not finished yet. who wants to help can get in touch ...
 # ToDo
 * **Bug**: Comments are not recognized --> 05.06.2020 fixed (V0.0.3)
 * **Bug**: Not all strigs are recognized
+* **Bug**: {**region** and **#region** - folding does not work}
+* **Bug**:  in comments with Strings: <a title="Intouch-Language bug1" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/Screenshot_1.jpg" alt="Intouch-Language bug1" width="10%" /></a>
+* **Bug**:  Stringtermination: <a title="Intouch-Language bug2" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/Screenshot_1.jpg" alt="Intouch-Language bug2" width="10%" /></a>
+
 
 
 -----------------------------------------------------------------------------------------------------------

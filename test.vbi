@@ -1,0 +1,177 @@
+	
+dim Funkt as message;
+Funkt = "FUWerte V1.0.0 - ";
+
+{
+Changelog:
+	V1.0.0		07.05.2020 		ViRu 	Erstellversion
+}
+
+{------------------------------------------------------------------------------}
+{Übergabe ausgeben:}
+	IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "Erste-MA:["   + Text(iErsteMA,"#") + "]"); ENDIF;
+	IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "Bezeichnung:["+ sFUBezeichnung     + "]"); ENDIF;
+{------------------------------------------------------------------------------}
+FU_Bezeichnung 			= 	"["+ Text(iErsteMA,"#") + "]" + sFUBezeichnung;
+FU_Sollwert.Name		=	"MA_" + Text(iErsteMA + 0, "0000");
+
+
+ShowTopLeftAt("TAB_HER_FU", $ObjHor - ($ObjHor - SYS_MouseX) - 250, SYS_MouseY - 100);
+
+IF StringLen(Topic) == 5 THEN
+	Full_Topic = Topic + "HER";
+ELSE
+	Full_Topic = Topic;            
+ENDIF;
+
+
+IF Sys_Debug_info > 0 OR Punkte > 0 THEN LogMessage(" ------------->SetReferenceBool-Full_Topic korrigiert:" + Full_Topic); ENDIF;
+
+  
+{ Achtung das Ändern der Formatierung kann zur Folge haben, dass PLS nicht funktioniert!}
+
+{ Simatic net}
+IF SYS_IOServer == "FSGATEWAY"  THEN
+
+	Temp_Return = Full_Topic + ".S7:[" + StringLeft(Topic,4) + "]DB" + Text(DB,"0000") + ",X" + Text(byte,"0000") + "."+Text(bit,"0");
+	IF Sys_Debug_info > 0 AND Punkte > 0 THEN LogMessage(Funkt + " -->Simatic net DA(FSGATEWAY):" + Temp_Return); ENDIF;
+ENDIF;
+
+{! Status wiederherstellen!}	
+	Sys_Debug_info = altDebug;	
+	
+RETURN Temp_Return;
+
+
+
+{==========================================================================================================================}
+{ konfiguration der Zusatzbuttons in Statusleiste [hauptsächlich Proview, Hubboden, Internet-Explorer auf Steuerungen...}
+CALL AppButonsConfig( ); 
+{==========================================================================================================================}
+
+
+{#region Testregion (Region-Folding funzt nich!)}
+
+INIWriteInteger("WIN.INI","InTouch","SQLQueryTimeOut",600);  {~~~ Timeout für SQL-Abfragen setzen in Sekunden ~~~}
+AT09_FehlerStatus.AlarmComment = "Verbindung zu " +  AT09_Name + " unterbrochen!"; {nach längerer Pause funzt kommentar nicht}
+
+SMEL_AnzahlMeldungen = AT01_AnzahlMeldungen + AT02_AnzahlMeldungen
+                                         + AT03_AnzahlMeldungen + AT04_AnzahlMeldungen
+                                         + AT05_AnzahlMeldungen + AT06_AnzahlMeldungen
+                                         + AT07_AnzahlMeldungen + AT08_AnzahlMeldungen
+                                         + AT09_AnzahlMeldungen + AT10_AnzahlMeldungen;
+
+
+INIWriteString(SYS_ProjektPath + "\histprv.ini",SYS_LoggingServer,"Path",StringReplace(PFAD,SYS_LocalDataPathPrefix,"\\" + SYS_LoggingServer + "\" + SYS_RemoteDataPathPrefix,0,1,0));
+{Der String wird durch "\" zerstört! -->    \""  das hier beendet den String}
+{#endregion ende Testregion}
+
+
+{~~~ Fehler String nicht richtig terminiert ~~~}
+INIWriteString(SYS_ProjektPath + "\dhistcfg.ini","History","szRetrievalParams",StringReplace(SYS_LogPath,SYS_LocalDataPathPrefix,"\\" + SYS_LoggingServer + "\" + SYS_RemoteDataPathPrefix,0,1,0));
+INIWriteString(SYS_ProjektPath + "\dhistcfg.ini","History","szLoggingParams",StringReplace(SYS_LogPath,SYS_LocalDataPathPrefix,"\\" + SYS_LoggingServer + "\" + SYS_RemoteDataPathPrefix,0,1,0));
+{~~~ Fehler String nicht richtig terminiert ~~~}
+{  Der String wird durch "\" zerstört! -->    \""  das hier beendet den String}
+{~~~ Fehler String nicht richtig terminiert ~~~}
+
+
+
+{~~~ Backup-Knoten für Historisches Logging konfigurieren ~~~}
+IF StringInString(SYS_LoggingNodes,SYS_PCName,1,0) > 0 AND SYS_PCName == SYS_LoggingBackup AND
+(INIReadString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup") <> "0" OR
+INIReadString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory") <> SYS_ProjektPath)
+THEN
+SYS_ViewNADCopyApplication = INIReadString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup");
+SYS_ApplicationDirectory = INIReadString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory");
+INIWriteString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup","0");
+
+
+DIM file AS INTEGER;
+file = 		InfoFile( "C:\Program Files (x86)\Wonderware\InTouch\Intouch.exe",1, $Second );
+IF file ==1 THEN
+	SYS_InstallPath = "C:\Program Files (x86)\Wonderware\InTouch";
+ELSE
+	file =      InfoFile( "C:\Program Files\Wonderware\InTouch\Intouch.exe",1, $Second );
+	IF file ==1 THEN
+		SYS_InstallPath = "C:\Program Files\Wonderware\InTouch";                                                                                                      
+	ELSE
+		file =      InfoFile( "C:\Programme\Wonderware\InTouch\Intouch.exe",1, $Second );
+		IF file ==1 THEN
+			SYS_InstallPath = "C:\Programme\Wonderware\InTouch";                                                                                                      
+		ENDIF;
+	ENDIF;
+ENDIF;
+
+
+INIWriteInteger("WIN.INI","InTouch","SQLQueryTimeOut",600);  {~~~ Timeout für SQL-Abfragen setzen in Sekunden ~~~}
+
+IF StringInString(HER_SQLNodes,SYS_PCName,1,0) > 0 THEN  { wenn Server läuft... }
+	
+	IF (sOptIP == "") THEN {IP-Adresse nicht übergeben --> Zugriff über DNS}
+		HER_SQLServer = "(local)";
+	ELSE  
+		HER_SQLServer = sOptIP; 
+	ENDIF;
+	
+	IF (sOptPort == "")	THEN
+		HER_SQLServer = HER_SQLServer + "\ " + sInstanz;
+	ELSE  
+		HER_SQLServer = HER_SQLServer + "\ " + sInstanz + "," + sOptPort;
+	ENDIF;	
+	HER_Terminal = 1;   { Freigabe Datenspeicherung auf dem Server }
+
+ELSE  {Server läuft wo anders...} 
+	
+	IF (sOptIP == "") THEN {IP-Adresse nicht übergeben --> Zugriff über DNS}
+		HER_SQLServer = SYS_STATION01BiosName ; 
+	ELSE  
+		HER_SQLServer = sOptIP; 
+	ENDIF;
+	
+	IF (sOptPort == "")	THEN
+		HER_SQLServer = HER_SQLServer + "\ " + sInstanz;
+	ELSE  
+		HER_SQLServer = HER_SQLServer + "\ " + sInstanz + "," + sOptPort;
+	ENDIF;
+	HER_Terminal = 0;  { Unterdrückung der Datenspeicherung auf dem Server }
+	
+ENDIF;
+
+
+
+IF TseQueryRunningOnClient()  == 1 THEN
+    IOSetAccessName( "IOStatus", "", "VIEW"+ TseGetClientId(), "IOStatus" );
+    IOSetAccessName( "VIEW", "", "VIEW"+ TseGetClientId(), "VIEW" );
+ENDIF;
+
+
+
+DIM Sys_HMSGPath AS MESSAGE;
+Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","HERMES Systeme GmbH",1,-1,0) ;{Sys_HMSGPath = "C:\Program Files (x86)\HERMES Systeme GmbH";}
+
+HGW_Gateway = InfoFile(Sys_HMSGPath + "\HerGATEWAY\HerGATEWAY.exe",1,$Minute);
+HGW_Messenger = InfoFile(Sys_HMSGPath+ "\HerMESSENGER\HerMESSENGER.exe",1,$Minute);
+                                                                             
+
+{ **************************************************************************************************************************}
+{## Tooltip Simulieren ##}
+WWContext("AT04_HV_USV_1_RZ_2_gelb",640,300,100,40,SYS_ContextMsg.Name,"N04-12Q1 ");
+{ ## Tooltip Simulieren  ende##}
+
+
+{ **************************************************************************************************************************}
+{### IT9.5 administrator Anmelden ###}
+IF Benutzer1<>"administrator" THEN
+Benutzer1 = "administrator";
+Kennwort1 = "coros";
+$OperatorEntered = Benutzer1;
+$PasswordEntered = Kennwort1;
+ELSE
+Benutzer1 = "none";
+Kennwort1 = " ";
+$OperatorEntered = Benutzer1;
+$PasswordEntered = Kennwort1;
+ENDIF;
+ {### IT9.5 administrator Anmelden Ende  ###}
+
+

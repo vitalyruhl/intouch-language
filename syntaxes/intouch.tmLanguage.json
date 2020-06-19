@@ -2,8 +2,8 @@
 	"$schema": "./schema.json",
 	"name": "Intouch",
 	"comment": "Modified from the original Scott Spences (VSCode VBA) [https://github.com/spences10/vscode-vba#syntax-highlighting] ",
-	"foldingStartMarker": "(?i:(THEN|while|For|{region)(\\s*.*$|\\b))",
-	"foldingStopMarker": "(?i:({endregion|endif;)(\\s*.*$|\\b))",
+	"foldingStartMarker": "(?i:(THEN|while|For|{region|(^\\s*//\\s*#?region\\b))(\\s*.*$|\\b))",
+	"foldingStopMarker": "(?i:({endregion|endif;|(^\\s*//\\s*#?endregion\\b))(\\s*.*$|\\b))",
 	"patterns": [
 		{
 			"include": "#keywords"
@@ -15,7 +15,7 @@
 			"include": "#comment"
 		},
 		{
-			"match": "(?i:\\b(IF|ENDIF|WHILE|FOR|RETURN|DIM|AS|DIM|AS|THEN|EXIT|EACH|STEP|OR|AND|NOT|IN|TO|MOD|SHL|SHR|RETURN|CALL)\\b)",
+			"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|RETURN|DIM|AS|DIM|AS|THEN|EXIT|EACH|STEP|OR|AND|NOT|IN|TO|MOD|SHL|SHR|RETURN|CALL)\\b)",
 			"name": "keyword.control.asp",
 			"comment": "vbi Regular Keywords"
 		},
@@ -40,11 +40,17 @@
 			"comment": "IT-Funktionen-2"
 		},
 		{
+			"match": "(\\b(WWContext|ShowTopLeftAt|INIReadString)\\b)",
+			"name": "storage.modifier.asp",
+			"comment": "IT-Funktionen-3"
+		},
+
+		{
 			"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False|TRUE|FALSE)\\b)",
 			"name": "constant.language.asp"
 		},
 		{
-			"match": "(((?i:(Comment|Name|Reference)))\\b)",
+			"match": "(((?i:(\\.Comment|\\.Name|\\.Reference)))\\b)",
 			"name": "keyword.control.asp",
 			"comment": "Intouch Dotfields"
 		},
@@ -62,6 +68,11 @@
 			"match": "(\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
 			"name": "support.function.vb.asp",
 			"comment": "Eigene Funktionen im Grundprogramm"
+		},
+		{
+			"match": "(\\s*\\b(SYS_)\\s*)",
+			"name": "entity.name.tag.asp",
+			"comment": "Systemvariablen (Eigene) kennzeichnen"
 		},
 		{
 			"match": "\\n",
@@ -159,6 +170,10 @@
 					{
 						"name": "constant.character.escape",
 						"match": "\\\\."
+					},
+					{
+						"name": "constant.character.escape",
+						"match": "\\."
 					}
 				]
 			},
