@@ -70,7 +70,7 @@
 			"comment": "Eigene Funktionen im Grundprogramm"
 		},
 		{
-			"match": "(\\s*\\b(SYS_)\\s*)",
+			"match": "(\\s*\\b(SYS_\\s*)\\b)",
 			"name": "entity.name.tag.asp",
 			"comment": "Systemvariablen (Eigene) kennzeichnen"
 		},
