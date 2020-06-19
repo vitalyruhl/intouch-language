@@ -246,6 +246,7 @@
               "support.constant",
               "support.function",
               "support.function.git-rebase",
+              "support.function.vb",
               "support.other",
               "support.property-value",
               "support.type",

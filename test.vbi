@@ -77,7 +77,7 @@ INIWriteString(SYS_ProjektPath + "\dhistcfg.ini","History","szLoggingParams",Str
 
 
 {~~~ Backup-Knoten für Historisches Logging konfigurieren ~~~}
-IF StringInString(SYS_LoggingNodes,SYS_PCName,1,0) > 0 AND SYS_PCName == SYS_LoggingBackup AND
+IF StringInString(SYS_LoggingNodes,SYS_PCName,1,0) > 0 AND SYS_PCName == SYS_LoggingBackup AND 
 (INIReadString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup") <> "0" OR
 INIReadString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory") <> SYS_ProjektPath)
 THEN
@@ -87,7 +87,7 @@ INIWriteString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup
 
 
 DIM file AS INTEGER;
-file = InfoFile( "C:\Program Files (x86)\Wonderware\InTouch\Intouch.exe",1, $Second);
+	file = InfoFile( "C:\Program Files (x86)\Wonderware\InTouch\Intouch.exe",1, $Second);
 IF file ==1 THEN
 	SYS_InstallPath = "C:\Program Files (x86)\Wonderware\InTouch";
 ELSE
@@ -103,45 +103,9 @@ ELSE
 ENDIF;
 
 
-INIWriteInteger("WIN.INI","InTouch","SQLQueryTimeOut",600);  {~~~ Timeout für SQL-Abfragen setzen in Sekunden ~~~}
-
-IF StringInString(HER_SQLNodes,SYS_PCName,1,0) > 0 THEN  { wenn Server läuft... }
-	
-	IF (sOptIP == "") THEN {IP-Adresse nicht übergeben --> Zugriff über DNS}
-		HER_SQLServer = "(local)";
-	ELSE  
-		HER_SQLServer = sOptIP; 
-	ENDIF;
-	
-	IF (sOptPort == "")	THEN
-		HER_SQLServer = HER_SQLServer + "\ " + sInstanz;
-	ELSE  
-		HER_SQLServer = HER_SQLServer + "\ " + sInstanz + "," + sOptPort;
-	ENDIF;	
-	HER_Terminal = 1;   { Freigabe Datenspeicherung auf dem Server }
-
-ELSE  {Server läuft wo anders...} 
-	
-	IF (sOptIP == "") THEN {IP-Adresse nicht übergeben --> Zugriff über DNS}
-		HER_SQLServer = SYS_STATION01BiosName ; 
-	ELSE  
-		HER_SQLServer = sOptIP; 
-	ENDIF;
-	
-	IF (sOptPort == "")	THEN
-		HER_SQLServer = HER_SQLServer + "\ " + sInstanz;
-	ELSE  
-		HER_SQLServer = HER_SQLServer + "\ " + sInstanz + "," + sOptPort;
-	ENDIF;
-	HER_Terminal = 0;  { Unterdrückung der Datenspeicherung auf dem Server }
-	
-ENDIF;
-
-
-
 IF TseQueryRunningOnClient()  == 1 THEN
     IOSetAccessName( "IOStatus", "", "VIEW"+ TseGetClientId(), "IOStatus" );
-    IOSetAccessName( "VIEW", "", "VIEW"+ TseGetClientId(), "VIEW" );
+IOSetAccessName( "VIEW", "", "VIEW"+ TseGetClientId(), "VIEW" );
 ENDIF;
 
 
@@ -149,29 +113,14 @@ ENDIF;
 DIM Sys_HMSGPath AS MESSAGE;
 Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","HERMES Systeme GmbH",1,-1,0) ;{Sys_HMSGPath = "C:\Program Files (x86)\HERMES Systeme GmbH";}
 
-HGW_Gateway = InfoFile(Sys_HMSGPath + "\HerGATEWAY\HerGATEWAY.exe",1,$Minute);
-HGW_Messenger = InfoFile(Sys_HMSGPath+ "\HerMESSENGER\HerMESSENGER.exe",1,$Minute);
+DIM Sys_HMSGPath AS MESSAGE;
+	Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","HERMES Systeme GmbH",1,-1,0) ;{Sys_HMSGPath = "C:\Program Files (x86)\HERMES Systeme GmbH";}
+
+     
                                                                              
 
 { **************************************************************************************************************************}
 {## Tooltip Simulieren ##}
 WWContext("AT04_HV_USV_1_RZ_2_gelb",640,300,100,40,SYS_ContextMsg.Name,"N04-12Q1 ");
 { ## Tooltip Simulieren  ende##}
-
-
-{ **************************************************************************************************************************}
-{### IT9.5 administrator Anmelden ###}
-IF Benutzer1<>"administrator" THEN
-Benutzer1 = "administrator";
-Kennwort1 = "coros";
-$OperatorEntered = Benutzer1;
-$PasswordEntered = Kennwort1;
-ELSE
-Benutzer1 = "none";
-Kennwort1 = " ";
-$OperatorEntered = Benutzer1;
-$PasswordEntered = Kennwort1;
-ENDIF;
- {### IT9.5 administrator Anmelden Ende  ###}
-
 

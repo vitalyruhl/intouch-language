@@ -15,53 +15,53 @@
 			"include": "#comment"
 		},
 		{
-			"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|RETURN|DIM|AS|DIM|AS|THEN|EXIT|EACH|STEP|OR|AND|NOT|IN|TO|MOD|SHL|SHR|RETURN|CALL)\\b)",
+			"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
 			"name": "keyword.control.asp",
 			"comment": "vbi Regular Keywords"
 		},
 		{
-			"match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|AS|Abs)\\b)",
+			"match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR)\\b)",
 			"name": "keyword.operator.asp",
 			"comment": "vbi Operatoren"
 		},
 		{
-			"match": "(\\s*\\b(discrete|integer|real|message|DISCRETE|INTEGER|REAL|MESSAGE)\\b\\s*)",
+			"match": "(?i:\\b(discrete|integer|real|message)\\b)",
 			"name": "storage.type.asp",
 			"comment": "VBi Variablentypen"
 		},
 		{
 			"match": "(\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
-			"name": "storage.modifier.asp",
+			"name": "support.function.asp",
 			"comment": "IT-Funktionen"
 		},
 		{
-			"match": "(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|show|hide|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
-			"name": "storage.modifier.asp",
+			"match": "(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
+			"name": "support.function.asp",
 			"comment": "IT-Funktionen-2"
 		},
 		{
-			"match": "(\\b(WWContext|ShowTopLeftAt|INIReadString)\\b)",
-			"name": "storage.modifier.asp",
+			"match": "(\\b(WWContext|ShowTopLeftAt|show|hide)\\b)",
+			"name": "support.function.asp",
 			"comment": "IT-Funktionen-3"
 		},
 
 		{
-			"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False|TRUE|FALSE)\\b)",
+			"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False)\\b)",
 			"name": "constant.language.asp"
 		},
 		{
 			"match": "(((?i:(\\.Comment|\\.Name|\\.Reference)))\\b)",
-			"name": "keyword.control.asp",
+			"name": "variable.parameter.asp",
 			"comment": "Intouch Dotfields"
 		},
 		{
 			"match": "(\\s*\\b(StringTrim|INIReadString|Text|StringInString)\\b\\s*)",
-			"name": "keyword.control.asp",
+			"name": "support.function.asp",
 			"comment": "Intouch String Funktionen"
 		},
 		{
 			"match": "(\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
-			"name": "keyword.control.asp",
+			"name": "support.function.asp",
 			"comment": "Intouch SQL Funktionen"
 		},
 		{
@@ -70,7 +70,7 @@
 			"comment": "Eigene Funktionen im Grundprogramm"
 		},
 		{
-			"match": "(\\s*\\b(SYS_\\s*)\\b)",
+			"match": "(?i:\\s*(SYS_|MA_|SMEL_)\\s*\\b)",
 			"name": "entity.name.tag.asp",
 			"comment": "Systemvariablen (Eigene) kennzeichnen"
 		},
