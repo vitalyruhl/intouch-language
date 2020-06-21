@@ -125,3 +125,121 @@ DIM Sys_HMSGPath AS MESSAGE;
 {## Tooltip Simulieren ##}
 WWContext("AT04_HV_USV_1_RZ_2_gelb",640,300,100,40,SYS_ContextMsg.Name,"N04-12Q1 ");
 { ## Tooltip Simulieren  ende##}
+
+MA_Stift3.EngUnits = "n.b.";
+LogMessage ( "$ Her_SQLNodes = " + HER_SQLNodes );
+BDE_B07_Beckentemp_Auto.Reference =MA_0497.Reference ; 
+
+REIHE = #HerAnlagenname.GetRowNumber();
+HER_AnlagennameID = #HerAnlagenname.GetRowColumnValue(REIHE,0);
+HILF = #HerAnlagenname.GetRowColumnValue(REIHE,1);
+HER_AnlagennameName = StringTrim(HILF,3);
+
+#HerAnlagenname.SQLString = "SELECT * FROM HerAnlagenname ORDER BY AnlagennameID";
+#HerAnlagenname.Execute();
+
+{ Shutdown}
+#HerAntriebe.Disconnect();
+
+{ Startup}
+#HerAntriebe.ConnectionString  = HER_ConfigConnectString;
+#HerAntriebe.Caption = "Antriebe"; 
+#HerAntriebe.SQLString = "SELECT * FROM HerAntriebe";
+#HerAntriebe.Execute();
+#HerAntriebe.SetColumnWidth( 1, 885);
+#HerAntriebe.SetColumnWidth( 2, 250);
+
+REIHE = #HerEinheit.GetRowNumber();
+HER_EinheitID = #HerEinheit.GetRowColumnValue(REIHE,0);
+HILF = #HerEinheit.GetRowColumnValue(REIHE,1);
+HER_EinheitName = StringTrim(HILF,3);
+
+ANZAHL = SQLNumRows(HER_ConnectionID);
+HER_SQLStatus = SQLFirst(HER_ConnectionID);
+
+SYS_ProjektPath = InfoInTouchAppDir(); 
+
+SYS_UhrInt = ITXCreateDateTime ($Year,$Month,$Day,$Hour,$Minute,$Second);
+
+WWStartApp ("taskkill /im wwalmlogger.exe /f","INVISIBLE");
+WWControl(InfoAppTitleExpand("LogViewer"),"Close");
+HER_ConfigStatus = SQLDisconnect(HER_ConfigConnectionID);
+CALL KonfigSpeichern( );
+
+IF SYS_User.ReferenceComplete == 1 AND SYS_UserPassword.ReferenceComplete == 1 THEN
+
+
+APSave_SQLStatus = SQLInsertEnd(APSave_ConnectionID,AP_StatementId);
+APSave_SQLStatus = SQLClearStatement(APSave_ConnectionID,AP_StatementId);
+APSave_SQLStatus = SQLDisconnect(APSave_ConnectionID);
+AP_SQLStatus = SQLNext(AP_ConnectionID);
+		
+AP_AnzahlZaehlerSave = SQLNumRows(AP_ConnectionID);
+AP_SQLStatus = SQLGetRecord(AP_ConnectionID,1);
+APSave_SQLStatus = SQLConnect(APSave_ConnectionID,HER_SQLConnectString);
+APSave_SQLStatus = SQLInsertPrepare(APSave_ConnectionID,"HerAPWerte","HerAPWerte",AP_StatementId);
+AP_SaveIndex = 1;
+
+
+IF SYS_STATION01BiosName <> "-" THEN SYS_STATION01_Nodename = IOGetNode("STATION1");ENDIF;
+
+
+
+
+MAX_Trend.DisplayMode = 3;
+MAX_Trend.ChartLength = 3600;
+MAX_Trend.MinRange = 0;
+MAX_Trend.MaxRange = 100;
+HTUpdateToCurrentTime( MAX_Trend.Name );
+MAX_KanalNummer =1 ;
+MAX_Kanal.DisplayMode = 3;
+HTUpdateToCurrentTime(MAX_Kanal.Name);
+
+AP_UebersichtNameZaehler00.Value = BZ_UebersichtName;
+
+TEXT1 = TEXT1 + StringMid(TAB_AAF.Comment,TABINDEX,1);
+
+FOR TABINDEX = TABINDEX TO StringLen(TAB_AAF.Comment)
+BYTE = StringToIntg(StringRight(TAB_AAF.Reference,6));
+CALL KonfigLesen( );
+CALL AppButonsConfig( ); 
+CALL xSetUhrzeitserver();
+CALL xSetDateiPfade();
+CALL xSetTSStation();
+CALL xLoggingConfig( );
+CALL xGatawaySettings ();
+CALL xSetSQLConfig("SQLHERMES","","");
+{==CALL KonfigLesen( );========================================================================================================================}
+
+{==========================================================================================================================}
+CALL xBZVZSettings();
+BZVZAP_Server = 0;  {--> Jetzt aus Datenbank!!!! in der Applicom Version muss dies auf 1!!!}{ ~~~ BZ/VZ/AP-Erfassung über SIMATIC.NET ~~~ }
+{==========================================================================================================================}
+
+{==========================================================================================================================}
+HGW_Freigabe = 0;
+CALL xHerGATEWAYSettings();
+{==========================================================================================================================}
+
+{==========================================================================================================================}
+{~~~ Konfiguration der Schaltanlagen ist jetzt in Quickfunctions ~~~}
+CALL xAnlagenConfig();
+{==========================================================================================================================}
+IF SYS_PCName == SYS_STATION01BiosName THEN CALL xSTATION1BiosName( ); ENDIF;
+IF SYS_PCName == SYS_STATION02BiosName THEN CALL xSTATION2BiosName( ); ENDIF;
+IF SYS_PCName == SYS_STATION03BiosName THEN CALL xSTATION3BiosName( ); ENDIF;
+IF SYS_PCName == SYS_STATION04BiosName THEN CALL xSTATION4BiosName( ); ENDIF;
+IF SYS_PCName == SYS_STATION05BiosName THEN CALL xSTATION5BiosName( ); ENDIF;
+IF SYS_PCName == SYS_STATION06BiosName THEN CALL xSTATION6BiosName( ); ENDIF;
+IF SYS_PCName == SYS_STATION07BiosName THEN CALL xSTATION7BiosName( ); ENDIF;
+IF SYS_PCName == SYS_STATION08BiosName THEN CALL xSTATION8BiosName( ); ENDIF;
+IF SYS_PCName == SYS_STATION09BiosName THEN CALL xSTATION9BiosName( ); ENDIF;
+
+CALL BDESchichtwerteZuweisen( );      {----in den In den beiden Quickfunction werden die Datenpunkte angegeben, die erfasst werden sollen (Filter, Wasserwerte usw.)-----------}
+CALL BDETageswerteZuweisen( );
+
+RestartWindowViewer( );
+ SYS_TSClient1_Name = TseGetClientNodeName( );
+SYS_CurrentWinUser = InfoDosEnv("USERNAME");
+
+
