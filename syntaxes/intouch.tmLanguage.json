@@ -15,11 +15,6 @@
 			"include": "#comment"
 		},
 		{
-			"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
-			"name": "keyword.control.asp",
-			"comment": "vbi Regular Keywords"
-		},
-		{
 			"match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR)\\b)",
 			"name": "keyword.operator.asp",
 			"comment": "vbi Operatoren"
@@ -44,7 +39,7 @@
 			"name": "support.function.asp",
 			"comment": "IT-Funktionen-3"
 		},
-
+		
 		{
 			"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False)\\b)",
 			"name": "constant.language.asp"
@@ -69,8 +64,13 @@
 			"name": "support.function.vb.asp",
 			"comment": "Eigene Funktionen im Grundprogramm"
 		},
+				{
+					"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
+					"name": "keyword.control.asp",
+					"comment": "vbi Regular Keywords"
+				},
 		{
-			"match": "(?i:\\s*(SYS_|MA_|SMEL_)\\s*\\b)",
+			"match": "(?i:\\b(SYS_|MA_|SMEL_)\\w*)",
 			"name": "entity.name.tag.asp",
 			"comment": "Systemvariablen (Eigene) kennzeichnen"
 		},
