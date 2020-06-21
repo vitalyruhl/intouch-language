@@ -97,11 +97,11 @@
 			"patterns": [
 				{
 					"match": "(?i:\\b(SYS_|MA_|SMEL_)\\w*)",
-					"name": "entity.name.tag.vbi",
+					"name": "variable.language.vbi",
 					"comment": "Systemvariablen (Eigene) kennzeichnen"
 				},
 				{
-					"match": "(\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
+					"match": "(?i:\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
 					"name": "support.function.vb.vbi",
 					"comment": "Eigene Funktionen im Grundprogramm"
 				}
@@ -126,17 +126,17 @@
 			},
 			
 			{
-				"match": "(\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
+				"match": "(?i:\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
 				"name": "support.function.vbi",
 				"comment": "IT-Funktionen"
 			},
 			{
-				"match": "(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
+				"match": "(?i:\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
 				"name": "keyword.vbi",
 				"comment": "IT-Funktionen-2"
 			},
 			{
-				"match": "(\\b(WWContext|ShowTopLeftAt|show|hide)\\b)",
+				"match": "(?i:\\b(WWContext|ShowTopLeftAt|show|hide|TseQueryRunningOnClient|IOSetAccessName|TseGetClientId)\\b)",
 				"name": "keyword.vbi",
 				"comment": "IT-Funktionen-3"
 			},
@@ -147,12 +147,12 @@
 			},
 			
 			{
-				"match": "(\\s*\\b(StringTrim|INIReadString|Text|StringInString|StringReplace)\\b\\s*)",
+				"match": "(?i:\\s*\\b(StringTrim|INIReadString|Text|StringInString|StringReplace)\\b\\s*)",
 				"name": "keyword.vbi",
 				"comment": "Intouch String Funktionen"
 			},
 			{
-				"match": "(\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
+				"match": "(?i:\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
 				"name": "keyword.vbi.vbi",
 				"comment": "Intouch SQL Funktionen"
 			}
