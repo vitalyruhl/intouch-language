@@ -123,4 +123,3 @@ DIM Sys_HMSGPath AS MESSAGE;
 {## Tooltip Simulieren ##}
 WWContext("AT04_HV_USV_1_RZ_2_gelb",640,300,100,40,SYS_ContextMsg.Name,"N04-12Q1 ");
 { ## Tooltip Simulieren  ende##}
-
