@@ -91,15 +91,18 @@ it is not finished yet. who wants to help can get in touch ...
 
 # ToDo
 * **Bug**: Comments are not recognized --> 05.06.2020 **fixed** (V0.0.3)
-* **Bug**: Not all strigs are recognized
+* **Bug**: Not all strigs are recognized --> 21.06.2020 **fixed** (V0.0.4)
 * **Bug**: {**region** and **#region** - folding does not work} <br /><br />
-* **Bug**:  in comments with Strings:<br /> <a title="Intouch-Language bug1" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_1.jpg" alt="Intouch-Language bug1" width="80%" /></a><br /><br />
-* **Bug**:  Stringtermination:<br /> <a title="Intouch-Language bug2" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_2.jpg" alt="Intouch-Language bug2" width="80%" /></a><br /><br />
+* **Bug**:  in comments with Strings: --> 21.06.2020 **fixed** (V0.0.5)
+* **Bug**:  Stringtermination: --> 21.06.2020 **fixed** (V0.0.5)
+* **Bug**:  Keywords bug: --> 21.06.2020 **fixed** (V0.0.5)
+
+
+
+<!-- 
 * **Bug**:  Keywords bug:<br /> <a title="Intouch-Language bug3" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_3.jpg" alt="Intouch-Language bug3" width="80%" /></a>
 <br /> <br /><a title="Intouch-Language bug3" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_4.jpg" alt="Intouch-Language bug3" width="80%" /></a>
-
-
-
+-->
 
 -----------------------------------------------------------------------------------------------------------
 <!--

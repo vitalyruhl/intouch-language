@@ -87,23 +87,52 @@
 		"dotfields": {
 			"patterns": [
 				{
-					"match": "(((?i:(\\.Comment|\\.Name|\\.Reference|\\.AlarmComment)))\\b)",
+					"match": "(((?i:(\\.Comment|\\.Name|\\.Reference|\\.AlarmComment|\\.EngUnits|\\.ReferenceComplete|\\.Value)))\\b)",
 					"name": "variable.name.vbi",
 					"comment": "Intouch Dotfields"
+				},
+				{
+					"match": "(((?i:(\\.GetRowNumber|\\.GetRowColumnValue|\\.Execute|\\.Disconnect|\\.SetColumnWidth)))\\b)",
+					"name": "variable.name.vbi",
+					"comment": "SQL Dotfields"
+				},
+				{
+					"match": "(((?i:(\\.DisplayMode|\\.ChartLength|\\.MinRange|\\.MaxRange|HTUpdateToCurrentTime)))\\b)",
+					"name": "variable.name.vbi",
+					"comment": "Trend Dotfields"
+				},
+				{
+					"match": "(?i:(\\$)\\w*)",
+					"name": "variable.name.vbi",
+					"comment": "Systemvariablen die mit $ kennzeichnen - sollen den selben scope kriegen wie die dotfields..."
 				}
 			]
 		},
 		"HermesKeywords": {
 			"patterns": [
 				{
-					"match": "(?i:\\b(SYS_|MA_|SMEL_)\\w*)",
+					"match": "(?i:\\b(SYS_|MA_|SMEL_|HER_)\\w*)",
 					"name": "variable.parameter.vbi",
 					"comment": "Systemvariablen (Eigene) kennzeichnen"
 				},
+				
 				{
 					"match": "(?i:\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
 					"name": "support.function.vb.vbi",
 					"comment": "Eigene Funktionen im Grundprogramm"
+				},
+				
+				{
+					"match": "(?i:\\s*\\b(BDETageswerteZuweisen|BDESchichtwerteZuweisen|xAnlagenConfig|xHerGATEWAYSettings|xBZVZSettings|xSetSQLConfig|xGatawaySettings|xLoggingConfig|xSetTSStation|xSetDateiPfade|xSetUhrzeitserver|KonfigLesen|AppButonsConfig)\\b\\s*)",
+					"name": "support.function.vb.vbi",
+					"comment": "Eigene Funktionen im Grundprogramm  2"
+				}
+				,
+				
+				{
+					"match": "(?i:\\s*\\b(xSTATION9BiosName|xSTATION8BiosName|xSTATION7BiosName|xSTATION6BiosName|xSTATION5BiosName|xSTATION4BiosName|xSTATION3BiosName|xSTATION2BiosName|xSTATION1BiosName)\\b\\s*)",
+					"name": "support.function.vb.vbi",
+					"comment": "Eigene Funktionen im Grundprogramm  3"
 				}
 			]
 		},
@@ -126,17 +155,17 @@
 			},
 			
 			{
-				"match": "(?i:\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
+				"match": "(?i:\\b(InfoDosEnv|TseGetClientNodeName|RestartWindowViewer|WWStartApp|Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
 				"name": "keyword.vbi",
 				"comment": "IT-Funktionen"
 			},
 			{
-				"match": "(?i:\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
+				"match": "(?i:\\b(IOGetNode|InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
 				"name": "keyword.vbi",
 				"comment": "IT-Funktionen-2"
 			},
 			{
-				"match": "(?i:\\b(WWContext|ShowTopLeftAt|show|hide|TseQueryRunningOnClient|IOSetAccessName|TseGetClientId)\\b)",
+				"match": "(?i:\\b(InfoAppTitleExpand|InfoInTouchAppDir|WWContext|ShowTopLeftAt|show|hide|TseQueryRunningOnClient|IOSetAccessName|TseGetClientId)\\b)",
 				"name": "keyword.vbi",
 				"comment": "IT-Funktionen-3"
 			},
@@ -147,12 +176,12 @@
 			},
 			
 			{
-				"match": "(?i:\\s*\\b(StringLeft|StringRight|StringTrim|INIReadString|Text|StringInString|StringReplace)\\b\\s*)",
+				"match": "(?i:\\s*\\b(StringToIntg|StringLen|StringMid|StringLeft|StringRight|StringTrim|INIReadString|Text|StringInString|StringReplace)\\b\\s*)",
 				"name": "keyword.vbi",
 				"comment": "Intouch String Funktionen"
 			},
 			{
-				"match": "(?i:\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
+				"match": "(?i:\\s*\\b(SQL|SQLNext|SQLNumRows|SQLInsertPrepare|SQLConnect|SQLGetRecord|SQLClearStatement|SQLInsertEnd|SQLDisconnect|SQLFirst|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
 				"name": "keyword.vbi.vbi",
 				"comment": "Intouch SQL Funktionen"
 			}
