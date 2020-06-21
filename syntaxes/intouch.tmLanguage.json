@@ -12,7 +12,7 @@
 		{ "include": "#constraints" },
 		{ "include": "#keywords" },
 		{ "include": "#restricted" },
-		{ "include": "#predefined" },
+
 		{ "include": "#strings" },
 		{ "include": "#calls" },
 		{ "include": "#HermesKeywords" 	},
@@ -87,8 +87,8 @@
 		"dotfields": {
 			"patterns": [
 				{
-					"match": "(((?i:(\\.Comment|\\.Name|\\.Reference)))\\b)",
-					"name": "variable.parameter.vbi",
+					"match": "(((?i:(\\.Comment|\\.Name|\\.Reference|\\.AlarmComment)))\\b)",
+					"name": "variable.name.vbi",
 					"comment": "Intouch Dotfields"
 				}
 			]
@@ -97,7 +97,7 @@
 			"patterns": [
 				{
 					"match": "(?i:\\b(SYS_|MA_|SMEL_)\\w*)",
-					"name": "variable.language.vbi",
+					"name": "variable.parameter.vbi",
 					"comment": "Systemvariablen (Eigene) kennzeichnen"
 				},
 				{
@@ -127,7 +127,7 @@
 			
 			{
 				"match": "(?i:\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
-				"name": "support.function.vbi",
+				"name": "keyword.vbi",
 				"comment": "IT-Funktionen"
 			},
 			{
@@ -147,7 +147,7 @@
 			},
 			
 			{
-				"match": "(?i:\\s*\\b(StringTrim|INIReadString|Text|StringInString|StringReplace)\\b\\s*)",
+				"match": "(?i:\\s*\\b(StringLeft|StringRight|StringTrim|INIReadString|Text|StringInString|StringReplace)\\b\\s*)",
 				"name": "keyword.vbi",
 				"comment": "Intouch String Funktionen"
 			},
@@ -167,16 +167,7 @@
 			}
 		  ]
 		},
-		"predefined": {
-		  "patterns": [
-			{
-			  "captures": {
-				"2": { "name": "support.function.vbi" }
-			  },
-			  "match": "\\b\\s*(\\.)\\s*(comment|name|reference)\\b"
-			}
-		  ]
-		},
+		
 		"parameters": {
 		  "patterns": [
 			{
