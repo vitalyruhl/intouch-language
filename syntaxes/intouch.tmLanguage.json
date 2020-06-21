@@ -1,187 +1,201 @@
 {
 	"$schema": "./schema.json",
 	"name": "Intouch",
-	"comment": "Modified from the original Scott Spences (VSCode VBA) [https://github.com/spences10/vscode-vba#syntax-highlighting] ",
+	"fileTypes": [ ".vbi" ],
+  	"scopeName": "source.vbi",
+	"comment": "Modified from the original Scott Spences (VSCode VBA) [https://github.com/spences10/vscode-vba#syntax-highlighting] and (OCL) [https://github.com/martinring/vscode-ocl]",
 	"foldingStartMarker": "(?i:(THEN|while|For|{region|(^\\s*//\\s*#?region\\b))(\\s*.*$|\\b))",
 	"foldingStopMarker": "(?i:({endregion|endif;|(^\\s*//\\s*#?endregion\\b))(\\s*.*$|\\b))",
-	"patterns": [
-		{
-			"include": "#keywords"
-		},
-		{
-			"include": "#strings"
-		},
-		{
-			"include": "#comment"
-		},
-		{
-			"match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR)\\b)",
-			"name": "keyword.operator.asp",
-			"comment": "vbi Operatoren"
-		},
-		{
-			"match": "(?i:\\b(discrete|integer|real|message)\\b)",
-			"name": "storage.type.asp",
-			"comment": "VBi Variablentypen"
-		},
-		{
-			"match": "(\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
-			"name": "support.function.asp",
-			"comment": "IT-Funktionen"
-		},
-		{
-			"match": "(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
-			"name": "support.function.asp",
-			"comment": "IT-Funktionen-2"
-		},
-		{
-			"match": "(\\b(WWContext|ShowTopLeftAt|show|hide)\\b)",
-			"name": "support.function.asp",
-			"comment": "IT-Funktionen-3"
-		},
 		
-		{
-			"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False)\\b)",
-			"name": "constant.language.asp"
+	"patterns": [
+		{"include": "#strings"			},
+		{"include": "#comments"			},
+		{"include": "#keywords"			},
+		{"include": "#HermesKeywords" 	},
+		{"include": "#dotfields"		}
+	],
+	"repository": {
+		"strings": {
+			"name": "string.quoted.double.intouch",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape",
+					"match": "\\\\."
+				},
+				{
+					"name": "constant.character.escape",
+					"match": "\\."
+				}
+			]
 		},
-		{
-			"match": "(((?i:(\\.Comment|\\.Name|\\.Reference)))\\b)",
-			"name": "variable.parameter.asp",
-			"comment": "Intouch Dotfields"
+		"dotfields": {
+			"patterns": [
+				{
+					"match": "(((?i:(\\.Comment|\\.Name|\\.Reference)))\\b)",
+					"name": "variable.parameter.vbi",
+					"comment": "Intouch Dotfields"
+				}
+			]
 		},
-		{
-			"match": "(\\s*\\b(StringTrim|INIReadString|Text|StringInString)\\b\\s*)",
-			"name": "support.function.asp",
-			"comment": "Intouch String Funktionen"
+		"HermesKeywords": {
+			"patterns": [
+				{
+					"match": "(?i:\\b(SYS_|MA_|SMEL_)\\w*)",
+					"name": "entity.name.tag.vbi",
+					"comment": "Systemvariablen (Eigene) kennzeichnen"
+				},
+				{
+					"match": "(\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
+					"name": "support.function.vb.vbi",
+					"comment": "Eigene Funktionen im Grundprogramm"
+				}
+			]
 		},
-		{
-			"match": "(\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
-			"name": "support.function.asp",
-			"comment": "Intouch SQL Funktionen"
+		"comments": {	
+					"name": "comment.block.vbi",
+					"begin": "{",
+					"end": "}"	
 		},
-		{
-			"match": "(\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
-			"name": "support.function.vb.asp",
-			"comment": "Eigene Funktionen im Grundprogramm"
-		},
+		"keywords": {
+			"patterns": [	
+				{
+					"match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR)\\b)",
+					"name": "keyword.operator.vbi",
+					"comment": "vbi Operatoren"
+				},
+				{
+					"match": "(?i:\\b(discrete|integer|real|message)\\b)",
+					"name": "storage.type.vbi",
+					"comment": "VBi Variablentypen"
+				},
+				{
+					"match": "(\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
+					"name": "support.function.vbi",
+					"comment": "IT-Funktionen"
+				},
+				{
+					"match": "(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
+					"name": "support.function.vbi",
+					"comment": "IT-Funktionen-2"
+				},
+				{
+					"match": "(\\b(WWContext|ShowTopLeftAt|show|hide)\\b)",
+					"name": "support.function.vbi",
+					"comment": "IT-Funktionen-3"
+				},
+				
+				{
+					"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False)\\b)",
+					"name": "constant.language.vbi"
+				},
+				
+				{
+					"match": "(\\s*\\b(StringTrim|INIReadString|Text|StringInString)\\b\\s*)",
+					"name": "support.function.vbi",
+					"comment": "Intouch String Funktionen"
+				},
+				{
+					"match": "(\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
+					"name": "support.function.vbi",
+					"comment": "Intouch SQL Funktionen"
+				},
+				
 				{
 					"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
-					"name": "keyword.control.asp",
+					"name": "keyword.control.vbi",
 					"comment": "vbi Regular Keywords"
 				},
-		{
-			"match": "(?i:\\b(SYS_|MA_|SMEL_)\\w*)",
-			"name": "entity.name.tag.asp",
-			"comment": "Systemvariablen (Eigene) kennzeichnen"
-		},
-		{
-			"match": "\\n",
-			"name": "meta.ending-space"
-		},
-		{
-			"include": "#round-brackets"
-		},
-		{
-			"begin": "^(?=\\t)",
-			"end": "(?=[^\\t])",
-			"name": "meta.leading-space",
-			"patterns": [
+				
+				{
+					"match": "\\n",
+					"name": "meta.ending-space"
+				},
+				{
+					"include": "#round-brackets"
+				},
+				{
+					"begin": "^(?=\\t)",
+					"end": "(?=[^\\t])",
+					"name": "meta.leading-space",
+					"patterns": [
+						{
+							"captures": {
+								"1": {
+									"name": "meta.odd-tab.tabs"
+								},
+								"2": {
+									"name": "meta.even-tab.tabs"
+								}
+							},
+							"match": "(\\t)(\\t)?"
+						}
+					]
+				},
+				{
+					"begin": "^(?= )",
+					"end": "(?=[^ ])",
+					"name": "meta.leading-space",
+					"patterns": [
+						{
+							"captures": {
+								"1": {
+									"name": "meta.odd-tab.spaces"
+								},
+								"2": {
+									"name": "meta.even-tab.spaces"
+								}
+							},
+							"match": "(  )(  )?"
+						}
+					]
+				},
 				{
 					"captures": {
 						"1": {
-							"name": "meta.odd-tab.tabs"
+							"name": "storage.type.vbi"
 						},
 						"2": {
-							"name": "meta.even-tab.tabs"
-						}
-					},
-					"match": "(\\t)(\\t)?"
-				}
-			]
-		},
-		{
-			"begin": "^(?= )",
-			"end": "(?=[^ ])",
-			"name": "meta.leading-space",
-			"patterns": [
-				{
-					"captures": {
-						"1": {
-							"name": "meta.odd-tab.spaces"
+							"name": "variable.other.bfeac.vbi"
 						},
-						"2": {
-							"name": "meta.even-tab.spaces"
+						"3": {
+							"name": "meta.separator.comma.vbi"
 						}
 					},
-					"match": "(  )(  )?"
-				}
-			]
-		},
-		{
-			"captures": {
-				"1": {
-					"name": "storage.type.asp"
+					"match": "(?i:(dim)\\s*(?:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)\\s*(,?)))",
+					"name": "variable.other.dim.vbi",
+					"comment": "Weiss noch nicht was das hier soll..."
 				},
-				"2": {
-					"name": "variable.other.bfeac.asp"
-				},
-				"3": {
-					"name": "meta.separator.comma.asp"
-				}
-			},
-			"match": "(?i:(dim)\\s*(?:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)\\s*(,?)))",
-			"name": "variable.other.dim.asp",
-			"comment": "Weiss noch nicht was das hier soll..."
-		},
-		
-			{
-				"match": "!|\\$|%|&|=|<=|>=|<>|<|>|!|^|&&|\\|\\b",
-				"name": "keyword.operator.js"
-			},
-			
-			{
-				"match": "(\\$)[a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?\\b\\s*",
-				"name": "variable.other.asp"
-			},
-			{
-				"match": "(?i:(?<=as )(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b))",
-				"name": "support.type.vb.asp"
-			},
-			{
-				"captures": {
-					"1": {
-						"name": "entity.name.function.asp"
-					}
-				},
-				"match": "(?i:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)(?=\\(\\)?))",
-				"name": "support.function.asp"
-			},
-			{
-				"match": "(?i:((?<=(\\+|=|-|\\&|\\\\|/|<|>|\\(|,))\\s*\\b([a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?)\\b(?!(\\(|\\.))|\\b([a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?)\\b(?=\\s*(\\+|=|-|\\&|\\\\|/|<|>|\\(|\\)))))",
-				"name": "variable.other.asp"
-			}
-		],
-		"repository": {
-			"strings": {
-				"name": "string.quoted.double.intouch",
-				"begin": "\"",
-				"end": "\"",
-				"patterns": [
+				
 					{
-						"name": "constant.character.escape",
-						"match": "\\\\."
+						"match": "!|\\$|%|&|=|<=|>=|<>|<|>|!|^|&&|\\|\\b",
+						"name": "keyword.operator.js"
+					},
+					
+					{
+						"match": "(\\$)[a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?\\b\\s*",
+						"name": "variable.other.vbi"
 					},
 					{
-						"name": "constant.character.escape",
-						"match": "\\."
+						"match": "(?i:(?<=as )(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b))",
+						"name": "support.type.vb.vbi"
+					},
+					{
+						"captures": {
+							"1": {
+								"name": "entity.name.function.vbi"
+							}
+						},
+						"match": "(?i:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)(?=\\(\\)?))",
+						"name": "support.function.vbi"
+					},
+					{
+						"match": "(?i:((?<=(\\+|=|-|\\&|\\\\|/|<|>|\\(|,))\\s*\\b([a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?)\\b(?!(\\(|\\.))|\\b([a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?)\\b(?=\\s*(\\+|=|-|\\&|\\\\|/|<|>|\\(|\\)))))",
+						"name": "variable.other.vbi"
 					}
 				]
-			},
-			"comment": {
-				"name": "comment.block",
-				"begin": "{",
-				"end": "}"
 			}
-		},
-		"scopeName": "source.vbi"
+	
 	}
+}
