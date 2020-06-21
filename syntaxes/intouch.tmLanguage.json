@@ -6,30 +6,84 @@
 	"comment": "Modified from the original Scott Spences (VSCode VBA) [https://github.com/spences10/vscode-vba#syntax-highlighting] and (OCL) [https://github.com/martinring/vscode-ocl]",
 	"foldingStartMarker": "(?i:(THEN|while|For|{region|(^\\s*//\\s*#?region\\b))(\\s*.*$|\\b))",
 	"foldingStopMarker": "(?i:({endregion|endif;|(^\\s*//\\s*#?endregion\\b))(\\s*.*$|\\b))",
-		
 	"patterns": [
-		{"include": "#strings"			},
-		{"include": "#comments"			},
-		{"include": "#keywords"			},
-		{"include": "#HermesKeywords" 	},
-		{"include": "#dotfields"		}
-	],
-	"repository": {
-		"strings": {
-			"name": "string.quoted.double.intouch",
-			"begin": "\"",
-			"end": "\"",
-			"patterns": [
-				{
-					"name": "constant.character.escape",
-					"match": "\\\\."
-				},
-				{
-					"name": "constant.character.escape",
-					"match": "\\."
-				}
-			]
+		{ "include": "#comments" },
+		{ "include": "#contexts" },
+		{ "include": "#constraints" },
+		{ "include": "#keywords" },
+		{ "include": "#restricted" },
+		{ "include": "#predefined" },
+		{ "include": "#strings" },
+		{ "include": "#calls" },
+		{ "include": "#HermesKeywords" 	},
+		{ "include": "#dotfields"		}
+	  ],
+	  "repository": {
+		"constraints": {
+		  "patterns": [
+			{
+			  "match": "\\b(pre|post|inv)(\\s+([\\p{L}_$][\\p{L}_$0-9]*)\\s*:)?",
+			  "captures": {
+				"1": { "name": "keyword.vbi" },
+				"3": { "name": "entity.name.section" }
+			  }
+			}
+		  ]
 		},
+		"strings": {
+		  "patterns": [
+			{
+				"begin": "\"",
+				"end": "\"",
+			  "name": "string.quoted.single.vbi"
+			}
+		  ]
+		},
+		"contexts": {
+		  "patterns": [
+			{
+			  "begin": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\())(\\s*::\\s*([\\p{L}_$][\\p{L}_$*0-9]*))\\s*\\(",
+			  "end": "\\)",
+			  "beginCaptures": {
+				"1": { "name": "keyword.vbi" },
+				"4": { "name": "entity.name.section" },
+				"5": { "name": "entity.name.type" },
+				"7": { "name": "entity.name.method.function" }
+			  },
+			  "patterns": [
+				{ "include": "#parameters" }
+			  ]
+			},
+			{
+			  "match": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\())(\\s*::\\s*([\\p{L}_$][\\p{L}_$*0-9]*))\\s*:\\s*([\\p{L}_$][\\p{L}_$*0-9]*)",
+			  "captures": {
+				"1": { "name": "keyword.vbi" },
+				"4": { "name": "entity.name.section" },
+				"5": { "name": "entity.name.type" },
+				"7": { "name": "variable.other" },
+				"8": { "name": "entity.name.type" }
+			  }
+			},
+			{
+			  "match": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\()|\\s*:)",
+			  "captures": {
+				"1": { "name": "keyword.vbi" },
+				"4": { "name": "entity.name.section" },
+				"5": { "name": "entity.name.type" }
+			  }
+			}
+		  ]
+		},
+		"calls": {
+		  "patterns": [
+			{
+			  "match": "\\b\\s*(\\.|->)\\s*([\\p{L}_$][\\p{L}_$0-9]*)\\s*\\(",
+			  "captures": {
+				"2": { "name": "entity.name.method.function" }
+			  }
+			}
+		  ]
+		},	
 		"dotfields": {
 			"patterns": [
 				{
@@ -59,143 +113,91 @@
 					"end": "}"	
 		},
 		"keywords": {
-			"patterns": [	
-				{
-					"match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR)\\b)",
-					"name": "keyword.operator.vbi",
-					"comment": "vbi Operatoren"
-				},
-				{
-					"match": "(?i:\\b(discrete|integer|real|message)\\b)",
-					"name": "storage.type.vbi",
-					"comment": "VBi Variablentypen"
-				},
-				{
-					"match": "(\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
-					"name": "support.function.vbi",
-					"comment": "IT-Funktionen"
-				},
-				{
-					"match": "(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
-					"name": "support.function.vbi",
-					"comment": "IT-Funktionen-2"
-				},
-				{
-					"match": "(\\b(WWContext|ShowTopLeftAt|show|hide)\\b)",
-					"name": "support.function.vbi",
-					"comment": "IT-Funktionen-3"
-				},
-				
-				{
-					"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False)\\b)",
-					"name": "constant.language.vbi"
-				},
-				
-				{
-					"match": "(\\s*\\b(StringTrim|INIReadString|Text|StringInString)\\b\\s*)",
-					"name": "support.function.vbi",
-					"comment": "Intouch String Funktionen"
-				},
-				{
-					"match": "(\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
-					"name": "support.function.vbi",
-					"comment": "Intouch SQL Funktionen"
-				},
-				
-				{
-					"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
-					"name": "keyword.control.vbi",
-					"comment": "vbi Regular Keywords"
-				},
-				
-				{
-					"match": "\\n",
-					"name": "meta.ending-space"
-				},
-				{
-					"include": "#round-brackets"
-				},
-				{
-					"begin": "^(?=\\t)",
-					"end": "(?=[^\\t])",
-					"name": "meta.leading-space",
-					"patterns": [
-						{
-							"captures": {
-								"1": {
-									"name": "meta.odd-tab.tabs"
-								},
-								"2": {
-									"name": "meta.even-tab.tabs"
-								}
-							},
-							"match": "(\\t)(\\t)?"
-						}
-					]
-				},
-				{
-					"begin": "^(?= )",
-					"end": "(?=[^ ])",
-					"name": "meta.leading-space",
-					"patterns": [
-						{
-							"captures": {
-								"1": {
-									"name": "meta.odd-tab.spaces"
-								},
-								"2": {
-									"name": "meta.even-tab.spaces"
-								}
-							},
-							"match": "(  )(  )?"
-						}
-					]
-				},
-				{
-					"captures": {
-						"1": {
-							"name": "storage.type.vbi"
-						},
-						"2": {
-							"name": "variable.other.bfeac.vbi"
-						},
-						"3": {
-							"name": "meta.separator.comma.vbi"
-						}
-					},
-					"match": "(?i:(dim)\\s*(?:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)\\s*(,?)))",
-					"name": "variable.other.dim.vbi",
-					"comment": "Weiss noch nicht was das hier soll..."
-				},
-				
-					{
-						"match": "!|\\$|%|&|=|<=|>=|<>|<|>|!|^|&&|\\|\\b",
-						"name": "keyword.operator.js"
-					},
-					
-					{
-						"match": "(\\$)[a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?\\b\\s*",
-						"name": "variable.other.vbi"
-					},
-					{
-						"match": "(?i:(?<=as )(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b))",
-						"name": "support.type.vb.vbi"
-					},
-					{
-						"captures": {
-							"1": {
-								"name": "entity.name.function.vbi"
-							}
-						},
-						"match": "(?i:(\\b[a-zA-Z_x7f-xff][a-zA-Z0-9_x7f-xff]*?\\b)(?=\\(\\)?))",
-						"name": "support.function.vbi"
-					},
-					{
-						"match": "(?i:((?<=(\\+|=|-|\\&|\\\\|/|<|>|\\(|,))\\s*\\b([a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?)\\b(?!(\\(|\\.))|\\b([a-zA-Z_xf-xff][a-zA-Z0-9_xf-xff]*?)\\b(?=\\s*(\\+|=|-|\\&|\\\\|/|<|>|\\(|\\)))))",
-						"name": "variable.other.vbi"
-					}
-				]
+		  "patterns": [
+			{
+			  "name": "keyword.control.vbi",
+			  "match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR)\\b)"
+			},
+			
+			{
+				"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
+				"name": "keyword.control.vbi",
+				"comment": "vbi Regular Keywords"
+			},
+			
+			{
+				"match": "(\\b(Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
+				"name": "support.function.vbi",
+				"comment": "IT-Funktionen"
+			},
+			{
+				"match": "(\\b(InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
+				"name": "keyword.vbi",
+				"comment": "IT-Funktionen-2"
+			},
+			{
+				"match": "(\\b(WWContext|ShowTopLeftAt|show|hide)\\b)",
+				"name": "keyword.vbi",
+				"comment": "IT-Funktionen-3"
+			},
+			
+			{
+				"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False)\\b)",
+				"name": "keyword.control.vbi"
+			},
+			
+			{
+				"match": "(\\s*\\b(StringTrim|INIReadString|Text|StringInString|StringReplace)\\b\\s*)",
+				"name": "keyword.vbi",
+				"comment": "Intouch String Funktionen"
+			},
+			{
+				"match": "(\\s*\\b(SQL|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
+				"name": "keyword.vbi.vbi",
+				"comment": "Intouch SQL Funktionen"
 			}
-	
+		  ]
+		},
+		"restricted": {
+		  "patterns": [
+			{
+			  "name": "support.type.vbi",
+			  "match": "(?i:\\b(discrete|integer|real|message)\\b)",
+			  "comment": "VBi Variablentypen"
+			}
+		  ]
+		},
+		"predefined": {
+		  "patterns": [
+			{
+			  "captures": {
+				"2": { "name": "support.function.vbi" }
+			  },
+			  "match": "\\b\\s*(\\.)\\s*(comment|name|reference)\\b"
+			}
+		  ]
+		},
+		"parameters": {
+		  "patterns": [
+			{
+			  "match": "\\s*([^,:\\s\\)\\(]*)\\s*:\\s*([^,:\\s\\)\\(]*)\\s*",
+			  "captures": {
+				"1": { "name": "variable.parameter" },
+				"2": { "name": "entity.name.type" }
+			  }
+			}
+		  ]
+		},
+		"arguments": {
+		  "patterns": [
+			{ "include": "#keywords" },
+			{
+			  "match": "\\s*([^,:\\s\\)\\(]*)\\s*",
+			  "captures": {
+				"1": { "name": "variable.parameter" }
+			  }
+			}
+		  ]
+		}
+	  }
 	}
-}

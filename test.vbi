@@ -63,7 +63,7 @@ SMEL_AnzahlMeldungen = AT01_AnzahlMeldungen + AT02_AnzahlMeldungen
 
 
 INIWriteString(SYS_ProjektPath + "\histprv.ini",SYS_LoggingServer,"Path",StringReplace(PFAD,SYS_LocalDataPathPrefix,"\\" + SYS_LoggingServer + "\" + SYS_RemoteDataPathPrefix,0,1,0));
-{Der String wird durch "\" zerstört! -->    \""  das hier beendet den String}
+
 {#endregion ende Testregion}
 
 
@@ -71,20 +71,18 @@ INIWriteString(SYS_ProjektPath + "\histprv.ini",SYS_LoggingServer,"Path",StringR
 INIWriteString(SYS_ProjektPath + "\dhistcfg.ini","History","szRetrievalParams",StringReplace(SYS_LogPath,SYS_LocalDataPathPrefix,"\\" + SYS_LoggingServer + "\" + SYS_RemoteDataPathPrefix,0,1,0));
 INIWriteString(SYS_ProjektPath + "\dhistcfg.ini","History","szLoggingParams",StringReplace(SYS_LogPath,SYS_LocalDataPathPrefix,"\\" + SYS_LoggingServer + "\" + SYS_RemoteDataPathPrefix,0,1,0));
 {~~~ Fehler String nicht richtig terminiert ~~~}
-{  Der String wird durch "\" zerstört! -->    \""  das hier beendet den String}
-{~~~ Fehler String nicht richtig terminiert ~~~}
 
 
 
 {~~~ Backup-Knoten für Historisches Logging konfigurieren ~~~}
 IF StringInString(SYS_LoggingNodes,SYS_PCName,1,0) > 0 AND SYS_PCName == SYS_LoggingBackup AND 
-(INIReadString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup") <> "0" OR
-INIReadString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory") <> SYS_ProjektPath)
+	(INIReadString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup") <> "0" OR
+	INIReadString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory") <> SYS_ProjektPath)
 THEN
-SYS_ViewNADCopyApplication = INIReadString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup");
-SYS_ApplicationDirectory = INIReadString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory");
-INIWriteString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup","0");
-
+	SYS_ViewNADCopyApplication = INIReadString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup");
+	SYS_ApplicationDirectory = INIReadString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory");
+	INIWriteString(SYS_OSPath + "WIN.INI","InTouch","ViewNADCopyApplicationOnStartup","0");
+ENDIF;
 
 DIM file AS INTEGER;
 file = InfoFile( "C:\Program Files (x86)\Wonderware\InTouch\Intouch.exe",1, $Second);
@@ -108,13 +106,17 @@ IF TseQueryRunningOnClient()  == 1 THEN
 IOSetAccessName( "VIEW", "", "VIEW"+ TseGetClientId(), "VIEW" );
 ENDIF;
 
+testNochmal.name
+testNochmal.Name
+testNochmal.NAME
+
 
 
 DIM Sys_HMSGPath AS MESSAGE;
-Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","HERMES Systeme GmbH",1,-1,0) ;{Sys_HMSGPath = "C:\Program Files (x86)\HERMES Systeme GmbH";}
+Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","HERMES Systeme GmbH",1,-1,0) ;		{Sys_HMSGPath = "C:\Program Files (x86)\HERMES Systeme GmbH";}
 
 DIM Sys_HMSGPath AS MESSAGE;
-	Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","HERMES Systeme GmbH",1,-1,0) ;{Sys_HMSGPath = "C:\Program Files (x86)\HERMES Systeme GmbH";}
+	Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","HERMES Systeme GmbH",1,-1,0) ;  {Sys_HMSGPath = "C:\Program Files (x86)\HERMES Systeme GmbH";}
 
      
                                                                              
