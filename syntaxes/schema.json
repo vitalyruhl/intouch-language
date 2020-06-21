@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "id": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "id": "https://raw.githubusercontent.com/vitalyruhl/tmlanguage/blob/master/tmlanguage.json",
     "$ref": "#/definitions/root",
     "definitions": {
       "root": {
