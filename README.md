@@ -26,7 +26,7 @@ it is not finished yet. who wants to help can get in touch ...
 
 <p align="center" bgcolor:=#3f3f3f>
   <br />
-  <a title="Intouch" href="https://factorysoftware.de/"><img src="https://factorysoftware.de/resources/uploads/2020/02/wonderware-germany-austria.png" alt="Intouch" /></a>   
+  <a title="Intouch" href="https://factorysoftware.de/"><img src="https://factorysoftware.de/resources/uploads/2020/02/wonderware-germany-austria-footer.png" alt="Intouch" /></a>   
 </p>
 
 # Example
@@ -90,8 +90,15 @@ it is not finished yet. who wants to help can get in touch ...
 
 
 # ToDo
-* **Bug**: Comments are not recognized --> 05.06.2020 fixed (V0.0.3)
+* **Bug**: Comments are not recognized --> 05.06.2020 **fixed** (V0.0.3)
 * **Bug**: Not all strigs are recognized
+* **Bug**: {**region** and **#region** - folding does not work} <br /><br />
+* **Bug**:  in comments with Strings:<br /> <a title="Intouch-Language bug1" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_1.jpg" alt="Intouch-Language bug1" width="80%" /></a><br /><br />
+* **Bug**:  Stringtermination:<br /> <a title="Intouch-Language bug2" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_2.jpg" alt="Intouch-Language bug2" width="80%" /></a><br /><br />
+* **Bug**:  Keywords bug:<br /> <a title="Intouch-Language bug3" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_3.jpg" alt="Intouch-Language bug3" width="80%" /></a>
+<br /> <br /><a title="Intouch-Language bug3" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_4.jpg" alt="Intouch-Language bug3" width="80%" /></a>
+
+
 
 
 -----------------------------------------------------------------------------------------------------------
