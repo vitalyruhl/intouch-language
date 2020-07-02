@@ -7,6 +7,15 @@
 </p>
 
 
+[![Version](https://vsmarketplacebadge.apphb.com/version/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
+[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell)
+[![Rating](https://vsmarketplacebadge.apphb.com/rating/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner) 
+
+<!-- 
+[![Build Status](https://travis-ci.org/Vitaly-ruhl/intouch-language.svg?branch=master)](https://travis-ci.org/Vitaly-ruhl/intouch-language)
+
+-->
+
 ```
 it is not finished yet. who wants to help can get in touch ...
 ```
@@ -86,15 +95,6 @@ it is not finished yet. who wants to help can get in touch ...
   <br />
   <br />
 </p>
-
-
-# ToDo
-* **Bug**: Comments are not recognized --> 05.06.2020 **fixed** (V0.0.3)
-* **Bug**: Not all strigs are recognized --> 21.06.2020 **fixed** (V0.0.4)
-* **Bug**: {**region** and **#region** - folding does not work} <br /><br />
-* **Bug**:  in comments with Strings: --> 21.06.2020 **fixed** (V0.0.5)
-* **Bug**:  Stringtermination: --> 21.06.2020 **fixed** (V0.0.5)
-* **Bug**:  Keywords bug: --> 21.06.2020 **fixed** (V0.0.5)
 
 
 
