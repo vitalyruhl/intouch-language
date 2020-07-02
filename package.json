@@ -2,9 +2,9 @@
     "name": "intouch-language",
     "displayName": "VSCode Intouch-Language",
     "description": "Intouch-Basic language syntax highlighting support and code snippets for VSCode",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "icon": "images/logo.png",
-    "publisher": "vitalyruhl",
+    "publisher": "vitaly-ruhl",
     "engines": {
         "vscode": "^1.45.0"
     },
