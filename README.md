@@ -8,17 +8,17 @@
 
 
 [![Version](https://vsmarketplacebadge.apphb.com/version/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell)
-[![Rating](https://vsmarketplacebadge.apphb.com/rating/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner) 
+[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
+[![Rating](https://vsmarketplacebadge.apphb.com/rating/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language) 
 
 <!-- 
 [![Build Status](https://travis-ci.org/Vitaly-ruhl/intouch-language.svg?branch=master)](https://travis-ci.org/Vitaly-ruhl/intouch-language)
 
 -->
 
-```
-it is not finished yet. who wants to help can get in touch ...
-```
+
+## ```it is not finished yet. who wants to help ...```
+
 
 # What's new in Intouch-Language
 - Add **Keywords**
