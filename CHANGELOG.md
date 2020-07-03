@@ -1,5 +1,7 @@
 
 
+### 0.1.2
+*   Correct links to Marktplace
 
 ### 0.1.1
 *   Publish Beta Release on VSC-Maktplace

@@ -1,51 +1,60 @@
 {
-    "name": "intouch-language",
-    "displayName": "VSCode Intouch-Language",
-    "description": "Intouch-Basic language syntax highlighting support and code snippets for VSCode",
-    "version": "0.1.1",
-    "icon": "images/logo.png",
-    "publisher": "vitaly-ruhl",
-    "engines": {
-        "vscode": "^1.45.0"
-    },
-    "repository": {
+	"name": "intouch-language",
+	"displayName": "VSCode Intouch-Language",
+	"description": "Intouch-Basic language syntax highlighting support and code snippets for VSCode",
+	"version": "0.1.2",
+	"icon": "images/logo.png",
+	"publisher": "vitaly-ruhl",
+	"engines": {
+		"vscode": "^1.45.0"
+	},
+	"repository": {
 		"type": "git",
 		"url": "https://github.com/vitalyruhl/intouch-language.git"
 	},
-    "categories": [
-        "Programming Languages",
-        "Formatters",
+	"categories": [
+		"Programming Languages",
+		"Formatters",
 		"Snippets"
-    ],
-    "keywords": [ 
+	],
+	"keywords": [
 		"Intouch",
 		"Invensys",
 		"Wonderware",
 		"formatter"
 	],
-    "contributes": {
-        "languages": [{
-            "id": "intouch",
-            "aliases": ["Intouch", "intouch"],
-            "extensions": [".vbi",".vi"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "intouch",
-            "scopeName": "source.vbi",
-            "path": "./syntaxes/intouch.tmLanguage.json"
-        }],
-        "snippets": [
+	"contributes": {
+		"languages": [
+			{
+				"id": "intouch",
+				"aliases": [
+					"Intouch",
+					"intouch"
+				],
+				"extensions": [
+					".vbi",
+					".vi"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "intouch",
+				"scopeName": "source.vbi",
+				"path": "./syntaxes/intouch.tmLanguage.json"
+			}
+		],
+		"snippets": [
 			{
 				"language": "vbi",
 				"path": "./snippets/vbi.json"
-            }
-        ],
-        "configuration": {
+			}
+		],
+		"configuration": {
 			"type": "object",
 			"title": "Intouch-Language Configuration",
-			"properties": {                
-				
+			"properties": {
 				"it.debug": {
 					"type": "boolean",
 					"default": false,
@@ -53,9 +62,10 @@
 				}
 			}
 		}
-
-    },
+	},
 	"__metadata": {
-		"publisherDisplayName": "Vitaly Ruhl"
+		"id": "834eb420-2978-4100-b7de-2430fc88e429",
+		"publisherDisplayName": "Vitaly Ruhl",
+		"publisherId": "448eaf8e-6bd4-4b72-b6cd-9af578a789d2"
 	}
-} 
+}
