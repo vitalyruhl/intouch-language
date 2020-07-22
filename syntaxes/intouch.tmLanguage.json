@@ -116,23 +116,18 @@
 					"comment": "Systemvariablen (Eigene) kennzeichnen"
 				},
 				
-				{
-					"match": "(?i:\\s*\\b(SetReferenceDINTs|SetReferenceDINT|SetReferenceBool|SetReferenceByte|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord)\\b\\s*)",
-					"name": "support.function.vb.vbi",
-					"comment": "Eigene Funktionen im Grundprogramm"
-				},
 				
 				{
-					"match": "(?i:\\s*\\b(BDETageswerteZuweisen|BDESchichtwerteZuweisen|xAnlagenConfig|xHerGATEWAYSettings|xBZVZSettings|xSetSQLConfig|xGatawaySettings|xLoggingConfig|xSetTSStation|xSetDateiPfade|xSetUhrzeitserver|KonfigLesen|AppButonsConfig)\\b\\s*)",
+					"match": "(?i:\\s*\\b(GetSplittByIndex|HerGATEWAYanzeigeAktualisieren|HerGATEWAYtriggerFreigabe|HerGATEWAYueberwachen|SetReferenceBool|SetReferenceByte|SetReferenceDINT|SetReferenceDINTs|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord|SetVarInputBoolsch|SetVarToggleBoolsch|BDEDatenLesen|BDEDatenSpeichern|BDEDatenSuchen|BDESchichtSchreiben|BDESchichtwerteDatenOK|BDESchichtwerteZuweisen|BDETageswerteDatenOK|BDETageswerteSchreiben|BDETageswerteZuweisen|BZBetriebsstunden|BZZaehlerAbfragen|ExterneModuleUeberwachen|FUWerte|GetSplittByIndex|HerBACKUP|HerProViewStart|HideAllPLS|KonfigLesen|KonfigSpeichern|QFFilter|QFFilterRegler15Schritt|QFLuftwerte|QFRinne|SessionUserInfoAkt|Sollwertaenderung|StatusExtApp|StatusleistenInfofelder|SWReal|wwalmdbtrigger|xAnlagenConfig|xBZVZSettings|xGatawaySettings|xHerGATEWAYSettings|xLoggingConfig|xSetDateiPfade|xSetSQLConfig|xSetTSStation|xSetUhrzeitserver)\\b\\s*)",
 					"name": "support.function.vb.vbi",
-					"comment": "Eigene Funktionen im Grundprogramm  2"
+					"comment": "Eigene Funktionen im Grundprogramm  1"
 				}
 				,
 				
 				{
 					"match": "(?i:\\s*\\b(xSTATION9BiosName|xSTATION8BiosName|xSTATION7BiosName|xSTATION6BiosName|xSTATION5BiosName|xSTATION4BiosName|xSTATION3BiosName|xSTATION2BiosName|xSTATION1BiosName)\\b\\s*)",
 					"name": "support.function.vb.vbi",
-					"comment": "Eigene Funktionen im Grundprogramm  3"
+					"comment": "Eigene Funktionen im Grundprogramm  2"
 				}
 			]
 		},
@@ -155,19 +150,29 @@
 			},
 			
 			{
-				"match": "(?i:\\b(InfoDosEnv|TseGetClientNodeName|RestartWindowViewer|WWStartApp|Caption|SetColumnWidth|WWGetServiceStatus|INIWriteInteger|INIWriteString|FileDelete|InfoFile|ITXStartAppInDirectory|StartApp|ITXCreateDateTime)\\b)",
+				"match": "(?i:\\s*\\b(Ack|AddPermission|almAckAll|almAckDisplay|almAckGroup|almAckPriority|almAckRecent|almAckSelect|almAckSelectedGroup|almAckSelectedPriority|almAckSelectedTag|almAckTag|almDefQuery|almMoveWindow|almQuery|almSelectAll|almSelectGroup|almSelectionCount|almSelectItem|almSelectPriority|almSelectTag|almSetQueryByName|almShowStats|almSuppressAll|almSuppressDisplay|almSuppressGroup|almSuppressPriority|almSuppressRetain|almSuppressSelected|almSuppressSelectedGroup|almSuppressSelectedPriority|almSuppressSelectedTag|almSuppressTag|almUnselectAll|almUnsuppressAll|AnnotateLayout|APUFindAlarmGroupInstance|APUFindFileInstance|APUFindPrinterInstance|APUGetAlarmGroupText|APUGetConfigurationFilePath|APUGetInstanceCount|APUGetPrinterJobCount|APUGetPrinterName|APUGetPrinterStatus|APUGetQueryAlarmState|APUGetQueryFromPriority|APUGetQueryProcessingState|APUGetQueryToPriority|APUIsInstanceUsed|APUSetAlarmGroupText|APUSetQueryAlarmState|APUSetQueryFromPriority|APUSetQueryToPriority|APUSetTimeoutValues|APUStartInstance|APUStartQuery|APUStopInstance|APUStopQuery|APUTranslateErrorCode)\\b\\s*)",
 				"name": "keyword.vbi",
-				"comment": "IT-Funktionen"
+				"comment": "IT-Funktionen Misc Teil 1"
 			},
 			{
-				"match": "(?i:\\b(IOGetNode|InfoAppActive|InfoAppTitle|WWDosCommand|WWControl|FileCopy|LogMessage|EnableDisableKeys|GetNodeName|PwdUserGetIndex|PwdUserRead)\\b)",
+				"match": "(?i:\\s*\\b(AttemptInvisibleLogon|ChangePassword|ChangeWindowColor|CreateFilenameFromDate|DateTimeGMT|DialogStringEntry|DialogValueEntry|EnableDisableKeys|FilePrint|FileSelect|GetAccountStatus|GetDiscOffMsg|GetDiscOnMsg|GetNodeName|GetPropertyD|GetPropertyI|GetPropertyM|GetWindowName|Hide|HideSelf|HTGetLastError|HTGetPenName|HTGetTimeAtScooter|HTGetTimeStringAtScooter|HTGetValue|HTGetValueAtScooter|HTGetValueAtZone|HTScrollLeft|HTScrollRight|HTSelectTag|HTSetPenName|HTUpdateToCurrentTime|HTZoomIn|HTZoomOut|InfoAppStatus|InfoAppTitleExpand|InfoWinEnv|InTouchVersion|InvisibleVerifyCredentials|IODisableFailover|IOForceFailover|IOGetAccessNameStatus|IOGetActiveSourceName|IOGetApplication|IOGetNode|IOGetTopic|IOReinitAccessName|IOReinitialize|IOSetAccessName|IOSetItem|IOSetRemoteReferences|IOStartUninitConversations|IsAnyAsyncFunctionBusy|IsAssignedRole|ITXAppActivate|ITXCheckDate|ITXConvertDate|ITXConvertDateString|ITXConvertDateTime|ITXConvertDateTimeString)\\b\\s*)",
 				"name": "keyword.vbi",
-				"comment": "IT-Funktionen-2"
+				"comment": "IT-Funktionen Misc Teil 2"
 			},
 			{
-				"match": "(?i:\\b(InfoAppTitleExpand|InfoInTouchAppDir|WWContext|ShowTopLeftAt|show|hide|TseQueryRunningOnClient|IOSetAccessName|TseGetClientId)\\b)",
+				"match": "(?i:\\s*\\b(ITXCreateDate|ITXCreateDateTime|ITXCreateDateTimeUTC|ITXShowHelpByNumber|ITXShowHelpByString|LaunchTagViewer|LogMessage|Logoff|LogonCurrentUser|MessageBox|MoveWindow|NumberRecipes|OpenWindowsList|PlaySound|PostLogonDialog|PrintHT|PrintScreen|PrintWindow|ptGetTrendType|ptLoadTrendCfg|ptPanCurrentPen|ptPanTime|ptPauseTrend|ptRefreshTrend|ptSaveTrendCfg|ptSetCurrentPen|ptSetPen|ptSetPenEx|ptSetTimeAxis|ptSetTimeAxisToCurrent|ptSetTrend|ptSetTrendType|ptZoomCurrentPen|ptZoomTime|PwdUserAdd|PwdUserDelete|PwdUserEdit|PwdUserGetIndex|PwdUserRead|QueryGroupMembership|ReloadWindowViewer|RestartWindowViewer|SendKeys|SendMail|SendSMTPMail|SendSMTPMailwAttachment|SetPropertyD|SetPropertyI|SetPropertyM|SetTagEU|SetWindowPrinter|Show|ShowAt|ShowHome|ShowTopLeftAt|StringCompareEncrypted|SwitchDisplayLanguage|SysBeep|SystemIsNT|TagExists|TseGetClientId|TseGetClientNodeName|TseQueryRunningOnClient|TseQueryRunningOnConsole|UTCDateTime|wcAddItem|wcClear|wcDeleteItem|wcDeleteSelection|wcErrorMessage|wcFindItem|wcGetItem|wcGetItemData|wcInsertItem|wcLoadList|wcLoadText|wcSaveList|wcSaveText|wcSetItemData|WindowState|WWAlwaysOnTop|WWBeep32|WWCntx32|WWContext|WWControl|WWControlPanel|WWDosCommand|WWExecute|WWIsDayLightSaving|WWMoveWindow|WWMultiMonitorNode|WWPoke|WWPrimaryMonitorHeight|WWPrimaryMonitorWidth|WWRequest|WWStartApp|WWVirtualMonitorHeight|WWVirtualMonitorWidth)\\b\\s*)",
 				"name": "keyword.vbi",
-				"comment": "IT-Funktionen-3"
+				"comment": "IT-Funktionen Misc Teil 3"
+			},
+			{
+				"match": "(?i:\\s*\\b(Abs|ArcCos|ArcSin|ArcTan|Clip_cursor|ConvertTemp|Cos|Exp|GeoArea|GeoEqualSideArea|GeoVolume|GetCursorPosition|Hide_cursor|Int|Log|LogN|MetFromStdFluid|MetFromStdLinear|MetFromStdWeight|Pi|Restore_clip|Round|SetCursorPosition|Sgn|Show_cursor|Sin|Sqrt|StdFromMetFluid|StdFromMetLinear|StdFromMetWeight|Tan|Trunc)\\b\\s*)",
+				"name": "keyword.vbi",
+				"comment": "IT-Funktionen-Math"
+			},
+			{
+				"match": "(?i:\\s*\\b(ActivateApp|CreateFilenameFromDate|FileCopy|FileDelete|FileMove|FileReadFields|FileReadMessage|FileWriteFields|FileWriteMessage|GetDiscOffMsg|GetDiscOnMsg|InfoAppActive|InfoAppTitle|InfoDisk|InfoDosEnv|InfoFile|InfoInTouchAppDir|InfoResources|INIReadInteger|INIReadString|INIWriteInteger|INIWriteString|IORRGetItemActiveState|IORRGetSystemInfo|IORRWriteState|IsNodeAppRunning|ITXCreateDirectory|ITXCreateSubDirectory|ITXGetProfileInt|ITXGetProfileString|ITXPutProfileInt|ITXPutProfileString|ITXRemoveDirectory|ITXRemoveSubDirectory|ITXResizeApplication|ITXSetLocalTime|ITXSetSystemDate|ITXSetSystemTime|ITXStartAppInDirectory|ITXWindowCtrl|SetTagEU|StartApp|SysBeep|SystemIsNT|TagExists|WWBeep32|WWCntx32|WWGetServiceExeName|WWGetServiceName|WWGetServiceStatus|WWServiceControl|WWServiceControlError|WWShutDownWin95|WWShutDownWinNT40)\\b\\s*)",
+				"name": "keyword.vbi",
+				"comment": "IT-Funktionen-System"
 			},
 			
 			{
@@ -176,14 +181,15 @@
 			},
 			
 			{
-				"match": "(?i:\\s*\\b(StringToIntg|StringLen|StringMid|StringLeft|StringRight|StringTrim|INIReadString|Text|StringInString|StringReplace)\\b\\s*)",
+				"match": "(?i:\\s*\\b(DText|StringASCII|StringChar|StringCompare|StringCompareNoCase|StringFromGMTTimeToLocal|StringFromIntg|StringFromReal|StringFromTime|StringFromTimeLocal|StringInString|StringLeft|StringLen|StringLower|StringMid|StringReplace|StringRight|StringSpace|StringTest|StringToIntg|StringToReal|StringTrim|StringUpper|Text|wwStringFromTime)\\b\\s*)",
+
 				"name": "keyword.vbi",
 				"comment": "Intouch String Funktionen"
 			},
 			{
-				"match": "(?i:\\s*\\b(SQL|SQLNext|SQLNumRows|SQLInsertPrepare|SQLConnect|SQLGetRecord|SQLClearStatement|SQLInsertEnd|SQLDisconnect|SQLFirst|ConnectionString|Execute|GetRowNumber|GetRowColumnValue|Disconnect|clicknRow|GetItem|SQLString|SQLLoadStatement|SQLAppendStatement|SQLExecute|SQLSetStatement)\\b\\s*)",
+				"match": "(?i:\\s*\\b(RecipeDelete|RecipeGetMessage|RecipeLoad|RecipeSave|RecipeSelectNextRecipe|RecipeSelectPreviousRecipe|RecipeSelectRecipe|RecipeSelectUnit|SPCEXSetDataset|SPCEXSetEndDate|SPCEXSetEndTime|SPCEXSetOutputFile|SPCEXSetProduct|SPCEXSetStartDate|SPCEXSetStartTime|SQLAppendStatement|SQLClearParam|SQLClearStatement|SQLClearTable|SQLCommit|SQLConnect|SQLCreateTable|SQLDelete|SQLDisconnect|SQLDropTable|SQLEnd|SQLErrorMsg|SQLExecute|SQLFirst|SQLGetRecord|SQLInsert|SQLInsertEnd|SQLInsertExecute|SQLInsertPrepare|SQLLast|SQLLoadStatement|SQLManageDSN|SQLNext|SQLNumRows|SQLPrepareStatement|SQLPrev|SQLRollback|SQLSelect|SQLSetParamChar|SQLSetParamDate|SQLSetParamDateTime|SQLSetParamDecimal|SQLSetParamFloat|SQLSetParamInt|SQLSetParamLong|SQLSetParamNull|SQLSetParamTime|SQLSetStatement|SQLTransact|SQLUpdate|SQLUpdateCurrent)\\b\\s*)",
 				"name": "keyword.vbi.vbi",
-				"comment": "Intouch SQL Funktionen"
+				"comment": "Intouch AddOns Funktionen"
 			}
 		  ]
 		},
