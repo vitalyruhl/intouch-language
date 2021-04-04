@@ -71,6 +71,9 @@
       <img alt="" border="0" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
       </form>
     </td>
+    <td align="center" width="100%" border="0" >
+      <a href="https://www.patreon.com/bePatron?u=53385633" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
+    </td>
   </tr>
 </table>
 
