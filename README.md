@@ -50,7 +50,8 @@
 
 # Install:
 * copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
-
+* or install it from 
+[Visual Studio Marktplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
 
 
 
@@ -60,23 +61,30 @@
 </p>
 
 
-# Help
+---
+
+
+## Donate
+
 <table align="center" width="100%" border="0" bgcolor:=#3f3f3f>
-  <tr>
-    <td align="center" width="100%" border="0" >
-      <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-      <input type="hidden" name="cmd" value="_s-xclick" />
-      <input type="hidden" name="hosted_button_id" value="Q3XSPVFAPSKMJ" />
-      <input type="image" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Spenden mit dem PayPal-Button" />
-      <img alt="" border="0" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
-      </form>
-    </td>
-    <td align="center" width="100%" border="0" >
-      <a href="https://www.patreon.com/bePatron?u=53385633" data-patreon-widget-type="become-patron-button">Become a Patron!</a><script async src="https://c6.patreon.com/becomePatronButton.bundle.js"></script>
-    </td>
-  </tr>
+<tr align="center">
+<td align="center">  
+if you prefer a one-time donation
+
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/FamilieRuhl)
+</td>
+
+<td align="center">  
+Become a patron, by simply clicking on this button (**very appreciated!**):
+
+[![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/join/6555448/checkout?ru=undefined)
+
+</td>
+</tr>
 </table>
 
+
+---
 
 <p align="center">
   <br />
@@ -106,19 +114,11 @@
 <br /> <br /><a title="Intouch-Language bug3" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_4.jpg" alt="Intouch-Language bug3" width="80%" /></a>
 -->
 
------------------------------------------------------------------------------------------------------------
-<!--
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
--->
 **Enjoy!**
+
+- - -
+
+## Copyright
+`2021 (c)Vitaly Ruhl`
+
+License: GNU General Public License v3.0
