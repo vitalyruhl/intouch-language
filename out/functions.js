@@ -4,6 +4,12 @@ exports.log = exports.info = exports.getConfig = exports.format = exports.config
 const vscode = require("vscode");
 const vscode_1 = require("vscode");
 exports.config = {};
+// Inline Character Constants
+const TAB = "\t";
+const CRLF = "\r\n";
+const DQUOTE = '\"';
+const SQUOTE = "\'";
+const BACKSLASH = "\\";
 function format(editor, range) {
     let result = [];
     let formatted = '';
@@ -16,19 +22,21 @@ function format(editor, range) {
     exports.config = getConfig();
     // Remoove EmptyLines...
     let nEL = exports.config.allowedNumberOfEmptyLines + 1.0;
-    console.log("nEL", nEL);
-    let r = /(^[ \t]*$\r?\n){2,}/gm;
-    //let rEL = new RegExp(`(^[\t]*$\r?\n){${nEL},}`,'gm' );
-    //console.log("rEL",rEL);
-    console.log("rEL", r);
-    formatted = PerformRegex(document, range, r, "\r\n");
-    console.log("ManageLinebreakes", formatted);
+    let rEL = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+    formatted = PerformRegex(document, range, rEL, CRLF);
+    //console.log("ManageLinebreakes",formatted);
     if (formatted) {
-        //result.push(new vscode.TextEdit(range, formatted));
         activeEditor.edit((editor) => {
             return editor.replace(range, formatted);
         });
     }
+    //rEL =/(^|\s*)(if|while|for\s*(\W\s*\S.*|\s*$)/gm;
+    //formatted = PerformRegex(document, range,rEL,TAB);
+    //if (formatted) {
+    //	activeEditor.edit((editor) =>{
+    //		return editor.replace(range, formatted);
+    //	});
+    //}
 }
 exports.format = format;
 function PerformRegex(document, range, regex, replace) {
