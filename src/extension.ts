@@ -1,28 +1,28 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { commands, StatusBarAlignment, window, workspace  } from 'vscode';
+import { format } from './functions';
 
-//import { p_comment } from './regex'
 
 
 export function activate(context: vscode.ExtensionContext) {
-
+	
 	vscode.commands.registerCommand('vbi-format', () => {
         const {activeTextEditor} = vscode.window;
 
         if (activeTextEditor && activeTextEditor.document.languageId === 'intouch') {
             const {document} = activeTextEditor;
-            const firstLine = document.lineAt(0);
-		
-			const edit = new vscode.WorkspaceEdit();
-			edit.insert(document.uri, firstLine.range.start, '\n--> command\n');
-			return vscode.workspace.applyEdit(edit)
+
+			let start = new vscode.Position(0, 0);
+			let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
+
+			return format(activeTextEditor,new vscode.Range(start, end));
+
            
         }
     });
 	
-	// 👍 formatter implemented using API
+	
 	vscode.languages.registerDocumentFormattingEditProvider({scheme: 'file', language: 'intouch'}, {
 		provideDocumentFormattingEdits(document: vscode.TextDocument) {
 			const firstLine = document.lineAt(0);

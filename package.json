@@ -56,7 +56,7 @@
 		],
 		"snippets": [
 			{
-				"language": "vbi",
+				"language": "intouch",
 				"path": "./snippets/vbi.json"
 			}
 		],
@@ -78,13 +78,23 @@
 		"configuration": {
 			"type": "object",
 			"title": "Intouch-Language",
+
 			"properties": {
-				"formatter.debug": {
+				
+				"VBI.formatter.debug": {
 					"type": "boolean",
 					"default": false,
 					"description": "Enable debugmodus."
 				},
-                "formatter.allowedNumberOfEmptyLines": {
+
+		
+				"VBI.formatter.debugToChannel": {
+					"type": "boolean",
+					"default": true,
+					"description": "debug into Channel instead on Dev-tools-console."
+				},
+
+                "VBI.formatter.allowedNumberOfEmptyLines": {
 					"type": "number",
 					"default": 1,
 					"description": "Number of allowed consecutive empty lines."

@@ -2,19 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deactivate = exports.activate = void 0;
 const vscode = require("vscode");
-//import { p_comment } from './regex'
+const functions_1 = require("./functions");
 function activate(context) {
     vscode.commands.registerCommand('vbi-format', () => {
         const { activeTextEditor } = vscode.window;
         if (activeTextEditor && activeTextEditor.document.languageId === 'intouch') {
             const { document } = activeTextEditor;
-            const firstLine = document.lineAt(0);
-            const edit = new vscode.WorkspaceEdit();
-            edit.insert(document.uri, firstLine.range.start, '\n--> command\n');
-            return vscode.workspace.applyEdit(edit);
+            let start = new vscode.Position(0, 0);
+            let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
+            return (0, functions_1.format)(activeTextEditor, new vscode.Range(start, end));
         }
     });
-    // 👍 formatter implemented using API
     vscode.languages.registerDocumentFormattingEditProvider({ scheme: 'file', language: 'intouch' }, {
         provideDocumentFormattingEdits(document) {
             const firstLine = document.lineAt(0);
