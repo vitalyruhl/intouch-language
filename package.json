@@ -1,17 +1,21 @@
 {
 	"name": "intouch-language",
-	"displayName": "VSCode Intouch-Language",
-	"description": "Intouch-Basic language syntax highlighting support and code snippets for VSCode",
-	"version": "0.2.0",
+	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021 vitalyruhl",
+	"description": "Intouch-Language syntax highlighting, formatter and code snippets for VSCode",
+	"version": "0.3.0",
 	"icon": "images/logo.png",
-	"publisher": "vitaly-ruhl",
+	"publisher": "vitalyruhl",
 	"engines": {
-		"vscode": "^1.45.0"
+		"vscode": "^1.6.0"
 	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/vitalyruhl/intouch-language.git"
 	},
+	"bugs": {
+		"url": "https://github.com/vitalyruhl/intouch-language/issues"
+	  },
+	"license": "GNU",
 	"categories": [
 		"Programming Languages",
 		"Formatters",
@@ -21,8 +25,13 @@
 		"Intouch",
 		"Invensys",
 		"Wonderware",
+		"Aveva",
 		"formatter"
 	],
+	"main": "./out/extension",
+	"activationEvents": [
+        "onLanguage:intouch"
+    ],
 	"contributes": {
 		"languages": [
 			{
@@ -51,18 +60,61 @@
 				"path": "./snippets/vbi.json"
 			}
 		],
+		
+        "commands": [
+			{
+				"command": "vbi-format",
+				"title": "Format Intouchfile",
+				"category": "vbi"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "vbi-format",
+				"key": "Ctrl+Shift+Alt+I"
+			}
+		],
+
 		"configuration": {
 			"type": "object",
-			"title": "Intouch-Language Configuration",
+			"title": "Intouch-Language",
 			"properties": {
-				"it.debug": {
+				"formatter.debug": {
 					"type": "boolean",
 					"default": false,
 					"description": "Enable debugmodus."
+				},
+                "formatter.allowedNumberOfEmptyLines": {
+					"type": "number",
+					"default": 1,
+					"description": "Number of allowed consecutive empty lines."
 				}
 			}
 		}
 	},
+	"scripts": {
+		"vscode:prepublish": "rm -rf ./out; npm run compile",
+		"postinstall": "node ./node_modules/vscode/bin/install && tsc",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
+	},
+    "capabilities": {
+      "virtualWorkspaces": true,
+      "untrustedWorkspaces": {
+        "supported": "limited",
+        "description": "%ext.capabilities.untrustedWorkspaces.description%"
+      }
+    },
+    "devDependencies": {
+		"typescript": "",
+		"vscode": "",
+		"vscode-test": "",
+		"eslint": "",
+		"@types/node": "",
+		"@types/vscode": ""
+		
+	},	
 	"__metadata": {
 		"id": "834eb420-2978-4100-b7de-2430fc88e429",
 		"publisherDisplayName": "Vitaly Ruhl",

@@ -1,4 +1,4 @@
-#Grund
+#main
 *.vsix
 **/logs
 *.exe
@@ -7,20 +7,27 @@
 *.zip
 *.iso
 
-#Tracking
-codealike.json
+#formatter
+#.vscode/**
+typings/**
+out/test/**
+test/**
+#src/**
+**/*.map
 
 
-#Diverse
+#others
 Thumbs.db
 
 
-#Ordner
+#Folder
 temp
+node_modules
+.vscode-test
 .vscodeignore
 
 
-#INFOS:
+#INFO:
 #https://labs.consol.de/development/git/2017/02/22/gitignore.html
 
 
