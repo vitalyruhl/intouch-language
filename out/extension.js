@@ -10,18 +10,18 @@ function activate(context) {
             const { document } = activeTextEditor;
             let start = new vscode.Position(0, 0);
             let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
-            return (0, functions_1.format)(activeTextEditor, new vscode.Range(start, end));
+            let r = new vscode.Range(start, end);
+            return (0, functions_1.formatCmd)(activeTextEditor, r);
         }
     });
+    //https://vscode-docs.readthedocs.io/en/latest/extensionAPI/vscode-api/
     vscode.languages.registerDocumentFormattingEditProvider({ scheme: 'file', language: 'intouch' }, {
         provideDocumentFormattingEdits(document) {
-            const firstLine = document.lineAt(0);
-            return [vscode.TextEdit.insert(firstLine.range.start, '\n--> format\n')];
-            // let start = new vscode.Position(0, 0);
-            // let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
-            // return format(document, new vscode.Range(start, end), options)
-            //todo:add test for sel. Ranges
-            // return format(document,range, options)
+            const { activeTextEditor } = vscode.window;
+            let start = new vscode.Position(0, 0);
+            let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
+            let r = new vscode.Range(start, end);
+            return (0, functions_1.formatTE)(activeTextEditor, r);
         }
     });
 }

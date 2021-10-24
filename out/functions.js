@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.log = exports.info = exports.getConfig = exports.format = exports.config = void 0;
+exports.log = exports.info = exports.getConfig = exports.formatCmd = exports.formatTE = exports.config = void 0;
 const vscode = require("vscode");
 const vscode_1 = require("vscode");
 exports.config = {};
@@ -10,35 +10,63 @@ const CRLF = "\r\n";
 const DQUOTE = '\"';
 const SQUOTE = "\'";
 const BACKSLASH = "\\";
+function formatTE(editor, range) {
+    return [
+        vscode.TextEdit.replace(range, format(editor, range))
+    ];
+}
+exports.formatTE = formatTE;
+function formatCmd(editor, range) {
+    return format(editor, range);
+}
+exports.formatCmd = formatCmd;
 function format(editor, range) {
     let result = [];
     let formatted = '';
+    let content = '';
     let activeEditor = vscode_1.window.activeTextEditor;
+    let regex;
     if (!activeEditor) {
-        return;
+        return '';
     }
     let document = activeEditor.document;
     //first Step - get the config
     exports.config = getConfig();
     // Remoove EmptyLines...
     let nEL = exports.config.allowedNumberOfEmptyLines + 1.0;
-    let rEL = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
-    formatted = PerformRegex(document, range, rEL, CRLF);
-    //console.log("ManageLinebreakes",formatted);
+    if (exports.config.EmptyLinesAlsoInComment) {
+        regex = new RegExp(`(?![^{]*})(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+    }
+    else {
+        regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+    }
+    content = document.getText(range); //get actual document text...
+    formatted = content.replace(regex, CRLF);
+    //make all keywords Uppercase
+    content = formatted;
+    regex = /(?![^{]*})(\\b(NULL|EOF|AS|IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL|MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR|discrete|integer|real|message)\\b)/gmi;
+    formatted = toUpperRegEx(regex, content); /*24.10.2021/todo: not in Comment!!!*/
+    log("info", formatted);
+    //All Hermes-System-Variable
+    regex = /(\\b(SYS_|MA_|SMEL_|HER_)\\w*)/gmi;
+    formatted = toUpperRegEx(regex, content);
+    log("info", formatted);
+    //Spacing on 
+    //	regex = /(?![^{]*})([^\s][-|==|=|\+][^\s])/gmi;
+    //	content = formatted;
+    //	formatted = content.replace(regex, ' - ');
+    //	log("info",formatted);
+    //config.AllowInlineIFClause
+    // <> =
     if (formatted) {
         activeEditor.edit((editor) => {
             return editor.replace(range, formatted);
         });
     }
-    //rEL =/(^|\s*)(if|while|for\s*(\W\s*\S.*|\s*$)/gm;
-    //formatted = PerformRegex(document, range,rEL,TAB);
-    //if (formatted) {
-    //	activeEditor.edit((editor) =>{
-    //		return editor.replace(range, formatted);
-    //	});
-    //}
 }
-exports.format = format;
+function toUpperRegEx(regex, str) {
+    return str.replace(regex, c => c.toUpperCase());
+}
 function PerformRegex(document, range, regex, replace) {
     let content = document.getText(range); //get actual document text...
     return content.replace(regex, replace); //test format comments

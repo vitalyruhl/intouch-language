@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { workspace , window} from 'vscode';
+import { workspace, window } from 'vscode';
 
 
 
@@ -14,50 +14,89 @@ const SQUOTE = "\'";
 const BACKSLASH = "\\";
 
 
+export function formatTE(editor: vscode.TextEditor, range: vscode.Range): vscode.TextEdit[]{
+	return [
+		vscode.TextEdit.replace(range,format(editor, range)) 
+	];
+}
+
+export function formatCmd(editor: vscode.TextEditor, range: vscode.Range){
+	return	format(editor, range);
+}
 
 
-export function format(editor: vscode.TextEditor,  range: vscode.Range) {
+function format(editor: vscode.TextEditor, range: vscode.Range):string {
 	let result: vscode.TextEdit[] = [];
 	let formatted: string = '';
-
+	let content: string = '';
 	let activeEditor = window.activeTextEditor;
-	
+	let regex: RegExp;
+
 	if (!activeEditor) {
-		return;
+		return '';
 	}
-	
+
 	let document = activeEditor.document;
 
 	//first Step - get the config
 	config = getConfig();
 
-	
+
 
 	// Remoove EmptyLines...
-	let nEL:number = config.allowedNumberOfEmptyLines + 1.0;
-	let rEL = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`,'gm');
-	
-	formatted = PerformRegex(document, range,rEL,CRLF);
-	//console.log("ManageLinebreakes",formatted);
-	
-    if (formatted) {
-		activeEditor.edit((editor) =>{
-			return editor.replace(range, formatted);
-    	});
+	let nEL: number = config.allowedNumberOfEmptyLines + 1.0;
+
+	if (config.EmptyLinesAlsoInComment){
+		regex = new RegExp(`(?![^{]*})(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+	}
+	else { 
+		regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
 	}
 
-	//rEL =/(^|\s*)(if|while|for\s*(\W\s*\S.*|\s*$)/gm;
-	//formatted = PerformRegex(document, range,rEL,TAB);
-	//if (formatted) {
-	//	activeEditor.edit((editor) =>{
-	//		return editor.replace(range, formatted);
-    //	});
-	//}
+	content = document.getText(range); //get actual document text...
+	formatted = content.replace(regex, CRLF);
 
+
+	//make all keywords Uppercase
+	content = formatted;
+	regex = /(?![^{]*})(\\b(NULL|EOF|AS|IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL|MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR|discrete|integer|real|message)\\b)/gmi;
+	formatted = toUpperRegEx(regex, content);/*24.10.2021/todo: not in Comment!!!*/
+	log("info",formatted);
+
+	//All Hermes-System-Variable
+	regex = /(\\b(SYS_|MA_|SMEL_|HER_)\\w*)/gmi;
+	formatted = toUpperRegEx(regex, content);
+	log("info",formatted);
+	
+
+	//Spacing on 
+//	regex = /(?![^{]*})([^\s][-|==|=|\+][^\s])/gmi;
+//	content = formatted;
+//	formatted = content.replace(regex, ' - ');
+//	log("info",formatted);
+//config.AllowInlineIFClause
+
+
+// <> =
+
+
+
+
+
+
+	if (formatted) {
+		activeEditor.edit((editor) => {
+			return editor.replace(range, formatted);
+		});
+	}
 }
 
 
-function PerformRegex(document: vscode.TextDocument, range: vscode.Range, regex:RegExp ,replace:string) {
+function toUpperRegEx(regex: RegExp, str: string): string {
+	return str.replace(regex, c => c.toUpperCase());
+}
+
+function PerformRegex(document: vscode.TextDocument, range: vscode.Range, regex: RegExp, replace: string) {
 	let content = document.getText(range); //get actual document text...
 	return content.replace(regex, replace); //test format comments
 }

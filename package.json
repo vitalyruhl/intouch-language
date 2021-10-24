@@ -98,6 +98,18 @@
 					"type": "number",
 					"default": 1,
 					"description": "Number of allowed consecutive empty lines."
+				},
+				
+				"VBI.formatter.EmptyLinesAlsoInComment": {
+					"type": "boolean",
+					"default": false,
+					"description": "Delete empty lines in commen also."
+				},
+				
+				"VBI.formatter.AllowInlineIFClause": {
+					"type": "boolean",
+					"default": true,
+					"description": "Allow Inline IF-ENDIF - Clause."
 				}
 			}
 		}
