@@ -1,0 +1,97 @@
+
+
+{Formatting-Test}
+
+{
+Changelog:
+	V1.0.1		25.10.2021 		ViRu 	define Tests
+}	
+
+
+{------------------------------------------------------------------------------}
+{Line-Spacing-Test -> Global standart setting is 1 empty line}
+
+
+
+
+
+
+
+
+
+{End epty-line-test}
+{-------------------------------------------}
+
+
+{-------------------------------------------}
+{Variable definition:}{todo: Nesting on Comment-Block    -------}
+dim Funkt as message;
+dim Funkt as integer;
+dim Funkt as message;
+Funkt="QF_xSetDeverloper V1.0.0 - ";
+{-------------------------------------------}
+
+
+
+
+{------------------------------------------------------------------------------}
+{Test wrong Nesting and inline if-Then and Spacings on +/-/<> etc...}
+IF Sys_Debug_info > 0 THEN LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); ENDIF;
+	IF Sys_Debug_info >0 THEN LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung           + "]"); ENDIF;
+		IF Sys_Debug_info>0 THEN LogMessage(Funkt+"Bezeichnung:["+sFUBezeichnung           + "]"); ENDIF;
+{Formating-Test comment:
+	if that if is Big after Formatting, Then the code is wrong...
+	IF Sys_Debug_info > 0 THEN LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); ENDIF;
+	IF Sys_Debug_info > 0 THEN LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung           + "]"); ENDIF;
+{------------------------------------------------------------------------------}
+
+
+{------------------------------------------------------------------------------}
+{Test Spacings on +/-/<>/=/==/; }
+c=a+b +d - e+ f;{folowing comment not formated! -> c=a+b +d - e+ f;}
+If Sys_PCName==SYS_STATION01BiosName THEN  sys_station=sys_PCName;ENDIF; 
+If Sys_PCName ==SYS_STATION01BiosName THEN  sys_station =sys_PCName;ENDIF; 
+If Sys_PCName== SYS_STATION01BiosName THEN  sys_station= sys_PCName;ENDIF; 
+If Sys_PCName == SYS_STATION01BiosName THEN  sys_station = sys_PCName;ENDIF; 
+{------------------------------------------------------------------------------}
+
+
+{------------------------------------------------------------------------------}
+{If-Then Nesting-Test}
+IF Sys_PCName <> SYS_STATION01BiosName THEN 
+IF SYS_PCName <>SYS_STATION02BiosName THEN 
+IF SYS_PCName<> SYS_STATION03BiosName THEN 
+IF SYS_PCName<>Sys_STATION04BiosName THEN 
+IF SYS_PCName <>Sys_STATION05BiosName THEN 
+IF SYS_PCName<> Sys_STATION06BiosName THEN 
+IF SYS_PCName<>Sys_STATION07BiosName THEN 
+IF SYS_PCName<>Sys_STATION08BiosName THEN 
+IF SYS_PCName<>Sys_STATION09BiosName THEN 
+IF SYS_STATION01Online THEN
+SYS_STATION09BiosName = SYS_PCName;
+STATION1:SYS_STATION09Online = 1;
+ELSE
+SYS_STATION01BiosName = SYS_PCName;
+ENDIF;
+ENDIF;  
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+{------------------------------------------------------------------------------}
+
+
+
+{------------------------------------------------------------------------------}
+{if-Then schal in one line - test}
+	if 	
+	Sys_Debug_info >0 
+	then 
+	LogMessage(Funkt + "Erste-MA:["   + Text(iErsteMA,"#") + "]"); 
+	ENDIF;
+{------------------------------------------------------------------------------}
+
