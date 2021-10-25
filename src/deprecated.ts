@@ -35,3 +35,9 @@ function deleteEmptyLines(range: vscode.Range, edit: vscode.TextEditorEdit, docu
 	//return deletedLinesCounter;
 }
 
+
+function PerformRegex(document: vscode.TextDocument, range: vscode.Range, regex: RegExp, replace: string) {
+	let content = document.getText(range); //get actual document text...
+	return content.replace(regex, replace); //test format comments
+}
+

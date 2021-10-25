@@ -24,4 +24,8 @@ function deleteEmptyLines(range, edit, document) {
     (0, functions_1.log)("info", "deletedLinesCounter:", deletedLinesCounter);
     //return deletedLinesCounter;
 }
+function PerformRegex(document, range, regex, replace) {
+    let content = document.getText(range); //get actual document text...
+    return content.replace(regex, replace); //test format comments
+}
 //# sourceMappingURL=deprecated.js.map

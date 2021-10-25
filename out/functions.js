@@ -4,12 +4,6 @@ exports.log = exports.info = exports.getConfig = exports.formatCmd = exports.for
 const vscode = require("vscode");
 const vscode_1 = require("vscode");
 exports.config = {};
-// Inline Character Constants
-const TAB = "\t";
-const CRLF = "\r\n";
-const DQUOTE = '\"';
-const SQUOTE = "\'";
-const BACKSLASH = "\\";
 function formatTE(editor, range) {
     return [
         vscode.TextEdit.replace(range, format(editor, range))
@@ -23,7 +17,6 @@ exports.formatCmd = formatCmd;
 function format(editor, range) {
     let result = [];
     let formatted = '';
-    let content = '';
     let activeEditor = vscode_1.window.activeTextEditor;
     let regex;
     if (!activeEditor) {
@@ -32,6 +25,8 @@ function format(editor, range) {
     let document = activeEditor.document;
     //first Step - get the config
     exports.config = getConfig();
+    formatted = document.getText(range); //get actual document text...
+    //--------------------------------------------------------------------------------//
     // Remoove EmptyLines...
     let nEL = exports.config.allowedNumberOfEmptyLines + 1.0;
     if (exports.config.EmptyLinesAlsoInComment) {
@@ -40,21 +35,27 @@ function format(editor, range) {
     else {
         regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
     }
-    content = document.getText(range); //get actual document text...
-    formatted = content.replace(regex, CRLF);
+    //todo uncomment on readdy: formatted = formatted.replace(regex, ff.CRLF);
+    //--------------------------------------------------------------------------------//
     //make all keywords Uppercase
-    content = formatted;
-    regex = /(?![^{]*})(\\b(NULL|EOF|AS|IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL|MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR|discrete|integer|real|message)\\b)/gmi;
-    formatted = toUpperRegEx(regex, content); /*24.10.2021/todo: not in Comment!!!*/
-    log("info", formatted);
+    // (?!("|{)[\s\S]*?(}|"))
+    // (\b(if|eof|discrete|integer|real|message)\b)
+    // (["'])(?:(?=(\\?))\2.)*?\1
+    // (?!([^{]*[}])([^"]*["]))(\b(as|eof|if|endif|then|dim)\b)
+    // (?<!(\0|\t|\n|\r))([^"](?![^{]*?["]})(\b(as|eof|if|endif|then|dim)\b))
+    regex = /(?![^{]*})(\b(NULL|EOF|AS|IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL|MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR|discrete|integer|real|message)\b)/gmi;
+    // formatted = toUpperRegEx(regex, formatted);/*24.10.2021/todo: not in Comment!!!*/
+    formatted = formatted.replace(regex, c => c.toUpperCase());
+    //log("info", formatted);
+    //--------------------------------------------------------------------------------//
     //All Hermes-System-Variable
-    regex = /(\\b(SYS_|MA_|SMEL_|HER_)\\w*)/gmi;
-    formatted = toUpperRegEx(regex, content);
+    regex = /\b(sys_|ma_|smel_|her_)/gmi;
+    formatted = toUpperRegEx(regex, formatted);
     log("info", formatted);
+    //--------------------------------------------------------------------------------//
     //Spacing on 
-    //	regex = /(?![^{]*})([^\s][-|==|=|\+][^\s])/gmi;
-    //	content = formatted;
-    //	formatted = content.replace(regex, ' - ');
+    let arr = ['-', '==', '=', '+', '-', '<', '>', '<>'];
+    formatted = formatSpaceBeforeAfter(arr, formatted);
     //	log("info",formatted);
     //config.AllowInlineIFClause
     // <> =
@@ -64,12 +65,17 @@ function format(editor, range) {
         });
     }
 }
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+function formatSpaceBeforeAfter(arr, str) {
+    arr.map(a => {
+        let regex = new RegExp(`(?![^{]*})(^[\\s]${a})`, 'gm');
+        return str.replace(regex, c => c.toUpperCase());
+    });
+    return str;
+}
 function toUpperRegEx(regex, str) {
     return str.replace(regex, c => c.toUpperCase());
-}
-function PerformRegex(document, range, regex, replace) {
-    let content = document.getText(range); //get actual document text...
-    return content.replace(regex, replace); //test format comments
 }
 function getConfig() {
     //debug
@@ -80,6 +86,10 @@ function getConfig() {
     if (exports.config.allowedNumberOfEmptyLines < 0 || exports.config.allowedNumberOfEmptyLines > 50) {
         exports.config.allowedNumberOfEmptyLines = 1;
     }
+    //misk
+    exports.config.EmptyLinesAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.EmptyLinesAlsoInComment');
+    exports.config.AllowInlineIFClause = vscode_1.workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
+    //log this
     console.log('getConfig():', exports.config);
     return exports.config;
 }

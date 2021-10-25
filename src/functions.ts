@@ -1,34 +1,23 @@
 import * as vscode from 'vscode';
 import { workspace, window } from 'vscode';
-
-
+import * as ff from './formats';
 
 export let config: any = {};
 
-
-// Inline Character Constants
-const TAB = "\t";
-const CRLF = "\r\n";
-const DQUOTE = '\"';
-const SQUOTE = "\'";
-const BACKSLASH = "\\";
-
-
-export function formatTE(editor: vscode.TextEditor, range: vscode.Range): vscode.TextEdit[]{
+export function formatTE(editor: vscode.TextEditor, range: vscode.Range): vscode.TextEdit[] {
 	return [
-		vscode.TextEdit.replace(range,format(editor, range)) 
+		vscode.TextEdit.replace(range, format(editor, range))
 	];
 }
 
-export function formatCmd(editor: vscode.TextEditor, range: vscode.Range){
-	return	format(editor, range);
+export function formatCmd(editor: vscode.TextEditor, range: vscode.Range) {
+	return format(editor, range);
 }
 
 
-function format(editor: vscode.TextEditor, range: vscode.Range):string {
+function format(editor: vscode.TextEditor, range: vscode.Range): string {
 	let result: vscode.TextEdit[] = [];
 	let formatted: string = '';
-	let content: string = '';
 	let activeEditor = window.activeTextEditor;
 	let regex: RegExp;
 
@@ -40,44 +29,50 @@ function format(editor: vscode.TextEditor, range: vscode.Range):string {
 
 	//first Step - get the config
 	config = getConfig();
+	formatted = document.getText(range); //get actual document text...
 
-
-
+	//--------------------------------------------------------------------------------//
 	// Remoove EmptyLines...
 	let nEL: number = config.allowedNumberOfEmptyLines + 1.0;
 
-	if (config.EmptyLinesAlsoInComment){
+	if (config.EmptyLinesAlsoInComment) {
 		regex = new RegExp(`(?![^{]*})(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
 	}
-	else { 
+	else {
 		regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
 	}
+	//todo uncomment on readdy: formatted = formatted.replace(regex, ff.CRLF);
 
-	content = document.getText(range); //get actual document text...
-	formatted = content.replace(regex, CRLF);
-
-
+	//--------------------------------------------------------------------------------//
 	//make all keywords Uppercase
-	content = formatted;
-	regex = /(?![^{]*})(\\b(NULL|EOF|AS|IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL|MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR|discrete|integer|real|message)\\b)/gmi;
-	formatted = toUpperRegEx(regex, content);/*24.10.2021/todo: not in Comment!!!*/
-	log("info",formatted);
+	// (?!("|{)[\s\S]*?(}|"))
+	// (\b(if|eof|discrete|integer|real|message)\b)
+	// (["'])(?:(?=(\\?))\2.)*?\1
+	// (?!([^{]*[}])([^"]*["]))(\b(as|eof|if|endif|then|dim)\b)
+	// (?<!(\0|\t|\n|\r))([^"](?![^{]*?["]})(\b(as|eof|if|endif|then|dim)\b))
 
+	regex = /(?![^{]*})(\b(NULL|EOF|AS|IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL|MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR|discrete|integer|real|message)\b)/gmi;
+	// formatted = toUpperRegEx(regex, formatted);/*24.10.2021/todo: not in Comment!!!*/
+	formatted = formatted.replace(regex, c => c.toUpperCase());
+	//log("info", formatted);
+
+
+	//--------------------------------------------------------------------------------//
 	//All Hermes-System-Variable
-	regex = /(\\b(SYS_|MA_|SMEL_|HER_)\\w*)/gmi;
-	formatted = toUpperRegEx(regex, content);
-	log("info",formatted);
-	
+	regex = /\b(sys_|ma_|smel_|her_)/gmi;
+	formatted = toUpperRegEx(regex, formatted);
+	log("info", formatted); 
 
+
+	//--------------------------------------------------------------------------------//
 	//Spacing on 
-//	regex = /(?![^{]*})([^\s][-|==|=|\+][^\s])/gmi;
-//	content = formatted;
-//	formatted = content.replace(regex, ' - ');
-//	log("info",formatted);
-//config.AllowInlineIFClause
+	let arr : string[] = ['-','==','=','+','-','<','>','<>'];
+	formatted = formatSpaceBeforeAfter(arr,formatted);
+	//	log("info",formatted);
+	//config.AllowInlineIFClause
 
 
-// <> =
+	// <> =
 
 
 
@@ -92,34 +87,43 @@ function format(editor: vscode.TextEditor, range: vscode.Range):string {
 }
 
 
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+
+function formatSpaceBeforeAfter(arr: string[],str: string): string {
+
+	arr.map( a => {
+		let regex = new RegExp(`(?![^{]*})(^[\\s]${a})`, 'gm');
+		return str.replace(regex, c => c.toUpperCase())
+	});
+ return str;
+}
+
 function toUpperRegEx(regex: RegExp, str: string): string {
 	return str.replace(regex, c => c.toUpperCase());
 }
 
-function PerformRegex(document: vscode.TextDocument, range: vscode.Range, regex: RegExp, replace: string) {
-	let content = document.getText(range); //get actual document text...
-	return content.replace(regex, replace); //test format comments
-}
-
-
 export function getConfig() {
-
+	
 	//debug
 	config.debug = workspace.getConfiguration().get('VBI.formatter.debug');
 	config.debugToChannel = workspace.getConfiguration().get('VBI.formatter.debugToChannel');
-
+	
 	//Leve emty Lines
 	config.allowedNumberOfEmptyLines = workspace.getConfiguration().get('VBI.formatter.allowedNumberOfEmptyLines');
 	if (config.allowedNumberOfEmptyLines < 0 || config.allowedNumberOfEmptyLines > 50) {
 		config.allowedNumberOfEmptyLines = 1;
 	}
-
+	
+	//misk
+	config.EmptyLinesAlsoInComment = workspace.getConfiguration().get('VBI.formatter.EmptyLinesAlsoInComment');
+	config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
+	
+	//log this
 	console.log('getConfig():', config);
 	return config;
 }
-
-
-
 
 /**
  * @param cat Type String --> define Cathegory [info,warn,error]
