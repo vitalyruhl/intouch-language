@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.log = exports.info = exports.getConfig = exports.formatCmd = exports.formatTE = exports.config = void 0;
 const vscode = require("vscode");
 const vscode_1 = require("vscode");
+const formats_1 = require("./formats");
 exports.config = {};
 function formatTE(editor, range) {
     return [
@@ -36,29 +37,7 @@ function format(editor, range) {
         regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
     }
     //todo uncomment on readdy: formatted = formatted.replace(regex, ff.CRLF);
-    //--------------------------------------------------------------------------------//
-    //make all keywords Uppercase
-    // (?!("|{)[\s\S]*?(}|"))
-    // (\b(if|eof|discrete|integer|real|message)\b)
-    // (["'])(?:(?=(\\?))\2.)*?\1
-    // (?!([^{]*[}])([^"]*["]))(\b(as|eof|if|endif|then|dim)\b)
-    // (?<!(\0|\t|\n|\r))([^"](?![^{]*?["]})(\b(as|eof|if|endif|then|dim)\b))
-    regex = /(?![^{]*})(\b(NULL|EOF|AS|IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL|MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR|discrete|integer|real|message)\b)/gmi;
-    // formatted = toUpperRegEx(regex, formatted);/*24.10.2021/todo: not in Comment!!!*/
-    formatted = formatted.replace(regex, c => c.toUpperCase());
-    //log("info", formatted);
-    //--------------------------------------------------------------------------------//
-    //All Hermes-System-Variable
-    regex = /\b(sys_|ma_|smel_|her_)/gmi;
-    formatted = toUpperRegEx(regex, formatted);
-    log("info", formatted);
-    //--------------------------------------------------------------------------------//
-    //Spacing on 
-    let arr = ['-', '==', '=', '+', '-', '<', '>', '<>'];
-    formatted = formatSpaceBeforeAfter(arr, formatted);
-    //	log("info",formatted);
-    //config.AllowInlineIFClause
-    // <> =
+    formatted = (0, formats_1.forFormat)(formatted); //Format document
     if (formatted) {
         activeEditor.edit((editor) => {
             return editor.replace(range, formatted);
@@ -67,16 +46,6 @@ function format(editor, range) {
 }
 //----------------------------------------------------------------
 //----------------------------------------------------------------
-function formatSpaceBeforeAfter(arr, str) {
-    arr.map(a => {
-        let regex = new RegExp(`(?![^{]*})(^[\\s]${a})`, 'gm');
-        return str.replace(regex, c => c.toUpperCase());
-    });
-    return str;
-}
-function toUpperRegEx(regex, str) {
-    return str.replace(regex, c => c.toUpperCase());
-}
 function getConfig() {
     //debug
     exports.config.debug = vscode_1.workspace.getConfiguration().get('VBI.formatter.debug');

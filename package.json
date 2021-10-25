@@ -14,7 +14,7 @@
 	},
 	"bugs": {
 		"url": "https://github.com/vitalyruhl/intouch-language/issues"
-	  },
+	},
 	"license": "GNU",
 	"categories": [
 		"Programming Languages",
@@ -30,8 +30,8 @@
 	],
 	"main": "./out/extension",
 	"activationEvents": [
-        "onLanguage:intouch"
-    ],
+		"onLanguage:intouch"
+	],
 	"contributes": {
 		"languages": [
 			{
@@ -60,8 +60,7 @@
 				"path": "./snippets/vbi.json"
 			}
 		],
-		
-        "commands": [
+		"commands": [
 			{
 				"command": "vbi-format",
 				"title": "Format Intouchfile",
@@ -74,38 +73,30 @@
 				"key": "Ctrl+Shift+Alt+I"
 			}
 		],
-
 		"configuration": {
 			"type": "object",
 			"title": "Intouch-Language",
-
 			"properties": {
-				
 				"VBI.formatter.debug": {
 					"type": "boolean",
 					"default": false,
 					"description": "Enable debugmodus."
 				},
-
-		
 				"VBI.formatter.debugToChannel": {
 					"type": "boolean",
 					"default": true,
 					"description": "debug into Channel instead on Dev-tools-console."
 				},
-
-                "VBI.formatter.allowedNumberOfEmptyLines": {
+				"VBI.formatter.allowedNumberOfEmptyLines": {
 					"type": "number",
 					"default": 1,
 					"description": "Number of allowed consecutive empty lines."
 				},
-				
 				"VBI.formatter.EmptyLinesAlsoInComment": {
 					"type": "boolean",
 					"default": false,
 					"description": "Delete empty lines in commen also."
 				},
-				
 				"VBI.formatter.AllowInlineIFClause": {
 					"type": "boolean",
 					"default": true,
@@ -121,22 +112,21 @@
 		"watch": "tsc -watch -p ./",
 		"test": "npm run compile && node ./node_modules/vscode/bin/test"
 	},
-    "capabilities": {
-      "virtualWorkspaces": true,
-      "untrustedWorkspaces": {
-        "supported": "limited",
-        "description": "%ext.capabilities.untrustedWorkspaces.description%"
-      }
-    },
-    "devDependencies": {
-		"typescript": "",
-		"vscode": "",
-		"vscode-test": "",
-		"eslint": "",
+	"capabilities": {
+		"virtualWorkspaces": true,
+		"untrustedWorkspaces": {
+			"supported": "limited",
+			"description": "%ext.capabilities.untrustedWorkspaces.description%"
+		}
+	},
+	"devDependencies": {
 		"@types/node": "",
-		"@types/vscode": ""
-		
-	},	
+		"@types/vscode": "",
+		"eslint": "",
+		"typescript": "",
+		"vscode": "^1.1.37",
+		"vscode-test": ""
+	},
 	"__metadata": {
 		"id": "834eb420-2978-4100-b7de-2430fc88e429",
 		"publisherDisplayName": "Vitaly Ruhl",

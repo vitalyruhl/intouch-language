@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { workspace, window } from 'vscode';
-import * as ff from './formats';
+import { forFormat } from './formats';
 
 export let config: any = {};
 
@@ -42,42 +42,8 @@ function format(editor: vscode.TextEditor, range: vscode.Range): string {
 		regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
 	}
 	//todo uncomment on readdy: formatted = formatted.replace(regex, ff.CRLF);
-
-	//--------------------------------------------------------------------------------//
-	//make all keywords Uppercase
-	// (?!("|{)[\s\S]*?(}|"))
-	// (\b(if|eof|discrete|integer|real|message)\b)
-	// (["'])(?:(?=(\\?))\2.)*?\1
-	// (?!([^{]*[}])([^"]*["]))(\b(as|eof|if|endif|then|dim)\b)
-	// (?<!(\0|\t|\n|\r))([^"](?![^{]*?["]})(\b(as|eof|if|endif|then|dim)\b))
-
-	regex = /(?![^{]*})(\b(NULL|EOF|AS|IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL|MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR|discrete|integer|real|message)\b)/gmi;
-	// formatted = toUpperRegEx(regex, formatted);/*24.10.2021/todo: not in Comment!!!*/
-	formatted = formatted.replace(regex, c => c.toUpperCase());
-	//log("info", formatted);
-
-
-	//--------------------------------------------------------------------------------//
-	//All Hermes-System-Variable
-	regex = /\b(sys_|ma_|smel_|her_)/gmi;
-	formatted = toUpperRegEx(regex, formatted);
-	log("info", formatted); 
-
-
-	//--------------------------------------------------------------------------------//
-	//Spacing on 
-	let arr : string[] = ['-','==','=','+','-','<','>','<>'];
-	formatted = formatSpaceBeforeAfter(arr,formatted);
-	//	log("info",formatted);
-	//config.AllowInlineIFClause
-
-
-	// <> =
-
-
-
-
-
+	
+	formatted = forFormat(formatted); //Format document
 
 	if (formatted) {
 		activeEditor.edit((editor) => {
@@ -90,19 +56,6 @@ function format(editor: vscode.TextEditor, range: vscode.Range): string {
 
 //----------------------------------------------------------------
 //----------------------------------------------------------------
-
-function formatSpaceBeforeAfter(arr: string[],str: string): string {
-
-	arr.map( a => {
-		let regex = new RegExp(`(?![^{]*})(^[\\s]${a})`, 'gm');
-		return str.replace(regex, c => c.toUpperCase())
-	});
- return str;
-}
-
-function toUpperRegEx(regex: RegExp, str: string): string {
-	return str.replace(regex, c => c.toUpperCase());
-}
 
 export function getConfig() {
 	
