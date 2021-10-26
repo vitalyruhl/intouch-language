@@ -110,7 +110,7 @@ function forFormat(text, config) {
                                     wba = text[i + k + 1];
                                 }
                                 if (tt === exports.OPERATORS[j]) { //Prespace  // && txt[i - 1] !== ' '
-                                    tt = ' ' + exports.OPERATORS[j] + ' '; // + wba;
+                                    tt = '' + exports.OPERATORS[j] + ''; // + wba;
                                     buf += tt;
                                     modified = exports.OPERATORS[j].length - 1;
                                     console.log('Operator:[', tt, ']modified:', modified);

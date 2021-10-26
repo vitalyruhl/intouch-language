@@ -136,7 +136,7 @@ export function forFormat(text: string, config: any): string {
                                 }
 
                                 if (tt === OPERATORS[j]) {//Prespace  // && txt[i - 1] !== ' '
-                                    tt = ' ' + OPERATORS[j] + ' ';// + wba;
+                                    tt = '' + OPERATORS[j] + '';// + wba;
                                     buf += tt;
                                     modified = OPERATORS[j].length -1 ;
                                     console.log('Operator:[',tt,']modified:',modified);
