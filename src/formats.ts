@@ -97,7 +97,6 @@ export function forFormat(text: string, config: any): string {
                     }
                 }
 
-
                 if (!(modified > 0) && (!inComment || config.KeywordUppercaseAlsoInComment)) {
                     let j: any;
 
@@ -179,8 +178,6 @@ export function forFormat(text: string, config: any): string {
                     }
                 }
 
-
-
             }//formatin session
 
             if (modified === 0) {//insert only when on this session not modified!
@@ -191,17 +188,6 @@ export function forFormat(text: string, config: any): string {
 
     }//for
     //console.log(buf);
-
-
-
-
-
-
-
-
-
-
-
 
     return buf;
 }//function

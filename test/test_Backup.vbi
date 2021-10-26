@@ -60,9 +60,9 @@ if sys_pcname<> sys_STATION03BiosName then
 if sys_pcname<>sys_STATION04BiosName then 
 if sys_pcname <>sys_STATION05BiosName then 
 if sys_pcname<> sys_STATION06BiosName then 
-if sys_pcname<>sys_STATION07BiosName then 
-if sys_pcname<>sys_STATION08BiosName then 
-if sys_pcname<>sys_STATION09BiosName then 
+if sys_pcname<= sys_STATION07BiosName then 
+if sys_pcname=>sys_STATION08BiosName then 
+if sys_pcname =>sys_STATION09BiosName then 
 if sys_STATION01Online then
 sys_STATION09BiosName = sys_pcname;
 STATION1:sys_STATION09Online = 1;
