@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { workspace, window } from 'vscode';
-import { forFormat } from './formats';
+import { forFormat, CRLF } from './formats';
 
 export let config: any = {};
 
@@ -31,6 +31,9 @@ function format(editor: vscode.TextEditor, range: vscode.Range): string {
 	config = getConfig();
 	formatted = document.getText(range); //get actual document text...
 
+	formatted = forFormat(formatted, config); //Format document
+
+
 	//--------------------------------------------------------------------------------//
 	// Remoove EmptyLines...
 	let nEL: number = config.allowedNumberOfEmptyLines + 1.0;
@@ -41,9 +44,10 @@ function format(editor: vscode.TextEditor, range: vscode.Range): string {
 	else {
 		regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
 	}
-	//todo uncomment on readdy: formatted = formatted.replace(regex, ff.CRLF);
-	
-	formatted = forFormat(formatted); //Format document
+	if (config.RemoveEmptyLines){
+		formatted = formatted.replace(regex, CRLF);
+	} 
+
 
 	if (formatted) {
 		activeEditor.edit((editor) => {
@@ -58,21 +62,23 @@ function format(editor: vscode.TextEditor, range: vscode.Range): string {
 //----------------------------------------------------------------
 
 export function getConfig() {
-	
+
 	//debug
 	config.debug = workspace.getConfiguration().get('VBI.formatter.debug');
 	config.debugToChannel = workspace.getConfiguration().get('VBI.formatter.debugToChannel');
-	
+
 	//Leve emty Lines
 	config.allowedNumberOfEmptyLines = workspace.getConfiguration().get('VBI.formatter.allowedNumberOfEmptyLines');
 	if (config.allowedNumberOfEmptyLines < 0 || config.allowedNumberOfEmptyLines > 50) {
 		config.allowedNumberOfEmptyLines = 1;
 	}
-	
+
 	//misk
+	config.RemoveEmptyLines = workspace.getConfiguration().get('VBI.formatter.RemoveEmptyLines');
 	config.EmptyLinesAlsoInComment = workspace.getConfiguration().get('VBI.formatter.EmptyLinesAlsoInComment');
+	config.KeywordUppercaseAlsoInComment = workspace.getConfiguration().get('VBI.formatter.KeywordUppercaseAlsoInComment');
 	config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
-	
+
 	//log this
 	console.log('getConfig():', config);
 	return config;
@@ -107,30 +113,27 @@ export function log(cat: string, ...o: any) {
 
 	if (config.debug) {
 		if (config.debugToChannel) {
-
-
-
 			switch (cat.toLowerCase()) {
 				case 'info':
 
-					info.appendLine('INFO:');
+					//info.appendLine('INFO:');
 					o.map((args: any) => {
-						info.appendLine('' + mapObject(args));
+						info.appendLine('INFO:' + mapObject(args));
 					});
 					info.show();
 					return;
 
 				case 'warn':
-					info.appendLine('WARN:');
+					//info.appendLine('WARN:');
 					o.map((args: any) => {
-						info.appendLine('' + mapObject(args));
+						info.appendLine('WARN:' + mapObject(args));
 					});
 					info.show();
 					return;
 
 				case 'error':
 					let err: string = '';
-					info.appendLine('ERROR: ');
+					//info.appendLine('ERROR: ');
 					//err += mapObject(cat) + ": \r\n";
 					o.map((args: any) => {
 						err += mapObject(args);
@@ -142,10 +145,10 @@ export function log(cat: string, ...o: any) {
 
 				default:
 
-					info.appendLine('INFO-Other:');
-					info.appendLine(mapObject(cat));
+					//info.appendLine('INFO-Other:');
+					//info.appendLine('INFO-Other:' + mapObject(cat));
 					o.map((args: any) => {
-						info.appendLine('' + mapObject(args));
+						info.appendLine('INFO-Other:' + mapObject(args));
 					});
 					info.show();
 					return;

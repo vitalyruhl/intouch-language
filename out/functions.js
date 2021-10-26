@@ -27,6 +27,7 @@ function format(editor, range) {
     //first Step - get the config
     exports.config = getConfig();
     formatted = document.getText(range); //get actual document text...
+    formatted = (0, formats_1.forFormat)(formatted, exports.config); //Format document
     //--------------------------------------------------------------------------------//
     // Remoove EmptyLines...
     let nEL = exports.config.allowedNumberOfEmptyLines + 1.0;
@@ -36,8 +37,9 @@ function format(editor, range) {
     else {
         regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
     }
-    //todo uncomment on readdy: formatted = formatted.replace(regex, ff.CRLF);
-    formatted = (0, formats_1.forFormat)(formatted); //Format document
+    if (exports.config.RemoveEmptyLines) {
+        formatted = formatted.replace(regex, formats_1.CRLF);
+    }
     if (formatted) {
         activeEditor.edit((editor) => {
             return editor.replace(range, formatted);
@@ -56,7 +58,9 @@ function getConfig() {
         exports.config.allowedNumberOfEmptyLines = 1;
     }
     //misk
+    exports.config.RemoveEmptyLines = vscode_1.workspace.getConfiguration().get('VBI.formatter.RemoveEmptyLines');
     exports.config.EmptyLinesAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.EmptyLinesAlsoInComment');
+    exports.config.KeywordUppercaseAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.KeywordUppercaseAlsoInComment');
     exports.config.AllowInlineIFClause = vscode_1.workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
     //log this
     console.log('getConfig():', exports.config);
@@ -87,22 +91,22 @@ function log(cat, ...o) {
         if (exports.config.debugToChannel) {
             switch (cat.toLowerCase()) {
                 case 'info':
-                    exports.info.appendLine('INFO:');
+                    //info.appendLine('INFO:');
                     o.map((args) => {
-                        exports.info.appendLine('' + mapObject(args));
+                        exports.info.appendLine('INFO:' + mapObject(args));
                     });
                     exports.info.show();
                     return;
                 case 'warn':
-                    exports.info.appendLine('WARN:');
+                    //info.appendLine('WARN:');
                     o.map((args) => {
-                        exports.info.appendLine('' + mapObject(args));
+                        exports.info.appendLine('WARN:' + mapObject(args));
                     });
                     exports.info.show();
                     return;
                 case 'error':
                     let err = '';
-                    exports.info.appendLine('ERROR: ');
+                    //info.appendLine('ERROR: ');
                     //err += mapObject(cat) + ": \r\n";
                     o.map((args) => {
                         err += mapObject(args);
@@ -112,10 +116,10 @@ function log(cat, ...o) {
                     exports.info.show();
                     return;
                 default:
-                    exports.info.appendLine('INFO-Other:');
-                    exports.info.appendLine(mapObject(cat));
+                    //info.appendLine('INFO-Other:');
+                    //info.appendLine('INFO-Other:' + mapObject(cat));
                     o.map((args) => {
-                        exports.info.appendLine('' + mapObject(args));
+                        exports.info.appendLine('INFO-Other:' + mapObject(args));
                     });
                     exports.info.show();
                     return;

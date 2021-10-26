@@ -79,7 +79,7 @@
 			"properties": {
 				"VBI.formatter.debug": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Enable debugmodus."
 				},
 				"VBI.formatter.debugToChannel": {
@@ -92,10 +92,21 @@
 					"default": 1,
 					"description": "Number of allowed consecutive empty lines."
 				},
+				"VBI.formatter.RemoveEmptyLines": {
+					"type": "boolean",
+					"default": false,
+					"description": "Delete empty lines."
+				},
+
 				"VBI.formatter.EmptyLinesAlsoInComment": {
 					"type": "boolean",
 					"default": false,
 					"description": "Delete empty lines in commen also."
+				},
+				"VBI.formatter.KeywordUppercaseAlsoInComment": {
+					"type": "boolean",
+					"default": false,
+					"description": "Allow uppercase Keywords in comments."
 				},
 				"VBI.formatter.AllowInlineIFClause": {
 					"type": "boolean",
