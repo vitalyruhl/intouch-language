@@ -35,6 +35,7 @@ function forFormat(text, config) {
             modified--;
         }
         else {
+            modified = 0;
             //check for String-End (check before begin!)
             if (inString && (txt[i] === '"')) {
                 if (!(txt[i - 1] === '\\')) { //check for escaped quot
@@ -123,7 +124,7 @@ function forFormat(text, config) {
                         }
                     }
                     //check for single operators
-                    if (!(modified > 0) && false) {
+                    if (!(modified > 0)) {
                         for (j in exports.SINGLE_OPERATORS) { //check double operators first
                             if (text[i] === exports.SINGLE_OPERATORS[j]) {
                                 if (text[i - 1] !== ' ') {
@@ -133,7 +134,7 @@ function forFormat(text, config) {
                                 if (text[i + 1] !== ' ') {
                                     buf += ' ';
                                 }
-                                modified = 1;
+                                modified = -1;
                                 //console.log('Operator:[', text[i], ']modified:', modified);
                                 break;
                             }
@@ -141,7 +142,7 @@ function forFormat(text, config) {
                     }
                 }
             } //formatin session
-            if (!(modified > 0)) { //insert only when on this session not modified!
+            if (modified === 0) { //insert only when on this session not modified!
                 buf += txt[i];
             }
         } //not modified

@@ -44,7 +44,7 @@ export function forFormat(text: string, config: any): string {
             modified--;
         }
         else {
-
+            modified = 0;
             //check for String-End (check before begin!)
             if (inString && (txt[i] === '"')) {
                 if (!(txt[i - 1] === '\\')) {  //check for escaped quot
@@ -137,7 +137,7 @@ export function forFormat(text: string, config: any): string {
                             }
 
                             if (tt === DOUBLE_OPERATORS[j]) {
-                                
+
                                 if (text[i - 1] !== ' ') {
                                     buf += ' ';
                                 }
@@ -149,14 +149,14 @@ export function forFormat(text: string, config: any): string {
                                 }
 
                                 modified = 1;
-                                
+
                                 break;
                             }
                         }
                     }
 
                     //check for single operators
-                    if (!(modified > 0) && false) {
+                    if (!(modified > 0)) {
                         for (j in SINGLE_OPERATORS) {//check double operators first
 
                             if (text[i] === SINGLE_OPERATORS[j]) {
@@ -171,7 +171,7 @@ export function forFormat(text: string, config: any): string {
                                     buf += ' ';
                                 }
 
-                                modified = 1;
+                                modified = -1;
                                 //console.log('Operator:[', text[i], ']modified:', modified);
                                 break;
                             }
@@ -183,7 +183,7 @@ export function forFormat(text: string, config: any): string {
 
             }//formatin session
 
-            if (!(modified > 0)) {//insert only when on this session not modified!
+            if (modified === 0) {//insert only when on this session not modified!
                 buf += txt[i];
             }
 
@@ -213,7 +213,7 @@ function CheckCRLForWhitespace(s: string): boolean {
 
     checks = FORMATS.concat(SINGLE_OPERATORS);
     checks = checks.concat(DOUBLE_OPERATORS);
-    
+
     checks = checks.concat(TRENNER);
 
     check = checks.map(item => {
