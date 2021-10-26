@@ -9,7 +9,8 @@ export const SQUOTE = "\'";
 export const BACKSLASH = "\\";
 
 export const FORMATS: string[] = [TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH];
-export const OPERATORS: string[] = ['+', '-', '*', '/', '%', '!', '~', '<', '>', '<>', '|', '=', '=='];
+export const SINGLE_OPERATORS: string[] = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
+export const DOUBLE_OPERATORS: string[] = ['==', '<>', '<=', '=>'];
 export const TRENNER: string[] = [';', ' '];
 
 import { log } from './functions';
@@ -88,21 +89,22 @@ export function forFormat(text: string, config: any): string {
 
             //formatting session
             if (!inString) {
-                let j: any;
-
-                let wbf: string = '';//word-bindery-test-char-before
-                let wba: string = '';//word-bindery-test-char-after
 
                 //check for consistense whitespace and remove them
                 if (!(modified > 0) && !inComment) {
                     if (text[i] === ' ' && text[i + 1] === ' ') {
                         modified++;
                     }
-
                 }
 
-                //check for KEYWORDS
+
                 if (!(modified > 0) && (!inComment || config.KeywordUppercaseAlsoInComment)) {
+                    let j: any;
+
+                    let wbf: string = '';//word-bindery-test-char-before
+                    let wba: string = '';//word-bindery-test-char-after
+
+                    //check for KEYWORDS
                     for (j in KEYWORDS) {
                         let k: any;
                         let tt: string = '';
@@ -122,54 +124,59 @@ export function forFormat(text: string, config: any): string {
                     }
 
 
-                    //check for operators
+                    //check for Double
                     if (!(modified > 0)) {
-                        for (j in OPERATORS) {//check double operators first
+                        for (j in DOUBLE_OPERATORS) {//check double operators first
                             let k: any;
                             let tt: string = '';
                             wbf = text[i - 1];
 
-                            if (OPERATORS[j].length > 1) {
-                                for (k = 0; k <= OPERATORS[j].length -1; k++) {
-                                    tt += text[i + k];
-                                    wba = text[i + k + 1];
+                            for (k = 0; k <= DOUBLE_OPERATORS[j].length - 1; k++) {
+                                tt += text[i + k];
+                                wba = text[i + k + 1];
+                            }
+
+                            if (tt === DOUBLE_OPERATORS[j]) {
+                                
+                                if (text[i - 1] !== ' ') {
+                                    buf += ' ';
                                 }
 
-                                if (tt === OPERATORS[j]) {//Prespace  // && txt[i - 1] !== ' '
-                                    tt = '' + OPERATORS[j] + '';// + wba;
-                                    buf += tt;
-                                    modified = OPERATORS[j].length -1 ;
-                                    console.log('Operator:[',tt,']modified:',modified);
+                                buf += DOUBLE_OPERATORS[j];
+
+                                if (text[i + 2] !== ' ') {
+                                    buf += ' ';
                                 }
+
+                                modified = 1;
+                                
+                                break;
                             }
                         }
                     }
 
+                    //check for single operators
+                    if (!(modified > 0) && false) {
+                        for (j in SINGLE_OPERATORS) {//check double operators first
 
-                    // for (j in OPERATORS) {//check singel operators
-                    //     let k: any;
-                    //     let tt: string = '';
-                    //     wbf = text[i - 1];
+                            if (text[i] === SINGLE_OPERATORS[j]) {
 
+                                if (text[i - 1] !== ' ') {
+                                    buf += ' ';
+                                }
 
-                    //     if (!(OPERATORS[j].length > 1)) {
+                                buf += text[i];
 
-                    //         if (txt[i] === OPERATORS[j]) { //single sign
+                                if (text[i + 1] !== ' ') {
+                                    buf += ' ';
+                                }
 
-                    //             if (txt[i - 1] !== ' ') {//Prespace
-                    //                 buf += ` `;
-                    //             }
-                    //             //buf += txt[i];
-                    //             // modified++;
-                    //             if (txt[i + 1] !== ' ') {//postspace
-                    //                 buf += ` `;
-                    //             }
-
-                    //         }
-                    //     }
-                    // }
-
-
+                                modified = 1;
+                                //console.log('Operator:[', text[i], ']modified:', modified);
+                                break;
+                            }
+                        }
+                    }
                 }
 
 
@@ -204,7 +211,9 @@ function CheckCRLForWhitespace(s: string): boolean {
     let check: boolean[] = [];
     let test: boolean = false;
 
-    checks = FORMATS.concat(OPERATORS);
+    checks = FORMATS.concat(SINGLE_OPERATORS);
+    checks = checks.concat(DOUBLE_OPERATORS);
+    
     checks = checks.concat(TRENNER);
 
     check = checks.map(item => {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forFormat = exports.TRENNER = exports.OPERATORS = exports.FORMATS = exports.BACKSLASH = exports.SQUOTE = exports.DQUOTE = exports.CRLF = exports.LF = exports.CR = exports.TAB = void 0;
+exports.forFormat = exports.TRENNER = exports.DOUBLE_OPERATORS = exports.SINGLE_OPERATORS = exports.FORMATS = exports.BACKSLASH = exports.SQUOTE = exports.DQUOTE = exports.CRLF = exports.LF = exports.CR = exports.TAB = void 0;
 // Character Constants
 exports.TAB = "\t";
 exports.CR = "\r";
@@ -10,7 +10,8 @@ exports.DQUOTE = '\"';
 exports.SQUOTE = "\'";
 exports.BACKSLASH = "\\";
 exports.FORMATS = [exports.TAB, exports.CR, exports.LF, exports.CRLF, exports.DQUOTE, exports.SQUOTE, exports.BACKSLASH];
-exports.OPERATORS = ['+', '-', '*', '/', '%', '!', '~', '<', '>', '<>', '|', '=', '=='];
+exports.SINGLE_OPERATORS = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
+exports.DOUBLE_OPERATORS = ['==', '<>', '<=', '=>'];
 exports.TRENNER = [';', ' '];
 const functions_1 = require("./functions");
 const KEYWORDS = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", "DIM", "THEN",
@@ -71,17 +72,17 @@ function forFormat(text, config) {
             }
             //formatting session
             if (!inString) {
-                let j;
-                let wbf = ''; //word-bindery-test-char-before
-                let wba = ''; //word-bindery-test-char-after
                 //check for consistense whitespace and remove them
                 if (!(modified > 0) && !inComment) {
                     if (text[i] === ' ' && text[i + 1] === ' ') {
                         modified++;
                     }
                 }
-                //check for KEYWORDS
                 if (!(modified > 0) && (!inComment || config.KeywordUppercaseAlsoInComment)) {
+                    let j;
+                    let wbf = ''; //word-bindery-test-char-before
+                    let wba = ''; //word-bindery-test-char-after
+                    //check for KEYWORDS
                     for (j in KEYWORDS) {
                         let k;
                         let tt = '';
@@ -98,43 +99,46 @@ function forFormat(text, config) {
                             }
                         }
                     }
-                    //check for operators
+                    //check for Double
                     if (!(modified > 0)) {
-                        for (j in exports.OPERATORS) { //check double operators first
+                        for (j in exports.DOUBLE_OPERATORS) { //check double operators first
                             let k;
                             let tt = '';
                             wbf = text[i - 1];
-                            if (exports.OPERATORS[j].length > 1) {
-                                for (k = 0; k <= exports.OPERATORS[j].length - 1; k++) {
-                                    tt += text[i + k];
-                                    wba = text[i + k + 1];
+                            for (k = 0; k <= exports.DOUBLE_OPERATORS[j].length - 1; k++) {
+                                tt += text[i + k];
+                                wba = text[i + k + 1];
+                            }
+                            if (tt === exports.DOUBLE_OPERATORS[j]) {
+                                if (text[i - 1] !== ' ') {
+                                    buf += ' ';
                                 }
-                                if (tt === exports.OPERATORS[j]) { //Prespace  // && txt[i - 1] !== ' '
-                                    tt = '' + exports.OPERATORS[j] + ''; // + wba;
-                                    buf += tt;
-                                    modified = exports.OPERATORS[j].length - 1;
-                                    console.log('Operator:[', tt, ']modified:', modified);
+                                buf += exports.DOUBLE_OPERATORS[j];
+                                if (text[i + 2] !== ' ') {
+                                    buf += ' ';
                                 }
+                                modified = 1;
+                                break;
                             }
                         }
                     }
-                    // for (j in OPERATORS) {//check singel operators
-                    //     let k: any;
-                    //     let tt: string = '';
-                    //     wbf = text[i - 1];
-                    //     if (!(OPERATORS[j].length > 1)) {
-                    //         if (txt[i] === OPERATORS[j]) { //single sign
-                    //             if (txt[i - 1] !== ' ') {//Prespace
-                    //                 buf += ` `;
-                    //             }
-                    //             //buf += txt[i];
-                    //             // modified++;
-                    //             if (txt[i + 1] !== ' ') {//postspace
-                    //                 buf += ` `;
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                    //check for single operators
+                    if (!(modified > 0) && false) {
+                        for (j in exports.SINGLE_OPERATORS) { //check double operators first
+                            if (text[i] === exports.SINGLE_OPERATORS[j]) {
+                                if (text[i - 1] !== ' ') {
+                                    buf += ' ';
+                                }
+                                buf += text[i];
+                                if (text[i + 1] !== ' ') {
+                                    buf += ' ';
+                                }
+                                modified = 1;
+                                //console.log('Operator:[', text[i], ']modified:', modified);
+                                break;
+                            }
+                        }
+                    }
                 }
             } //formatin session
             if (!(modified > 0)) { //insert only when on this session not modified!
@@ -150,7 +154,8 @@ function CheckCRLForWhitespace(s) {
     let checks = [];
     let check = [];
     let test = false;
-    checks = exports.FORMATS.concat(exports.OPERATORS);
+    checks = exports.FORMATS.concat(exports.SINGLE_OPERATORS);
+    checks = checks.concat(exports.DOUBLE_OPERATORS);
     checks = checks.concat(exports.TRENNER);
     check = checks.map(item => {
         if (s === item) {
