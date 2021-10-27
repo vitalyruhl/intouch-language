@@ -6,17 +6,15 @@ exports.NESTINGS = [
     {
         keyword: 'if',
         lineEnd: 'then',
-        nesting: const_1.TAB,
         midle: 'else',
-        end: 'eindif',
+        end: 'endif',
         cbInline: true
     },
     {
         keyword: 'for',
-        lineEnd: const_1.LF,
-        nesting: const_1.TAB,
+        lineEnd: const_1.CRLF,
         midle: '',
-        end: 'next',
+        end: 'next;',
         cbInline: false
     },
 ];

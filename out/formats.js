@@ -10,20 +10,35 @@ function formatNestings(text, config) {
     let buf = '';
     let isError = false;
     let codeFragments = [];
-    //codeFragments.push('\n!!!! FORMATED !!!\n');
-    // split in lines
-    //for (let i = range.start.line; i < range.end.line; i++) {
-    //    codeFragments.push(document.lineAt(i).text);
-    //}
-    codeFragments = text.split(const_1.CRLF);
+    let regex = '';
+    let nestingCounter = 0;
+    codeFragments = text.split(const_1.CRLF); //split code by Line
     for (let i = 0; i < codeFragments.length - 1; i++) {
         codeFragments[i] = codeFragments[i].replace(const_3.REGEX_gm_TAB_NOT_IN_COMMENT, ''); //remove all Nestings
         codeFragments[i] = codeFragments[i].replace(const_3.REGEX_gm_MOR_2_WSP, ' '); // remoove continuus whitespaces
+        let Obj = nestingdef_1.NESTINGS; // todo: format nestings
+        Obj.forEach(item => {
+            regex = `((?![^{]*})(\\b${item.keyword})\\b)`;
+            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                nestingCounter++;
+            }
+            regex = `((?![^{]*})(\\b${item.end})\\b)`;
+            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                nestingCounter--;
+            }
+            if (nestingCounter < 0) { //just in case
+                nestingCounter = 0;
+            }
+        });
+        // interface NestingInterface {
+        //     keyword: string; //begin of the Nesting
+        //     lineEnd: string; //end of the Line in Keyword - can be the same
+        //     midle: string; //eg else in if-then-else-endit
+        //     end: string; //end of this Nestin
+        //     cbInline: boolean; //can be Inline
+        // }
+        codeFragments[i] = getNesting(nestingCounter) + codeFragments[i];
     }
-    for (let Key in nestingdef_1.NESTINGS) {
-    }
-    // todo: remove all whitespaces from code only
-    // todo: format nestings
     // combine all into new text and return it
     for (let i = 0; i < codeFragments.length - 1; i++) {
         buf += codeFragments[i] + const_1.CRLF;
@@ -34,6 +49,16 @@ function formatNestings(text, config) {
 }
 exports.formatNestings = formatNestings;
 //edit.delete(line.rangeIncludingLineBreak);
+function getNesting(n) {
+    let temp = '';
+    if (n === 0) {
+        return '';
+    }
+    for (let i = 0; i <= n; i++) {
+        temp += const_1.TAB;
+    }
+    return temp;
+}
 function forFormat(text, config) {
     let txt = text.split('');
     let buf = '';
