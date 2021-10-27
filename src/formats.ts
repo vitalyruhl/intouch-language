@@ -9,6 +9,11 @@ export function formatNestings(text: string, config: any): string {
     let a = NESTINGS;
     let buf: string = '';
 
+    // todo: split in lines
+    // todo: split lines in comment, string, code
+    // todo: remove all whitespaces from code only
+    // todo: format nestings
+    // todo: combine all into new text and return it
 
     buf = text;
     log("error", "format nestings is not implemented yet")
@@ -83,13 +88,6 @@ export function forFormat(text: string, config: any): string {
 
             //formatting session
             if (!inString) {
-
-                //check for consistense whitespace and remove them
-                if (!(modified > 0) && !inComment) {
-                    if (text[i] === ' ' && text[i + 1] === ' ') {
-                        modified++;
-                    }
-                }
 
                 if (!(modified > 0) && (!inComment || config.KeywordUppercaseAlsoInComment)) {
                     let j: any;

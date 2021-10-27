@@ -36,6 +36,7 @@ function format(editor: vscode.TextEditor, range: vscode.Range): string {
 
 	formatted = formatNestings(formatted, config); //Format nestings
 
+	// todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
 
 	//--------------------------------------------------------------------------------//
 	// Remoove EmptyLines...

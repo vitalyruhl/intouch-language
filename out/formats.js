@@ -8,6 +8,11 @@ const nestingdef_1 = require("./nestingdef");
 function formatNestings(text, config) {
     let a = nestingdef_1.NESTINGS;
     let buf = '';
+    // todo: split in lines
+    // todo: split lines in comment, string, code
+    // todo: remove all whitespaces from code only
+    // todo: format nestings
+    // todo: combine all into new text and return it
     buf = text;
     (0, functions_1.log)("error", "format nestings is not implemented yet");
     return buf;
@@ -68,12 +73,6 @@ function forFormat(text, config) {
             }
             //formatting session
             if (!inString) {
-                //check for consistense whitespace and remove them
-                if (!(modified > 0) && !inComment) {
-                    if (text[i] === ' ' && text[i + 1] === ' ') {
-                        modified++;
-                    }
-                }
                 if (!(modified > 0) && (!inComment || config.KeywordUppercaseAlsoInComment)) {
                     let j;
                     let wbf = ''; //word-bindery-test-char-before
