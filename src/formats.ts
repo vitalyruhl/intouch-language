@@ -33,7 +33,7 @@ export function formatNestings(range: vscode.Range, document: vscode.TextDocumen
 }
 
 export function forFormat(text: string, config: any): string {
-    //let txt = runes(text);//Splitt text into single character
+   
     let txt = text.split('');//Splitt text into single character
     let buf: string = '';
     let i: any = 0;
@@ -126,9 +126,9 @@ export function forFormat(text: string, config: any): string {
                     }
 
 
-                    //check for Double
+                    //check double operators first
                     if (!(modified > 0)) {
-                        for (j in DOUBLE_OPERATORS) {//check double operators first
+                        for (j in DOUBLE_OPERATORS) {
                             let k: any;
                             let tt: string = '';
                             wbf = text[i - 1];
@@ -159,7 +159,7 @@ export function forFormat(text: string, config: any): string {
 
                     //check for single operators
                     if (!(modified > 0)) {
-                        for (j in SINGLE_OPERATORS) {//check double operators first
+                        for (j in SINGLE_OPERATORS) {
 
                             if (text[i] === SINGLE_OPERATORS[j]) {
 
@@ -181,7 +181,7 @@ export function forFormat(text: string, config: any): string {
                     }
                 }
 
-            }//formatin session
+            }//formating session
 
             if (modified === 0) {//insert only when on this session not modified!
                 buf += txt[i];
@@ -197,25 +197,6 @@ export function forFormat(text: string, config: any): string {
 
 
 function CheckCRLForWhitespace(s: string): boolean {
-    let checks: string[] = [];
-    let check: boolean[] = [];
-    let test: boolean = false;
-
-    checks = FORMATS.concat(SINGLE_OPERATORS);
-    checks = checks.concat(DOUBLE_OPERATORS);
-
-    checks = checks.concat(TRENNER);
-
-    check = checks.map(item => {
-        if (s === item) {
-            return true;
-        }
-        return false;
-    });
-
-
-    test = test || check.some(it => it === true);
-
-    //console.log('check', s, test);
-    return test;
+    //https://stackoverflow.com/questions/69709447/problem-to-create-a-regex-expression-in-js-to-select-keywords-in-text-but-excl/69734464?noredirect=1#comment123265818_69734464
+    return FORMATS.concat(SINGLE_OPERATORS, DOUBLE_OPERATORS, TRENNER).some(item => s === item);
 }

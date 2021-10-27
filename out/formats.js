@@ -26,7 +26,6 @@ function formatNestings(range, document, config) {
 }
 exports.formatNestings = formatNestings;
 function forFormat(text, config) {
-    //let txt = runes(text);//Splitt text into single character
     let txt = text.split(''); //Splitt text into single character
     let buf = '';
     let i = 0;
@@ -101,9 +100,9 @@ function forFormat(text, config) {
                             }
                         }
                     }
-                    //check for Double
+                    //check double operators first
                     if (!(modified > 0)) {
-                        for (j in const_2.DOUBLE_OPERATORS) { //check double operators first
+                        for (j in const_2.DOUBLE_OPERATORS) {
                             let k;
                             let tt = '';
                             wbf = text[i - 1];
@@ -126,7 +125,7 @@ function forFormat(text, config) {
                     }
                     //check for single operators
                     if (!(modified > 0)) {
-                        for (j in const_2.SINGLE_OPERATORS) { //check double operators first
+                        for (j in const_2.SINGLE_OPERATORS) {
                             if (text[i] === const_2.SINGLE_OPERATORS[j]) {
                                 if (text[i - 1] !== ' ') {
                                     buf += ' ';
@@ -142,7 +141,7 @@ function forFormat(text, config) {
                         }
                     }
                 }
-            } //formatin session
+            } //formating session
             if (modified === 0) { //insert only when on this session not modified!
                 buf += txt[i];
             }
@@ -153,20 +152,7 @@ function forFormat(text, config) {
 } //function
 exports.forFormat = forFormat;
 function CheckCRLForWhitespace(s) {
-    let checks = [];
-    let check = [];
-    let test = false;
-    checks = const_2.FORMATS.concat(const_2.SINGLE_OPERATORS);
-    checks = checks.concat(const_2.DOUBLE_OPERATORS);
-    checks = checks.concat(const_2.TRENNER);
-    check = checks.map(item => {
-        if (s === item) {
-            return true;
-        }
-        return false;
-    });
-    test = test || check.some(it => it === true);
-    //console.log('check', s, test);
-    return test;
+    //https://stackoverflow.com/questions/69709447/problem-to-create-a-regex-expression-in-js-to-select-keywords-in-text-but-excl/69734464?noredirect=1#comment123265818_69734464
+    return const_2.FORMATS.concat(const_2.SINGLE_OPERATORS, const_2.DOUBLE_OPERATORS, const_2.TRENNER).some(item => s === item);
 }
 //# sourceMappingURL=formats.js.map
