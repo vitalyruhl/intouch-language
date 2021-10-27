@@ -13,7 +13,7 @@ exports.FORMATS = [exports.TAB, exports.CR, exports.LF, exports.CRLF, exports.DQ
 exports.SINGLE_OPERATORS = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
 exports.DOUBLE_OPERATORS = ['==', '<>', '<=', '=>'];
 exports.TRENNER = [';', ' '];
-exports.KEYWORDS = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", "DIM", "THEN",
+exports.KEYWORDS = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", "next", "DIM", "THEN",
     "EXIT", "EACH", "STEP", "IN", "RETURN", "CALL", "MOD", "AND", "NOT", "IS",
     "OR", "XOR", "Abs", "TO", "SHL", "SHR", "discrete", "integer", "real", "message"];
 //# sourceMappingURL=const.js.map
