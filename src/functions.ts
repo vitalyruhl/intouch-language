@@ -6,61 +6,56 @@ import { CRLF } from "./const";
 export let config: any = {};
 
 export function formatTE(editor: vscode.TextEditor, range: vscode.Range): vscode.TextEdit[] {
-	return [
-		vscode.TextEdit.replace(range, format(editor, range))
-	];
-}
-
-export function formatCmd(editor: vscode.TextEditor, range: vscode.Range) {
-	return format(editor, range);
-}
-
-
-function format(editor: vscode.TextEditor, range: vscode.Range): string {
-	let result: vscode.TextEdit[] = [];
-	let formatted: string = '';
-	let activeEditor = window.activeTextEditor;
-	let regex: RegExp;
-
-	if (!activeEditor) {
-		return '';
-	}
-
-	let document = activeEditor.document;
-
-	//first Step - get the config
 	config = getConfig();
-	formatted = document.getText(range); //get actual document text...
+	let document = window.activeTextEditor.document;
 
-	formatted = forFormat(formatted, config); //Format keywords and operators
-
-	formatted = formatNestings(formatted, config); //Format nestings
 
 	// todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
 
+	return [
+		vscode.TextEdit.replace(range, format(editor, range)),//ground formattings
+		vscode.TextEdit.replace(range, formatNestings(range, document, config))//Format nestings
+
+	];
+}
+
+function format(editor: vscode.TextEditor, range: vscode.Range): string {
+
+	let formatted: string = '';
+	let activeEditor = window.activeTextEditor;
+	let regex: RegExp;
+	let isError: boolean = false;
+
+	let document = activeEditor.document;
+
+	formatted = document.getText(range); //get actual document text...
+	formatted = forFormat(formatted, config); //Format keywords and operators
+
 	//--------------------------------------------------------------------------------//
-	// Remoove EmptyLines...
+	// Remove EmptyLines...
 	let nEL: number = config.allowedNumberOfEmptyLines + 1.0;
 
-	if (config.EmptyLinesAlsoInComment) {
-		regex = new RegExp(`(?![^{]*})(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
-	}
-	else {
-		regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
-	}
 	if (config.RemoveEmptyLines) {
+		if (config.EmptyLinesAlsoInComment) {
+			regex = new RegExp(`(?![^{]*})(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+		}
+		else {
+			regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+		}
 		formatted = formatted.replace(regex, CRLF);
 	}
 
-	// return it back to the Sourcefile
+	// apply changes
 	if (formatted) {
 		activeEditor.edit((editor) => {
 			return editor.replace(range, formatted);
 		});
 	}
+
+	if (isError) { //only for ts, because a function must return value....
+        return '';
+    }
 }
-
-
 
 //----------------------------------------------------------------
 //----------------------------------------------------------------

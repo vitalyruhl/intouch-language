@@ -5,16 +5,23 @@ const const_1 = require("./const");
 const const_2 = require("./const");
 const functions_1 = require("./functions");
 const nestingdef_1 = require("./nestingdef");
-function formatNestings(text, config) {
+function formatNestings(range, document, config) {
     let a = nestingdef_1.NESTINGS;
     let buf = '';
+    let line;
     // todo: split in lines
     // todo: split lines in comment, string, code
     // todo: remove all whitespaces from code only
     // todo: format nestings
     // todo: combine all into new text and return it
-    buf = text;
-    (0, functions_1.log)("error", "format nestings is not implemented yet");
+    const firstLine = document.lineAt(0);
+    let aktLine;
+    for (let i = range.start.line; i < range.end.line; i++) {
+        aktLine = document.lineAt(i);
+        //edit.delete(line.rangeIncludingLineBreak);
+        (0, functions_1.log)("info", aktLine);
+    }
+    //log("error", "format nestings is not implemented yet")
     return buf;
 }
 exports.formatNestings = formatNestings;

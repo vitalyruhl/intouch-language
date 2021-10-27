@@ -1,53 +1,49 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.log = exports.info = exports.getConfig = exports.formatCmd = exports.formatTE = exports.config = void 0;
+exports.log = exports.info = exports.getConfig = exports.formatTE = exports.config = void 0;
 const vscode = require("vscode");
 const vscode_1 = require("vscode");
 const formats_1 = require("./formats");
 const const_1 = require("./const");
 exports.config = {};
 function formatTE(editor, range) {
+    exports.config = getConfig();
+    let document = vscode_1.window.activeTextEditor.document;
+    // todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
     return [
-        vscode.TextEdit.replace(range, format(editor, range))
+        vscode.TextEdit.replace(range, format(editor, range)),
+        vscode.TextEdit.replace(range, (0, formats_1.formatNestings)(range, document, exports.config)) //Format nestings
     ];
 }
 exports.formatTE = formatTE;
-function formatCmd(editor, range) {
-    return format(editor, range);
-}
-exports.formatCmd = formatCmd;
 function format(editor, range) {
-    let result = [];
     let formatted = '';
     let activeEditor = vscode_1.window.activeTextEditor;
     let regex;
-    if (!activeEditor) {
-        return '';
-    }
+    let isError = false;
     let document = activeEditor.document;
-    //first Step - get the config
-    exports.config = getConfig();
     formatted = document.getText(range); //get actual document text...
     formatted = (0, formats_1.forFormat)(formatted, exports.config); //Format keywords and operators
-    formatted = (0, formats_1.formatNestings)(formatted, exports.config); //Format nestings
-    // todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
     //--------------------------------------------------------------------------------//
-    // Remoove EmptyLines...
+    // Remove EmptyLines...
     let nEL = exports.config.allowedNumberOfEmptyLines + 1.0;
-    if (exports.config.EmptyLinesAlsoInComment) {
-        regex = new RegExp(`(?![^{]*})(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
-    }
-    else {
-        regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
-    }
     if (exports.config.RemoveEmptyLines) {
+        if (exports.config.EmptyLinesAlsoInComment) {
+            regex = new RegExp(`(?![^{]*})(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+        }
+        else {
+            regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+        }
         formatted = formatted.replace(regex, const_1.CRLF);
     }
-    // return it back to the Sourcefile
+    // apply changes
     if (formatted) {
         activeEditor.edit((editor) => {
             return editor.replace(range, formatted);
         });
+    }
+    if (isError) { //only for ts, because a function must return value....
+        return '';
     }
 }
 //----------------------------------------------------------------

@@ -5,6 +5,7 @@
 {
 Changelog:
 	V1.0.1		25.10.2021 		ViRu 	define Tests
+	V1.0.2		27.10.2021 		ViRu 	add some Tests and modify commets 
 }	
 
 {-------------------------------------------}
@@ -27,18 +28,10 @@ Funkt ="+/-/<>/==/=/</>";
 
 
 {------------------------------------------------------------------------------}
-{Test wrong Nesting and inline if - then and Spacings on +/-/<> etc...}
+{Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
 if sys_Debug_info > 0 then LogMessage(eof Funkt +"eof if one of eof is big -> its Wrong! | ["   + Text(iErsteMA,"#")  "]"); endif;
 	if sys_Debug_info >0 then LogMessage(Funkt+ "eof if one of eof is big -> its Wrong! | ["         + Text(iErsteMA,"#")  "]"); endif;
 		if sys_Debug_info>0 then LogMessage(Funkt+"eof if one of eof is big -> its Wrong! | ["   + Text(iErsteMA,"#")  "]");      endif;
-{------------------------------------------------------------------------------}
-
-
-{------------------------------------------------------------------------------}
-{Formating-Test comment:
-	if that if is Big after Formatting, then the code is wrong...
-	if sys_Debug_info > 0 then LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); endif;
-	if sys_Debug_info > 0 then LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung           + "]"); endif;
 {------------------------------------------------------------------------------}
 
 
@@ -114,6 +107,19 @@ endif;
 next;	
 
 {------------------------------------------------------------------------------}
+
+
+
+{------------------------------------------------------------------------------}
+{Formating-Test comment:
+	if that if is Big after Formatting, then the code is wrong...
+	if sys_Debug_info > 0 then LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); endif;
+	if sys_Debug_info > 0 then LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung           + "]"); endif;
+{------------------------------------------------------------------------------}
+
+
+
+
 {------------------------------------------------------------------------------}
 {Line-Spacing-Test -> Global standart setting is 1 empty line}
 

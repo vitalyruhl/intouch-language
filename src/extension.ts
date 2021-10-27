@@ -1,7 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import { formatCmd, formatTE } from './functions';
+import { formatTE } from './functions';
 
 export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.registerCommand('vbi-format', () => {
@@ -11,7 +11,8 @@ export function activate(context: vscode.ExtensionContext) {
 			let start = new vscode.Position(0, 0);
 			let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
 			let r = new vscode.Range(start, end);
-			return formatCmd(activeTextEditor, r);
+			return formatTE(activeTextEditor, r);
+			//return formatCmd(activeTextEditor, r);
 		}
 	});
 

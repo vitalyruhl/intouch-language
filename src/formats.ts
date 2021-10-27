@@ -3,11 +3,12 @@ import { TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH } from "./const";
 import { FORMATS, SINGLE_OPERATORS, DOUBLE_OPERATORS, TRENNER, KEYWORDS } from './const';
 import { log } from './functions';
 import { NESTINGS } from "./nestingdef";
+import * as vscode from 'vscode';
 
-
-export function formatNestings(text: string, config: any): string {
+export function formatNestings(range: vscode.Range, document: vscode.TextDocument, config: any): string {
     let a = NESTINGS;
     let buf: string = '';
+    let line: string[];
 
     // todo: split in lines
     // todo: split lines in comment, string, code
@@ -15,8 +16,18 @@ export function formatNestings(text: string, config: any): string {
     // todo: format nestings
     // todo: combine all into new text and return it
 
-    buf = text;
-    log("error", "format nestings is not implemented yet")
+
+    const firstLine = document.lineAt(0);
+    let aktLine;
+
+    for (let i = range.start.line; i < range.end.line; i++) {
+
+        aktLine = document.lineAt(i);
+        //edit.delete(line.rangeIncludingLineBreak);
+        log("info", aktLine);
+    }
+
+    //log("error", "format nestings is not implemented yet")
 
     return buf;
 }

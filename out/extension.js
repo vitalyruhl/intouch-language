@@ -11,7 +11,8 @@ function activate(context) {
             let start = new vscode.Position(0, 0);
             let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
             let r = new vscode.Range(start, end);
-            return (0, functions_1.formatCmd)(activeTextEditor, r);
+            return (0, functions_1.formatTE)(activeTextEditor, r);
+            //return formatCmd(activeTextEditor, r);
         }
     });
     //https://vscode-docs.readthedocs.io/en/latest/extensionAPI/vscode-api/
