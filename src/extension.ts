@@ -11,8 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 			let start = new vscode.Position(0, 0);
 			let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
 			let r = new vscode.Range(start, end);
-			return formatTE(activeTextEditor, r);
-			//return formatCmd(activeTextEditor, r);
+			return formatTE(r);
 		}
 	});
 
@@ -23,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
 			let start = new vscode.Position(0, 0);
 			let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
 			let r = new vscode.Range(start, end);
-			return formatTE(activeTextEditor, r);
+			return formatTE(r);
 		}
 	});
 }

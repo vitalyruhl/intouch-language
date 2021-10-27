@@ -3,38 +3,53 @@ import { TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH } from "./const";
 import { FORMATS, SINGLE_OPERATORS, DOUBLE_OPERATORS, TRENNER, KEYWORDS } from './const';
 import { log } from './functions';
 import { NESTINGS } from "./nestingdef";
+
 import * as vscode from 'vscode';
 
-export function formatNestings(range: vscode.Range, document: vscode.TextDocument, config: any): string {
-    let a = NESTINGS;
+import { REGEX_gm_TAB_NOT_IN_COMMENT, REGEX_gm_MOR_2_WSP } from './const';
+
+export function formatNestings(text: string, config: any): string {
+
     let buf: string = '';
-    let line: string[];
+    let isError: boolean = false;
+    let codeFragments: string[] = [];
 
-    // todo: split in lines
-    // todo: split lines in comment, string, code
-    // todo: remove all whitespaces from code only
-    // todo: format nestings
-    // todo: combine all into new text and return it
+    //codeFragments.push('\n!!!! FORMATED !!!\n');
 
+    // split in lines
+   //for (let i = range.start.line; i < range.end.line; i++) {
+   //    codeFragments.push(document.lineAt(i).text);
+   //}
 
-    const firstLine = document.lineAt(0);
-    let aktLine;
+    codeFragments = text.split(CRLF);
 
-    for (let i = range.start.line; i < range.end.line; i++) {
-
-        aktLine = document.lineAt(i);
-        //edit.delete(line.rangeIncludingLineBreak);
-        log("info", aktLine);
+    for (let i = 0; i < codeFragments.length - 1; i++) {
+        codeFragments[i] = codeFragments[i].replace(REGEX_gm_TAB_NOT_IN_COMMENT, ''); //remove all Nestings
+        codeFragments[i] = codeFragments[i].replace(REGEX_gm_MOR_2_WSP, ' '); // remoove continuus whitespaces
     }
 
-    //log("error", "format nestings is not implemented yet")
+    for (let Key in NESTINGS){
 
-    return buf;
+    }
+    // todo: remove all whitespaces from code only
+    // todo: format nestings
+
+    // combine all into new text and return it
+    for (let i = 0; i < codeFragments.length - 1; i++) {
+        buf += codeFragments[i] + CRLF;
+    }
+
+    if (!isError) { 
+		return buf;
+	}
 }
 
+//edit.delete(line.rangeIncludingLineBreak);
+
+
 export function forFormat(text: string, config: any): string {
-   
-    let txt = text.split('');//Splitt text into single character
+
+    let txt = text.split('');
     let buf: string = '';
     let i: any = 0;
     let modified: number = 0;

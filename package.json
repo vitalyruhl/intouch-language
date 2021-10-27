@@ -94,7 +94,7 @@
 				},
 				"VBI.formatter.RemoveEmptyLines": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Delete empty lines."
 				},
 

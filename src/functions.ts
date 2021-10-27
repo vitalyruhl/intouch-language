@@ -5,31 +5,30 @@ import { CRLF } from "./const";
 
 export let config: any = {};
 
-export function formatTE(editor: vscode.TextEditor, range: vscode.Range): vscode.TextEdit[] {
+export function formatTE(range: vscode.Range): vscode.TextEdit[] {
 	config = getConfig();
 	let document = window.activeTextEditor.document;
 
-
-	// todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
-
 	return [
-		vscode.TextEdit.replace(range, format(editor, range)),//ground formattings
-		vscode.TextEdit.replace(range, formatNestings(range, document, config))//Format nestings
-
+		vscode.TextEdit.replace(range, format(range, document, config)),
 	];
 }
 
-function format(editor: vscode.TextEditor, range: vscode.Range): string {
-
-	let formatted: string = '';
+function format(range: vscode.Range, document: vscode.TextDocument, config: any): string {
 	let activeEditor = window.activeTextEditor;
+	//let document = window.activeTextEditor.document;
+
 	let regex: RegExp;
 	let isError: boolean = false;
+	let formatted: string = '';
 
-	let document = activeEditor.document;
 
 	formatted = document.getText(range); //get actual document text...
 	formatted = forFormat(formatted, config); //Format keywords and operators
+	formatted = formatNestings(formatted, config);//format Nestings
+	
+	// todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
+
 
 	//--------------------------------------------------------------------------------//
 	// Remove EmptyLines...
@@ -44,17 +43,20 @@ function format(editor: vscode.TextEditor, range: vscode.Range): string {
 		}
 		formatted = formatted.replace(regex, CRLF);
 	}
+	//--------------------------------------------------------------------------------//
 
+	//--------------------------------------------------------------------------------//
 	// apply changes
 	if (formatted) {
 		activeEditor.edit((editor) => {
 			return editor.replace(range, formatted);
 		});
 	}
-
+	
 	if (isError) { //only for ts, because a function must return value....
-        return '';
-    }
+		return '';
+	}
+	//--------------------------------------------------------------------------------//
 }
 
 //----------------------------------------------------------------

@@ -5,28 +5,37 @@ const const_1 = require("./const");
 const const_2 = require("./const");
 const functions_1 = require("./functions");
 const nestingdef_1 = require("./nestingdef");
-function formatNestings(range, document, config) {
-    let a = nestingdef_1.NESTINGS;
+const const_3 = require("./const");
+function formatNestings(text, config) {
     let buf = '';
-    let line;
-    // todo: split in lines
-    // todo: split lines in comment, string, code
+    let isError = false;
+    let codeFragments = [];
+    //codeFragments.push('\n!!!! FORMATED !!!\n');
+    // split in lines
+    //for (let i = range.start.line; i < range.end.line; i++) {
+    //    codeFragments.push(document.lineAt(i).text);
+    //}
+    codeFragments = text.split(const_1.CRLF);
+    for (let i = 0; i < codeFragments.length - 1; i++) {
+        codeFragments[i] = codeFragments[i].replace(const_3.REGEX_gm_TAB_NOT_IN_COMMENT, ''); //remove all Nestings
+        codeFragments[i] = codeFragments[i].replace(const_3.REGEX_gm_MOR_2_WSP, ' '); // remoove continuus whitespaces
+    }
+    for (let Key in nestingdef_1.NESTINGS) {
+    }
     // todo: remove all whitespaces from code only
     // todo: format nestings
-    // todo: combine all into new text and return it
-    const firstLine = document.lineAt(0);
-    let aktLine;
-    for (let i = range.start.line; i < range.end.line; i++) {
-        aktLine = document.lineAt(i);
-        //edit.delete(line.rangeIncludingLineBreak);
-        (0, functions_1.log)("info", aktLine);
+    // combine all into new text and return it
+    for (let i = 0; i < codeFragments.length - 1; i++) {
+        buf += codeFragments[i] + const_1.CRLF;
     }
-    //log("error", "format nestings is not implemented yet")
-    return buf;
+    if (!isError) {
+        return buf;
+    }
 }
 exports.formatNestings = formatNestings;
+//edit.delete(line.rangeIncludingLineBreak);
 function forFormat(text, config) {
-    let txt = text.split(''); //Splitt text into single character
+    let txt = text.split('');
     let buf = '';
     let i = 0;
     let modified = 0;

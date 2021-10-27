@@ -6,29 +6,29 @@ const vscode_1 = require("vscode");
 const formats_1 = require("./formats");
 const const_1 = require("./const");
 exports.config = {};
-function formatTE(editor, range) {
+function formatTE(range) {
     exports.config = getConfig();
     let document = vscode_1.window.activeTextEditor.document;
-    // todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
     return [
-        vscode.TextEdit.replace(range, format(editor, range)),
-        vscode.TextEdit.replace(range, (0, formats_1.formatNestings)(range, document, exports.config)) //Format nestings
+        vscode.TextEdit.replace(range, format(range, document, exports.config)),
     ];
 }
 exports.formatTE = formatTE;
-function format(editor, range) {
-    let formatted = '';
+function format(range, document, config) {
     let activeEditor = vscode_1.window.activeTextEditor;
+    //let document = window.activeTextEditor.document;
     let regex;
     let isError = false;
-    let document = activeEditor.document;
+    let formatted = '';
     formatted = document.getText(range); //get actual document text...
-    formatted = (0, formats_1.forFormat)(formatted, exports.config); //Format keywords and operators
+    formatted = (0, formats_1.forFormat)(formatted, config); //Format keywords and operators
+    formatted = (0, formats_1.formatNestings)(formatted, config); //format Nestings
+    // todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
     //--------------------------------------------------------------------------------//
     // Remove EmptyLines...
-    let nEL = exports.config.allowedNumberOfEmptyLines + 1.0;
-    if (exports.config.RemoveEmptyLines) {
-        if (exports.config.EmptyLinesAlsoInComment) {
+    let nEL = config.allowedNumberOfEmptyLines + 1.0;
+    if (config.RemoveEmptyLines) {
+        if (config.EmptyLinesAlsoInComment) {
             regex = new RegExp(`(?![^{]*})(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
         }
         else {
@@ -36,6 +36,8 @@ function format(editor, range) {
         }
         formatted = formatted.replace(regex, const_1.CRLF);
     }
+    //--------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------//
     // apply changes
     if (formatted) {
         activeEditor.edit((editor) => {
@@ -45,6 +47,7 @@ function format(editor, range) {
     if (isError) { //only for ts, because a function must return value....
         return '';
     }
+    //--------------------------------------------------------------------------------//
 }
 //----------------------------------------------------------------
 //----------------------------------------------------------------
