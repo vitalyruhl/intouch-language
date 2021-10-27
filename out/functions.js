@@ -4,6 +4,7 @@ exports.log = exports.info = exports.getConfig = exports.formatCmd = exports.for
 const vscode = require("vscode");
 const vscode_1 = require("vscode");
 const formats_1 = require("./formats");
+const const_1 = require("./const");
 exports.config = {};
 function formatTE(editor, range) {
     return [
@@ -27,7 +28,8 @@ function format(editor, range) {
     //first Step - get the config
     exports.config = getConfig();
     formatted = document.getText(range); //get actual document text...
-    formatted = (0, formats_1.forFormat)(formatted, exports.config); //Format document
+    formatted = (0, formats_1.forFormat)(formatted, exports.config); //Format keywords and operators
+    formatted = (0, formats_1.formatNestings)(formatted, exports.config); //Format nestings
     //--------------------------------------------------------------------------------//
     // Remoove EmptyLines...
     let nEL = exports.config.allowedNumberOfEmptyLines + 1.0;
@@ -38,8 +40,9 @@ function format(editor, range) {
         regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
     }
     if (exports.config.RemoveEmptyLines) {
-        formatted = formatted.replace(regex, formats_1.CRLF);
+        formatted = formatted.replace(regex, const_1.CRLF);
     }
+    // return it back to the Sourcefile
     if (formatted) {
         activeEditor.edit((editor) => {
             return editor.replace(range, formatted);

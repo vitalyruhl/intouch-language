@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { workspace, window } from 'vscode';
-import { forFormat, CRLF } from './formats';
+import { forFormat, formatNestings } from './formats';
+import { CRLF } from "./const";
 
 export let config: any = {};
 
@@ -31,7 +32,9 @@ function format(editor: vscode.TextEditor, range: vscode.Range): string {
 	config = getConfig();
 	formatted = document.getText(range); //get actual document text...
 
-	formatted = forFormat(formatted, config); //Format document
+	formatted = forFormat(formatted, config); //Format keywords and operators
+
+	formatted = formatNestings(formatted, config); //Format nestings
 
 
 	//--------------------------------------------------------------------------------//
@@ -44,11 +47,11 @@ function format(editor: vscode.TextEditor, range: vscode.Range): string {
 	else {
 		regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
 	}
-	if (config.RemoveEmptyLines){
+	if (config.RemoveEmptyLines) {
 		formatted = formatted.replace(regex, CRLF);
-	} 
+	}
 
-
+	// return it back to the Sourcefile
 	if (formatted) {
 		activeEditor.edit((editor) => {
 			return editor.replace(range, formatted);

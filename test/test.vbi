@@ -93,6 +93,28 @@ endif;
 
 
 {------------------------------------------------------------------------------}
+{nesting-test for}
+for i = 1 to StringLen(sInputString){Warum ist index bei Intouch-Strings mit 1 beginnend und nicht 0?}
+
+SZ = StringMid(sInputString,i,1);
+
+if SZ == sDelimiter then {Trennzeichen gefunden}
+Splitt = Splitt + 1;
+
+if Splitt == iIndex then {das richtige Element gefunden}
+IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "True Splitt("+ text(Splitt,"#") + ")/i:("+ text(i,"#") + "):[" + Temp_Return + "]"); ENDIF;	
+exit for;
+else
+IF Sys_Debug_info > 0 THEN LogMessage(Funkt + " Splitt("+ text(i,"#") + "):[" + Temp_Return + "]"); ENDIF;	
+Temp_Return = "";
+endif;	
+else
+Temp_Return = Temp_Return + SZ; {Zum Schluss wird der Rest ausgegeben!!!}
+endif;
+next;	
+
+{------------------------------------------------------------------------------}
+{------------------------------------------------------------------------------}
 {Line-Spacing-Test -> Global standart setting is 1 empty line}
 
 

@@ -1,25 +1,20 @@
 
-// Character Constants
-export const TAB = "\t";
-export const CR = "\r";
-export const LF = "\n";
-export const CRLF = "\r\n";
-export const DQUOTE = '\"';
-export const SQUOTE = "\'";
-export const BACKSLASH = "\\";
-
-export const FORMATS: string[] = [TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH];
-export const SINGLE_OPERATORS: string[] = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
-export const DOUBLE_OPERATORS: string[] = ['==', '<>', '<=', '=>'];
-export const TRENNER: string[] = [';', ' '];
-
+import { TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH } from "./const";
+import { FORMATS, SINGLE_OPERATORS, DOUBLE_OPERATORS, TRENNER, KEYWORDS } from './const';
 import { log } from './functions';
+import { NESTINGS } from "./nestingdef";
 
 
-const KEYWORDS: string[] = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", "DIM", "THEN",
-    "EXIT", "EACH", "STEP", "IN", "RETURN", "CALL", "MOD", "AND", "NOT", "IS",
-    "OR", "XOR", "Abs", "TO", "SHL", "SHR", "discrete", "integer", "real", "message"];
+export function formatNestings(text: string, config: any): string {
+    let a = NESTINGS;
+    let buf: string = '';
 
+
+    buf = text;
+    log("error", "format nestings is not implemented yet")
+
+    return buf;
+}
 
 export function forFormat(text: string, config: any): string {
     //let txt = runes(text);//Splitt text into single character
@@ -33,7 +28,6 @@ export function forFormat(text: string, config: any): string {
 
     let LineCount: number = 1;
     let ColumnCount: number = 0;
-    let NestingCount: number = 0;
 
     for (i = 0; i <= txt.length - 1; i++) {
 
@@ -191,6 +185,7 @@ export function forFormat(text: string, config: any): string {
 
     return buf;
 }//function
+
 
 function CheckCRLForWhitespace(s: string): boolean {
     let checks: string[] = [];

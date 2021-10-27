@@ -144,7 +144,7 @@
 			},
 			
 			{
-				"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
+				"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|NEXT|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
 				"name": "keyword.control.vbi",
 				"comment": "vbi Regular Keywords"
 			},
