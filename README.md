@@ -125,6 +125,7 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
   + Space between `;{` ==> `; {`
   + Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`
   + Test more code, and add some missing formatting rules
+  + If-Then -> when `THEN` is on other line (multiline condition) ==> `THEN` in the same Nesting where `IF` is (like `ELSE`).
 
 <br>
 
