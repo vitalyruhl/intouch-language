@@ -73,6 +73,13 @@ export function formatNestings(text: string, config: any): string {
                 //loop in all Nesting Keyworconfigurations
                 NESTINGS.some(item => {//format nestings
 
+                    /*
+                    todo: 2021.10.28 viru ->  
+                            bug 2021.10.28 double Keyword in nesting-config (1x next in for and 1x in while) 
+                            break nesting, because this reduce nesting, witout increase it on while
+                            Break on find firs match, does not work on .some or .foreach -> need to use another iteration
+                    */
+                    
 
                     if (!exclude) { //bugfix on "exit for;"
                         //begin like IF
@@ -101,6 +108,7 @@ export function formatNestings(text: string, config: any): string {
                         }
                         if (nestingCounter < 0) {//just in case
                             nestingCounter = 0;
+                            thisLineBack = false;
                         }
                     }
                 });
@@ -150,6 +158,8 @@ function getNesting(n: number, thisLineBack: boolean): string {
 }
 
 export function forFormat(text: string, config: any): string {
+
+    // todo: 2021.10.28 viru -> this is to complicated! -> refactor it like Nesting!
 
     let txt = text.split('');
     let buf: string = '';

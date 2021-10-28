@@ -53,6 +53,12 @@ function formatNestings(text, config) {
                 });
                 //loop in all Nesting Keyworconfigurations
                 nestingdef_1.NESTINGS.some(item => {
+                    /*
+                    todo: 2021.10.28 viru ->
+                            bug 2021.10.28 double Keyword in nesting-config (1x next in for and 1x in while)
+                            break nesting, because this reduce nesting, witout increase it on while
+                            Break on find firs match, does not work on .some or .foreach -> need to use another iteration
+                    */
                     if (!exclude) { //bugfix on "exit for;"
                         //begin like IF
                         regex = `((?![^{]*})(\\b${item.keyword})\\b)`;
@@ -76,6 +82,7 @@ function formatNestings(text, config) {
                         }
                         if (nestingCounter < 0) { //just in case
                             nestingCounter = 0;
+                            thisLineBack = false;
                         }
                     }
                 });
@@ -118,6 +125,7 @@ function getNesting(n, thisLineBack) {
     return temp;
 }
 function forFormat(text, config) {
+    // todo: 2021.10.28 viru -> this is to complicated! -> refactor it like Nesting!
     let txt = text.split('');
     let buf = '';
     let i = 0;

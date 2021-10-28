@@ -107,7 +107,43 @@ endif;
 next;	
 
 {------------------------------------------------------------------------------}
+{bug in Nesting 2021.10.28}
+IF  Attrak_Reglernummer >  = 0 THEN
+{*** Istwerte zuweisen ***}
+DIM i AS INTEGER;
+DIM S AS INTEGER;
+S = 0;
 
+FOR i = 32 TO 62 STEP 2
+Attrak_IW_Programmzeit_0.Name = "Attrak_IW_Programmzeit_" + Text(s,"0");
+Attrak_IW_Programmzeit_0.Reference = CALL SetReferenceWord( SYS_Topic, Attrak_DB_Ist, Attrak_Startbyte_Ist + i);
+S = S + 1;
+NEXT;
+
+ELSE
+
+Attrak_IW_Programmzeit_0.Name = "MA_0000";
+
+IF  Attrak_Reglernummer >  = 0 THEN
+{*** Istwerte zuweisen ***}
+DIM i AS INTEGER;
+DIM S AS INTEGER;
+S = 0;
+
+FOR i = 32 TO 62 STEP 2
+Attrak_IW_Programmzeit_0.Name = "Attrak_IW_Programmzeit_" + Text(s,"0");
+Attrak_IW_Programmzeit_0.Reference = CALL SetReferenceWord( SYS_Topic, Attrak_DB_Ist, Attrak_Startbyte_Ist + i);
+S = S + 1;
+NEXT;
+
+Attrak_IW_Programmzeit_0.Name = "MA_0000";
+
+ENDIF;
+
+ENDIF;
+
+{end Bug 1}
+{------------------------------------------------------------------------------}
 
 
 {------------------------------------------------------------------------------}
