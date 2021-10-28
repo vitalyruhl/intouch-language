@@ -18,11 +18,11 @@
 
 
 # What's new in Intouch-Language
-- V0.3.0 Add **Formatting Function** (not ready, but work in 'IF' and 'For')
+- V0.3.0 Add **Formatting Function** (not ready, but work in 'IF', 'For', 'WHILE')
   + New Keybinding (`strg+shift+alt+i`) for Quickformat in all dokuments
   + Add **Format on .vbi** with standart `shift+alt+F`
   + Add some settings for Formatting feature
-- V0.2.0 Add **Keywords**
+- V0.2.2 Add Keywords and All Functions from Intouch 11.1.13 Help
 - V0.2.0 Add some **Snippets**
 
 * Save your code as `.vbi` or `.vi` for automatic Language recognition. 
@@ -112,6 +112,37 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
   <br />
 </p>
 
+ - - - 
+
+ **ToDo:**
+
++ **Formatter**
+  + **Bugs:**
+    + `tmp="\\share\";` ==> Trowing Error unclosed String, because it escaped -> remove ALL escapes 
+      + other escapes like `\.`, `\0` etc.. not tested yed
+  + **Futures:**
+  + -/+ operator before a Number shall be formattet as:  `'= -1'` - Not `'= - 1'`
+  + Call function `myfunction ();` ==> `myfunction();`
+  + Space between `;{` ==> `; {`
+  + Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`
+  + Test more Code, and add some missing formatting rules
+
+<br>
+
++ **Syntax-highlighting**
+  + no issues
+  + no futures planned
+  
+<br>
+
++ **Snippets**
+  + no issues
+  + no futures planned
+
+ 
+> Please report **all** issues or future-requests [There:](https://github.com/vitalyruhl/intouch-language/issues)
+
+ - - - 
 
 
 <!-- 
@@ -119,7 +150,12 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
 <br /> <br /><a title="Intouch-Language bug3" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_4.jpg" alt="Intouch-Language bug3" width="80%" /></a>
 -->
 
+
 **Enjoy!**
+
+<br>
+
+<br>
 
 - - -
 

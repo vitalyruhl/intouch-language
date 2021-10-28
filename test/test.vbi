@@ -6,8 +6,16 @@
 Changelog:
 	V1.0.1		25.10.2021 		ViRu 	define Tests
 	V1.0.2		27.10.2021 		ViRu 	add some Tests and modify commets 
-	V1.0.3		28.10.2021 		ViRu 	add Test for bug in Nesting 
+	V1.0.3		28.10.2021 		ViRu 	add Test for next furures 
 }	
+
+{-------------------------------------------}
+{Futures / Bugs / Issues}
+tmp="\\share\";{Bug - Trowing Error unclosed String, because it escaped -> remove ALL escapes}
+CALL xGatawaySettings ();{ToDo: No space between -> xGatawaySettings()}  
+SYS_Anlage = -1;{ToDo: - before Number!}  
+ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;{Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`}
+{-------------------------------------------}
 
 {-------------------------------------------}
 {Variable definition:}{todo: Nesting on Comment-Block    -------}
@@ -15,6 +23,8 @@ dim m as message;
 dim i as integer;
 dim d as discrete;
 dim r as real;
+StartApp SYS_ToolsPath + "\Scheduler.exe " + SQLServer + " " + Database_user + " " + Database_pwd;
+
 {-------------------------------------------}
 
 
@@ -108,41 +118,7 @@ endif;
 next;	
 
 {------------------------------------------------------------------------------}
-IF  Attrak_Reglernummer >  = 0 THEN
-{*** Istwerte zuweisen ***}
-DIM i AS INTEGER;
-DIM S AS INTEGER;
-S = 0;
 
-FOR i = 32 TO 62 STEP 2
-Attrak_IW_Programmzeit_0.Name = "Attrak_IW_Programmzeit_" + Text(s,"0");
-Attrak_IW_Programmzeit_0.Reference = CALL SetReferenceWord( SYS_Topic, Attrak_DB_Ist, Attrak_Startbyte_Ist + i);
-S = S + 1;
-NEXT;
-
-ELSE
-
-Attrak_IW_Programmzeit_0.Name = "MA_0000";
-
-IF  Attrak_Reglernummer >  = 0 THEN
-{*** Istwerte zuweisen ***}
-DIM i AS INTEGER;
-DIM S AS INTEGER;
-S = 0;
-
-FOR i = 32 TO 62 STEP 2
-Attrak_IW_Programmzeit_0.Name = "Attrak_IW_Programmzeit_" + Text(s,"0");
-Attrak_IW_Programmzeit_0.Reference = CALL SetReferenceWord( SYS_Topic, Attrak_DB_Ist, Attrak_Startbyte_Ist + i);
-S = S + 1;
-NEXT;
-
-Attrak_IW_Programmzeit_0.Name = "MA_0000";
-
-ENDIF;
-
-ENDIF;
-
-{------------------------------------------------------------------------------}
 
 
 {------------------------------------------------------------------------------}
