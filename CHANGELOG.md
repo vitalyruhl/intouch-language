@@ -1,6 +1,9 @@
 
 
 ### 0.2.0
+*   Add ground formatting function (not ready, but work in IF and For)
+
+### 0.2.0
 *   Add and test all Intouch Keywords
 ### 0.1.2
 *   Correct links to Marktplace
