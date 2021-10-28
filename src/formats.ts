@@ -78,6 +78,25 @@ export function formatNestings(text: string, config: any): string {
                             bug 2021.10.28 double Keyword in nesting-config (1x next in for and 1x in while) 
                             break nesting, because this reduce nesting, witout increase it on while
                             Break on find firs match, does not work on .some or .foreach -> need to use another iteration
+
+
+
+                            https://stackoverflow.com/questions/2641347/short-circuit-array-foreach-like-calling-break
+                            for (const [index, el] of arr.entries()) {
+                                if ( index === 5 ) break;
+                                }
+                                var array = [1, 2, 3];
+
+                            OR
+
+                            for (var i = 0; i < array.length; i++) {
+                            if (array[i] === 1){
+                                break;
+                            }
+                            }
+
+
+
                     */
                     
 
