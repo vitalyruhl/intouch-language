@@ -8,54 +8,112 @@ const nestingdef_1 = require("./nestingdef");
 const const_3 = require("./const");
 function formatNestings(text, config) {
     let buf = '';
-    let isError = false;
     let codeFragments = [];
     let regex = '';
     let nestingCounter = 0;
-    codeFragments = text.split(const_1.CRLF); //split code by Line
-    for (let i = 0; i < codeFragments.length - 1; i++) {
-        codeFragments[i] = codeFragments[i].replace(const_3.REGEX_gm_TAB_NOT_IN_COMMENT, ''); //remove all Nestings
-        codeFragments[i] = codeFragments[i].replace(const_3.REGEX_gm_MOR_2_WSP, ' '); // remoove continuus whitespaces
-        let Obj = nestingdef_1.NESTINGS; // todo: format nestings
-        Obj.forEach(item => {
-            regex = `((?![^{]*})(\\b${item.keyword})\\b)`;
-            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
-                nestingCounter++;
+    let nestingCounterPrevous = 0;
+    let multilineComment = false;
+    let thisLineBack = false;
+    let LineCount = 1;
+    try {
+        codeFragments = text.split(const_1.CRLF); //split code by Line
+        for (let i = 0; i < codeFragments.length - 1; i++) {
+            LineCount = i + 1; //only for Log and Error
+            if (codeFragments[i] === '') { //not in epmty lines goes faster...
+                continue;
             }
-            regex = `((?![^{]*})(\\b${item.end})\\b)`;
-            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
-                nestingCounter--;
+            //check for multiline comment
+            //REGEX_gm_GET_NESTING
+            if (codeFragments[i].search(const_3.REGEX.g_CHECK_OPEN_COMMENT) !== -1) {
+                multilineComment = true;
             }
-            if (nestingCounter < 0) { //just in case
-                nestingCounter = 0;
+            if (codeFragments[i].search(const_3.REGEX.g_CHECK_CLOSE_COMMENT) !== -1) {
+                multilineComment = false;
             }
-        });
-        // interface NestingInterface {
-        //     keyword: string; //begin of the Nesting
-        //     lineEnd: string; //end of the Line in Keyword - can be the same
-        //     midle: string; //eg else in if-then-else-endit
-        //     end: string; //end of this Nestin
-        //     cbInline: boolean; //can be Inline
-        // }
-        codeFragments[i] = getNesting(nestingCounter) + codeFragments[i];
+            let str = codeFragments[i].match(const_3.REGEX.gm_GET_STRING); //get all Strings in the Line
+            if (str) {
+                let str2 = str.map(item => {
+                    let strw = item.replace(/\s(?<!\t)/gmi, '\0'); //replace whitespaces in each String on ~
+                    strw = strw.replace(/\t/gmi, 'u0001'); //replace TAB in each String on ~~~~
+                    return codeFragments[i].replace(item, strw); //each String in Line
+                });
+                // remove continuus whitespaces (Item 0 contains all Text???!!!)
+                // and Then ~ back in whitespaces
+                codeFragments[i] = str2[0].replace(const_3.REGEX.gm_MOR_2_WSP, ' ').replace(/\0/gmi, ' ').replace(/u0001/gmi, '\t'); //replace ~ back in whitespaces
+            }
+            if (!multilineComment) {
+                let exclude = false;
+                codeFragments[i] = codeFragments[i].replace(const_3.REGEX.gm_GET_NESTING, ''); //remove all Nestings
+                nestingdef_1.EXCLUDE_KEYWORDS.some(item => {
+                    //show for Exludes from Nesting
+                    regex = `((?![^{]*})(${item}))`;
+                    if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                        exclude = true;
+                    }
+                });
+                //loop in all Nesting Keyworconfigurations
+                nestingdef_1.NESTINGS.some(item => {
+                    if (!exclude) { //bugfix on "exit for;"
+                        //begin like IF
+                        regex = `((?![^{]*})(\\b${item.keyword})\\b)`;
+                        if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                            nestingCounter++;
+                        }
+                    }
+                    //midle like ELSE
+                    if (item.midle !== '') {
+                        regex = `((?![^{]*})(\\b${item.midle})\\b)`;
+                        if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                            thisLineBack = true;
+                        }
+                    }
+                    //end like ENDIF
+                    regex = `((?![^{]*})(\\b${item.end})\\b)`;
+                    if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                        nestingCounter--;
+                        if (nestingCounterPrevous !== nestingCounter) {
+                            thisLineBack = true;
+                        }
+                        if (nestingCounter < 0) { //just in case
+                            nestingCounter = 0;
+                        }
+                    }
+                });
+            }
+            if (nestingCounterPrevous !== nestingCounter) {
+                codeFragments[i] = getNesting(nestingCounterPrevous, thisLineBack) + codeFragments[i];
+                nestingCounterPrevous = nestingCounter;
+                thisLineBack = false; //reset this Flag
+            }
+            else {
+                codeFragments[i] = getNesting(nestingCounterPrevous, thisLineBack) + codeFragments[i];
+                thisLineBack = false; //reset this Flag
+            }
+        }
+        // combine all into new text and return it
+        for (let i = 0; i < codeFragments.length - 1; i++) {
+            buf += codeFragments[i] + const_1.CRLF;
+        }
     }
-    // combine all into new text and return it
-    for (let i = 0; i < codeFragments.length - 1; i++) {
-        buf += codeFragments[i] + const_1.CRLF;
+    catch (error) {
+        (0, functions_1.log)("Error", `Unhandled Error @ Line ${LineCount}!`);
+        return text; //on error return unformated code
     }
-    if (!isError) {
-        return buf;
-    }
+    return buf;
 }
 exports.formatNestings = formatNestings;
 //edit.delete(line.rangeIncludingLineBreak);
-function getNesting(n) {
+function getNesting(n, thisLineBack) {
     let temp = '';
-    if (n === 0) {
-        return '';
-    }
-    for (let i = 0; i <= n; i++) {
-        temp += const_1.TAB;
+    if (n !== 0) {
+        for (let i = 0; i < n; i++) {
+            if (thisLineBack) {
+                thisLineBack = false; //reset this Flag
+            }
+            else {
+                temp += const_1.TAB;
+            }
+        }
     }
     return temp;
 }

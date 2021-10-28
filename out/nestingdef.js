@@ -1,21 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NESTINGS = void 0;
-const const_1 = require("./const");
+exports.NESTINGS = exports.EXCLUDE_KEYWORDS = void 0;
+exports.EXCLUDE_KEYWORDS = ["EXIT FOR"];
 exports.NESTINGS = [
     {
         keyword: 'if',
-        lineEnd: 'then',
         midle: 'else',
         end: 'endif',
-        cbInline: true
     },
     {
         keyword: 'for',
-        lineEnd: const_1.CRLF,
         midle: '',
-        end: 'next;',
-        cbInline: false
+        end: 'next',
+    },
+    {
+        keyword: 'while',
+        midle: '',
+        end: 'next',
     },
 ];
 //# sourceMappingURL=nestingdef.js.map

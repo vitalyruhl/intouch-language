@@ -1,0 +1,2 @@
+	if sys_Debug_info >0 then LogMessage(Funkt          +           "eof                if one of eof is big -> its Wrong! | ["         + Text(iFirstMA,"#")  "]"); endif;
+		if sys_Debug_info>0 then LogMessage(Funkt+"eof if one        of eof is big -> its Wrong! | ["   + Text(iFirstMA,"#")  "]");      endif;
