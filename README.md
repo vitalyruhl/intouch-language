@@ -16,21 +16,20 @@
 
 -->
 
-
 # What's new in Intouch-Language
-- V0.3.0 Add **Formatting Function** (not ready, but work in 'IF' and 'For')
-  + New Keybinding (`strg+shift+alt+i`) for Quickformat in all dokuments
+- V0.3.0 Add **Formatting Function** (not ready yet, meanwhile works in 'IF', 'For', 'WHILE')
+  + New Keybinding (`strg+shift+alt+i`) for quickformat in all documents
   + Add **Format on .vbi** with standart `shift+alt+F`
-  + Add some settings for Formatting feature
-- V0.2.0 Add **Keywords**
+  + Add some settings for formatting feature
+- V0.2.2 Add Keywords and all Functions from Intouch 11.1.13 Help
 - V0.2.0 Add some **Snippets**
 
-* Save your code as `.vbi` or `.vi` for automatic Language recognition. 
+* Save your code as `.vbi` or `.vi` for automatic language recognition. 
 
 
 # Intouch-Language
-- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides `syntax highlighting`, `snippets` and `futo-format` function for Intouch Basic.
-- **Intouch** is a Programming language for Wonderware SCADA Intouch Applications.
+- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides `syntax highlighting`, `snippets` and `auto-format` function for Intouch Basic.
+- **Intouch** is a programming language for Wonderware SCADA Intouch Applications.
 
 
 
@@ -57,7 +56,7 @@
   + `git clone https://github.com/vitalyruhl/intouch-language.git`
   + open shell and type `npm i`
   + run: `npm run compile`, or `npm run watch` if you want to make changes in src folder.
-  + you must restart you VS-Code after install, to apply new settings 
+  + you must restart the VS-Code after installation, to apply new settings 
 
 
 <p align="center">
@@ -112,6 +111,37 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
   <br />
 </p>
 
+ - - - 
+
+ **ToDo:**
+
++ **Formatter**
+  + **Bugs:**
+    + `tmp="\\share\";` ==> Trowing Error unclosed String, because it escaped -> remove ALL escapes 
+      + other escapes like `\.`, `\0` etc.. not tested yed
+  + **Futures:**
+  + -/+ operator before a Number shall be formattet as:  `'= -1'` - Not `'= - 1'`
+  + Call function `myfunction ();` ==> `myfunction();`
+  + Space between `;{` ==> `; {`
+  + Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`
+  + Test more code, and add some missing formatting rules
+
+<br>
+
++ **Syntax-highlighting**
+  + no issues
+  + no futures planned
+  
+<br>
+
++ **Snippets**
+  + no issues
+  + no futures planned
+
+ 
+> Please report **all** issues or future-requests [There:](https://github.com/vitalyruhl/intouch-language/issues)
+
+ - - - 
 
 
 <!-- 
@@ -119,7 +149,12 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
 <br /> <br /><a title="Intouch-Language bug3" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/bugs/Screenshot_4.jpg" alt="Intouch-Language bug3" width="80%" /></a>
 -->
 
+
 **Enjoy!**
+
+<br>
+
+<br>
 
 - - -
 

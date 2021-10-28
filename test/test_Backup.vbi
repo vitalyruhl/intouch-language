@@ -6,7 +6,16 @@
 Changelog:
 	V1.0.1		25.10.2021 		ViRu 	define Tests
 	V1.0.2		27.10.2021 		ViRu 	add some Tests and modify commets 
+	V1.0.3		28.10.2021 		ViRu 	add Test for next furures 
 }	
+
+{-------------------------------------------}
+{Futures / Bugs / Issues}
+tmp="\\share\";
+CALL xGatawaySettings ();{ToDo: No space between -> xGatawaySettings()}  
+SYS_Anlage = -1;{ToDo: - before Number!}  
+ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;{Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`}
+{-------------------------------------------}
 
 {-------------------------------------------}
 {Variable definition:}{todo: Nesting on Comment-Block    -------}
@@ -14,6 +23,8 @@ dim m as message;
 dim i as integer;
 dim d as discrete;
 dim r as real;
+StartApp SYS_ToolsPath + "\Scheduler.exe " + SQLServer + " " + Database_user + " " + Database_pwd;
+
 {-------------------------------------------}
 
 
