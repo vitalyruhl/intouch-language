@@ -71,28 +71,20 @@ export function formatNestings(text: string, config: any): string {
                 });
 
                 //loop in all Nesting Keyworconfigurations
-                NESTINGS.some(item => {//format nestings
-
-                    /*
-                    todo: 2021.10.28 viru ->  
-                            bug 2021.10.28 double Keyword in nesting-config (1x next in for and 1x in while) 
-                            break nesting, because this reduce nesting, witout increase it on while
-                            Break on find firs match, does not work on .some or .foreach -> need to use another iteration
-                    */
-                    
+                for (var ii = 0; ii < NESTINGS.length; ii++) {
+                //NESTINGS.some(item => {//format nestings
 
                     if (!exclude) { //bugfix on "exit for;"
                         //begin like IF
-                        regex = `((?![^{]*})(\\b${item.keyword})\\b)`;
+                        regex = `((?![^{]*})(\\b${NESTINGS[ii].keyword})\\b)`;
                         if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
-
                             nestingCounter++;
                         }
                     }
 
                     //midle like ELSE
-                    if (item.midle !== '') {
-                        regex = `((?![^{]*})(\\b${item.midle})\\b)`;
+                    if (NESTINGS[ii].midle !== '') {
+                        regex = `((?![^{]*})(\\b${NESTINGS[ii].midle})\\b)`;
                         if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
                             thisLineBack = true;
                         }
@@ -100,18 +92,20 @@ export function formatNestings(text: string, config: any): string {
 
 
                     //end like ENDIF
-                    regex = `((?![^{]*})(\\b${item.end})\\b)`;
+                    regex = `((?![^{]*})(\\b${NESTINGS[ii].end})\\b)`;
                     if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
                         nestingCounter--;
                         if (nestingCounterPrevous !== nestingCounter) {
                             thisLineBack = true;
+                            break;
                         }
                         if (nestingCounter < 0) {//just in case
                             nestingCounter = 0;
                             thisLineBack = false;
                         }
                     }
-                });
+                //});
+                };
             }
 
             if (nestingCounterPrevous !== nestingCounter) {
