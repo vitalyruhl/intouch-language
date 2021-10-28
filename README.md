@@ -17,18 +17,19 @@
 -->
 
 
-## ```it is not finished yet. who wants to help ...```
-
-
 # What's new in Intouch-Language
-- Add **Keywords**
-- Add some **Snippets**
+- V0.3.0 Add **Formatting Function** (not ready, but work in 'IF' and 'For')
+  + New Keybinding (`strg+shift+alt+i`) for Quickformat in all dokuments
+  + Add **Format on .vbi** with standart `shift+alt+F`
+  + Add some settings for Formatting feature
+- V0.2.0 Add **Keywords**
+- V0.2.0 Add some **Snippets**
 
 * Save your code as `.vbi` or `.vi` for automatic Language recognition. 
 
 
 # Intouch-Language
-- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides `syntax highlighting` and `snippets` for Intouch Basic.
+- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides `syntax highlighting`, `snippets` and `futo-format` function for Intouch Basic.
 - **Intouch** is a Programming language for Wonderware SCADA Intouch Applications.
 
 
@@ -42,17 +43,21 @@
 <table align="center" width="100%" border="0">
   <tr>
     <td align="center" border="0">
-    <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/example.jpg" alt="Example" width="60%" /></a>
+    <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/example.gif" alt="Example" width="60%" /></a>
     </td>
   </tr>
 </table>
 
 
 # Install:
-* copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
-* or install it from 
+* install it from, find in ext.-manager (type intouch) 
 [Visual Studio Marktplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
-
+* (Beta Version) copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
+  + `cd ~/.vscode/extensions/`
+  + `git clone https://github.com/vitalyruhl/intouch-language.git`
+  + open shell and type `npm i`
+  + run: `npm run compile`, or `npm run watch` if you want to make changes in src folder.
+  + you must restart you VS-Code after install, to apply new settings 
 
 
 <p align="center">

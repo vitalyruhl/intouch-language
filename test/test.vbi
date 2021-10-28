@@ -6,6 +6,7 @@
 Changelog:
 	V1.0.1		25.10.2021 		ViRu 	define Tests
 	V1.0.2		27.10.2021 		ViRu 	add some Tests and modify commets 
+	V1.0.3		28.10.2021 		ViRu 	add Test for bug in Nesting 
 }	
 
 {-------------------------------------------}
@@ -107,7 +108,6 @@ endif;
 next;	
 
 {------------------------------------------------------------------------------}
-{bug in Nesting 2021.10.28}
 IF  Attrak_Reglernummer >  = 0 THEN
 {*** Istwerte zuweisen ***}
 DIM i AS INTEGER;
