@@ -39,7 +39,7 @@
 # Intouch-Language
 
 - **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides `syntax highlighting`, `snippets` and `auto-format` function for Intouch Basic.
-- **Intouch** is a programming language for Wonderware SCADA Intouch Applications.
+- **Intouch** is a programming language for AVEVA (Wonderware) SCADA Intouch Applications.
 
 <p align="center" bgcolor:=#3f3f3f>
   <br />
