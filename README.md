@@ -18,14 +18,14 @@
 
 # What's new in Intouch-Language
 - V0.3.2 
-  + automatic increased number on Publisch (my mistake)
+  + automatic increased number on publish (my mistake)
 - V0.3.1 
-  + fixed bug on escaped stringend `tmp="\\share\";`
+  + fixed bug on escaped string end `tmp="\\share\";`
   + Add some missing formatting rules
 - V0.3.0 
   + Add **Formatting Function**
   + New Keybinding (`strg+shift+alt+i`) for quickformat in all documents
-  + Add **Format on .vbi** with standart `shift+alt+F`
+  + Add **Format on .vbi** with standard `shift+alt+F`
   + Add some settings for formatting feature
 - V0.2.2  
   + Add Keywords and all Functions from Intouch 11.1.13 Help
@@ -54,8 +54,8 @@
 
 
 # Install:
-* install it from, find in ext.-manager (type intouch) 
-[Visual Studio Marktplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
+* install it from, find in ext.-manager (type Intouch) 
+[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
 * (Beta Version) copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
   + `cd ~/.vscode/extensions/`
   + `git clone https://github.com/vitalyruhl/intouch-language.git`
