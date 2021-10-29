@@ -17,6 +17,8 @@
 -->
 
 # What's new in Intouch-Language
+- V0.3.2 
+  + automatic increased number on Publisch (my mistake)
 - V0.3.1 
   + fixed bug on escaped stringend `tmp="\\share\";`
   + Add some missing formatting rules

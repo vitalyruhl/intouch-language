@@ -1,7 +1,17 @@
 
 
-### 0.2.0
-*   Add ground formatting function (not ready, but work in IF and For)
+### V0.3.2 
+  + automatic increased number on Publisch (my mistake)
+
+### V0.3.1 
+  + fixed bug on escaped stringend `tmp="\\share\";`
+  + Add some missing formatting rules
+
+### V0.3.0 
+  + Add **Formatting Function**
+  + New Keybinding (`strg+shift+alt+i`) for quickformat in all documents
+  + Add **Format on .vbi** with standart `shift+alt+F`
+  + Add some settings for formatting feature
 
 ### 0.2.0
 *   Add and test all Intouch Keywords
