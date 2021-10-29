@@ -49,7 +49,7 @@
 
 # Installation
 
-- install it from, find in ext.-manager (type Intouch)
+- install it in ext.-manager (type Intouch) or from 
   [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
 - (Beta Version) copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
   - `cd ~/.vscode/extensions/`
