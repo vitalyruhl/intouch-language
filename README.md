@@ -14,24 +14,9 @@
 
 # What's new in Intouch-Language
 
-### V0.3.2 - V0.3.3
-
-- correct some spelling mistakes
-- debug per default `off`, instead `on`
-- correct `.vscodeignore`
-
-### V0.3.1
-
-- fixed bug on escaped string end like `tmp="\\myserver\share\";`
-- Add some missing formatting rules
-
-### V0.3.0
+### V1.0.0
 
 - Add **Formatting Function**
-- New Keybinding `strg + shift + alt + i` for quickformat in document
-  - not really usable, because work only on assigned intouch language
-- Add **Format on .vbi** with standard `shift + alt + F`
-- Add some settings for formatting feature
 
 <br>
 <br>
@@ -94,11 +79,18 @@
   <br />
 </p>
 
+### Enjoy!
+
+> [Please report missing rules or future-requests on this link.](https://github.com/vitalyruhl/intouch-language/issues)
+
+<br>
+<br>
+
 # Todo
 
 - **Formatter**
-  - Test more code, and add some missing formatting rules
-  - Please report missing rules or future-requests [there](https://github.com/vitalyruhl/intouch-language/issues)
+  - no issues
+  - no futures planned
 
 <br>
 
@@ -115,12 +107,6 @@
 <br>
 <br>
 
-**Enjoy!**
-
-> [Please report **all** issues or future-requests on this link.](https://github.com/vitalyruhl/intouch-language/issues)
-
-<br>
-<br>
 
 ---
 

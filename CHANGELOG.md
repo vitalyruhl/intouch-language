@@ -1,5 +1,10 @@
 # Changelog
 
+
+### V1.0.0
+
+- correct `.vscodeignore`, and Release it as ready
+
 ### V0.3.3
 
 - 2021.10.29 VitalyRuhl
