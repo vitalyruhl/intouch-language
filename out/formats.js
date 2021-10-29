@@ -52,40 +52,38 @@ function formatNestings(text, config) {
                     }
                 });
                 //loop in all Nesting Keyworconfigurations
-                nestingdef_1.NESTINGS.some(item => {
-                    /*
-                    todo: 2021.10.28 viru ->
-                            bug 2021.10.28 double Keyword in nesting-config (1x next in for and 1x in while)
-                            break nesting, because this reduce nesting, witout increase it on while
-                            Break on find firs match, does not work on .some or .foreach -> need to use another iteration
-                    */
+                for (var ii = 0; ii < nestingdef_1.NESTINGS.length; ii++) {
+                    //NESTINGS.some(item => {//format nestings
                     if (!exclude) { //bugfix on "exit for;"
                         //begin like IF
-                        regex = `((?![^{]*})(\\b${item.keyword})\\b)`;
+                        regex = `((?![^{]*})(\\b${nestingdef_1.NESTINGS[ii].keyword})\\b)`;
                         if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
                             nestingCounter++;
                         }
                     }
                     //midle like ELSE
-                    if (item.midle !== '') {
-                        regex = `((?![^{]*})(\\b${item.midle})\\b)`;
+                    if (nestingdef_1.NESTINGS[ii].midle !== '') {
+                        regex = `((?![^{]*})(\\b${nestingdef_1.NESTINGS[ii].midle})\\b)`;
                         if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
                             thisLineBack = true;
                         }
                     }
                     //end like ENDIF
-                    regex = `((?![^{]*})(\\b${item.end})\\b)`;
+                    regex = `((?![^{]*})(\\b${nestingdef_1.NESTINGS[ii].end})\\b)`;
                     if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
                         nestingCounter--;
                         if (nestingCounterPrevous !== nestingCounter) {
                             thisLineBack = true;
+                            break;
                         }
                         if (nestingCounter < 0) { //just in case
                             nestingCounter = 0;
                             thisLineBack = false;
                         }
                     }
-                });
+                    //});
+                }
+                ;
             }
             if (nestingCounterPrevous !== nestingCounter) {
                 codeFragments[i] = getNesting(nestingCounterPrevous, thisLineBack) + codeFragments[i];
@@ -144,10 +142,9 @@ function forFormat(text, config) {
             modified = 0;
             //check for String-End (check before begin!)
             if (inString && (txt[i] === '"')) {
-                if (!(txt[i - 1] === '\\')) { //check for escaped quot
-                    inString = false;
-                    //log("info", `Info @ Line ${LineCount} at Column ${ColumnCount} -> closed string detected!`);
-                }
+                // if (!(txt[i - 1] === '\\')) {  //check for escaped quot
+                inString = false;
+                // }
             }
             else if (!inComment) { //check for String-Begin, but not the same char as close!
                 if (txt[i] === '"') {
@@ -159,7 +156,7 @@ function forFormat(text, config) {
             if (txt[i] === const_1.LF) { //txt[i] === CRLF || txt[i] === CR || txt[i] === LF
                 if (inString) { //check for String error, because there is no way to declara string over multiple Line!
                     (0, functions_1.log)("Error", `Error @ Line ${LineCount} at Column ${ColumnCount} -> no closed string detected!`);
-                    (0, functions_1.log)("Error", buf);
+                    (0, functions_1.log)("info", buf);
                     return text; //return unformatet text
                 }
                 LineCount++;

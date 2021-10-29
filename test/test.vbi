@@ -1,5 +1,5 @@
 
-
+tmp="\\share\";{Bug - Trowing Error unclosed String, because it escaped -> remove ALL escapes}
 {Formatting-Test}
 
 {

@@ -178,10 +178,9 @@ export function forFormat(text: string, config: any): string {
             modified = 0;
             //check for String-End (check before begin!)
             if (inString && (txt[i] === '"')) {
-                if (!(txt[i - 1] === '\\')) {  //check for escaped quot
-                    inString = false;
-                    //log("info", `Info @ Line ${LineCount} at Column ${ColumnCount} -> closed string detected!`);
-                }
+               // if (!(txt[i - 1] === '\\')) {  //check for escaped quot
+               inString = false;
+               // }
             }
             else if (!inComment) {//check for String-Begin, but not the same char as close!
                 if (txt[i] === '"') {
@@ -195,7 +194,7 @@ export function forFormat(text: string, config: any): string {
 
                 if (inString) {//check for String error, because there is no way to declara string over multiple Line!
                     log("Error", `Error @ Line ${LineCount} at Column ${ColumnCount} -> no closed string detected!`);
-                    log("Error", buf);
+                    log("info", buf);
                     return text; //return unformatet text
                 }
 
