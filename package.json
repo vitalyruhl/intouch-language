@@ -2,7 +2,7 @@
 	"name": "intouch-language",
 	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021 vitalyruhl",
 	"description": "Intouch-Language syntax highlighting, formatter and code snippets for VSCode",
-	"version": "0.3.3",
+	"version": "1.0.0",
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
