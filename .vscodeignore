@@ -1,3 +1,13 @@
+#main
+*.vsix
+**/logs
+*.exe
+*.7z
+*.zap*
+*.zip
+*.iso
+
+#vscode
 .vscode-test/**
 .gitignore
 **/*.ts
@@ -5,7 +15,9 @@
 **/tslint.json
 !file.ts
 !file.sh
-./temp
-./out
-./other
-./images
+
+#Folder
+temp
+out
+other
+

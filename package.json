@@ -63,7 +63,7 @@
 		"commands": [
 			{
 				"command": "vbi-format",
-				"title": "Format Intouchfile",
+				"title": "Format Intouch file",
 				"category": "vbi"
 			}
 		],
@@ -79,8 +79,8 @@
 			"properties": {
 				"VBI.formatter.debug": {
 					"type": "boolean",
-					"default": true,
-					"description": "Enable debugmodus."
+					"default": false,
+					"description": "Enable debug modus."
 				},
 				"VBI.formatter.debugToChannel": {
 					"type": "boolean",
@@ -100,7 +100,7 @@
 				"VBI.formatter.EmptyLinesAlsoInComment": {
 					"type": "boolean",
 					"default": false,
-					"description": "Delete empty lines in commen also."
+					"description": "Delete empty lines in comments also."
 				},
 				"VBI.formatter.FormatAlsoInComment": {
 					"type": "boolean",
