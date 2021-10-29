@@ -77,8 +77,8 @@ export function getConfig() {
 	//misk
 	config.RemoveEmptyLines = workspace.getConfiguration().get('VBI.formatter.RemoveEmptyLines');
 	config.EmptyLinesAlsoInComment = workspace.getConfiguration().get('VBI.formatter.EmptyLinesAlsoInComment');
-	config.KeywordUppercaseAlsoInComment = workspace.getConfiguration().get('VBI.formatter.KeywordUppercaseAlsoInComment');
-	config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
+	config.FormatAlsoInComment = workspace.getConfiguration().get('VBI.formatter.FormatAlsoInComment');
+	//config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
 
 	//log this
 	console.log('getConfig():', config);

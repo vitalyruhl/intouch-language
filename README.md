@@ -17,15 +17,18 @@
 -->
 
 # What's new in Intouch-Language
-- V0.3.0 Add **Formatting Function** (not ready yet, meanwhile works in 'IF', 'For', 'WHILE')
+- V0.3.1 
+  + fixed bug on escaped stringend `tmp="\\share\";`
+  + Add some missing formatting rules
+- V0.3.0 
+  + Add **Formatting Function**
   + New Keybinding (`strg+shift+alt+i`) for quickformat in all documents
   + Add **Format on .vbi** with standart `shift+alt+F`
   + Add some settings for formatting feature
-- V0.2.2 Add Keywords and all Functions from Intouch 11.1.13 Help
-- V0.2.0 Add some **Snippets**
-
-* Save your code as `.vbi` or `.vi` for automatic language recognition. 
-
+- V0.2.2  
+  + Add Keywords and all Functions from Intouch 11.1.13 Help
+- V0.2.0  
+  + Add some **Snippets**
 
 # Intouch-Language
 - **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides `syntax highlighting`, `snippets` and `auto-format` function for Intouch Basic.
@@ -57,6 +60,9 @@
   + open shell and type `npm i`
   + run: `npm run compile`, or `npm run watch` if you want to make changes in src folder.
   + you must restart the VS-Code after installation, to apply new settings 
+
+
+> Save your code as `.vbi` or `.vi` for automatic language recognition. 
 
 
 <p align="center">
@@ -116,17 +122,9 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
  **ToDo:**
 
 + **Formatter**
-  + **Bugs:**
-    + `tmp="\\share\";` ==> Trowing Error unclosed String, because it escaped -> remove ALL escapes 
-      + other escapes like `\.`, `\0` etc.. not tested yed
-  + **Futures:**
-  + -/+ operator before a Number shall be formattet as:  `'= -1'` - Not `'= - 1'`
-  + Call function `myfunction ();` ==> `myfunction();`
-  + Space between `;{` ==> `; {`
-  + Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`
   + Test more code, and add some missing formatting rules
-  + If-Then -> when `THEN` is on other line (multiline condition) ==> `THEN` in the same Nesting where `IF` is (like `ELSE`).
-
+  + Please report missing rules or future-requests [there](https://github.com/vitalyruhl/intouch-language/issues)
+  
 <br>
 
 + **Syntax-highlighting**
@@ -140,7 +138,7 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
   + no futures planned
 
  
-> Please report **all** issues or future-requests [There:](https://github.com/vitalyruhl/intouch-language/issues)
+> [Please report **all** issues or future-requests on this link.](https://github.com/vitalyruhl/intouch-language/issues)
 
  - - - 
 

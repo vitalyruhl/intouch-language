@@ -7,16 +7,19 @@ exports.NESTINGS = [
         keyword: 'if',
         midle: 'else',
         end: 'endif',
+        multiline: 'then',
     },
     {
         keyword: 'for',
         midle: '',
         end: 'next',
+        multiline: '',
     },
     {
         keyword: 'while',
         midle: '',
         end: 'next',
+        multiline: '',
     },
 ];
 //# sourceMappingURL=nestingdef.js.map

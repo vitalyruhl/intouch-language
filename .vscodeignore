@@ -1,4 +1,11 @@
-.vscode/**
 .vscode-test/**
 .gitignore
-vsc-extension-quickstart.md
+**/*.ts
+**/tsconfig.json
+**/tslint.json
+!file.ts
+!file.sh
+./temp
+./out
+./other
+./images

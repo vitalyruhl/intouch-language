@@ -1,10 +1,8 @@
 
-import { TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH } from "./const";
-import { FORMATS, SINGLE_OPERATORS, DOUBLE_OPERATORS, TRENNER, KEYWORDS } from './const';
+import { TAB, LF, CRLF } from "./const";
+import { FORMATS, SINGLE_OPERATORS, DOUBLE_OPERATORS, TRENNER, KEYWORDS, NO_SPACE_ITEMS } from './const';
 import { log } from './functions';
 import { NESTINGS, EXCLUDE_KEYWORDS } from "./nestingdef";
-
-import * as vscode from 'vscode';
 
 import { REGEX } from './const';
 
@@ -51,8 +49,52 @@ export function formatNestings(text: string, config: any): string {
                 });
 
                 // remove continuus whitespaces (Item 0 contains all Text???!!!)
+
+                codeFragments[i] = str2[0].replace(REGEX.gm_MOR_2_WSP, ' ');
+
+                //!-----------------------------------------------------------------------------------
+                //! NEW Formattings
+
+                if (!multilineComment) {
+                    //check for NO_SPACE_ITEMS
+                    for (let item in NO_SPACE_ITEMS) {
+
+                        //find space before
+                        if (config.FormatAlsoInComment) {
+                            regex = `(\\s\\${NO_SPACE_ITEMS[item]})`;
+                        }
+                        else {
+                            regex = `((?![^{]*})\\s\\${NO_SPACE_ITEMS[item]})`;
+                        }
+                        codeFragments[i] = codeFragments[i].replace(new RegExp(regex, 'g'), `${NO_SPACE_ITEMS[item]}`);
+
+                        //find space after
+                        if (config.FormatAlsoInComment) {
+                            regex = `(\\${NO_SPACE_ITEMS[item]}\\s)`;
+                        }
+                        else {
+                            regex = `((?![^{]*})(\\${NO_SPACE_ITEMS[item]}\\s))`;
+                        }
+                        codeFragments[i] = codeFragments[i].replace(new RegExp(regex, 'g'), `${NO_SPACE_ITEMS[item]}`);
+                    }
+
+                    //* check for Space or crlf after ';'
+                    //! it migt be replaced in strings to?! -> its a Problem? -> fix them so far as posible
+                    if (config.FormatAlsoInComment) {
+                        codeFragments[i] = codeFragments[i].replace(/;(?!\s)/g, `; `);
+                    }
+                    else {
+                        codeFragments[i] = codeFragments[i].replace(/(?![^{]*});(?!\s)/g, `; `);
+                    }
+
+                }
+                //! END New Formattings
+                //!-----------------------------------------------------------------------------------
+
                 // and Then ~ back in whitespaces
-                codeFragments[i] = str2[0].replace(REGEX.gm_MOR_2_WSP, ' ').replace(/\0/gmi, ' ').replace(/u0001/gmi, '\t');//replace ~ back in whitespaces
+                codeFragments[i] = codeFragments[i].replace(/\0/gmi, ' ').replace(/u0001/gmi, '\t');//replace ~ back in whitespaces
+
+
             }
 
 
@@ -70,15 +112,28 @@ export function formatNestings(text: string, config: any): string {
                     }
                 });
 
-                //loop in all Nesting Keyworconfigurations
+                //loop in all Nesting Keyworconfigurations 
+                let keyFound: boolean = false;
                 for (var ii = 0; ii < NESTINGS.length; ii++) {
-                //NESTINGS.some(item => {//format nestings
+                    //NESTINGS.some(item => {//format nestings
 
-                    if (!exclude) { //bugfix on "exit for;"
-                        //begin like IF
+                    if (!exclude) { //(!exclude) ==> bugfix on "exit for;"
+                        //first like if
                         regex = `((?![^{]*})(\\b${NESTINGS[ii].keyword})\\b)`;
                         if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
                             nestingCounter++;
+                            keyFound = true;
+                        }
+                    }
+
+
+                    //bugfix on "then in a new line"
+                    if (NESTINGS[ii].multiline !== '') {
+                        regex = `((?![^{]*})(\\b${NESTINGS[ii].multiline})\\b)`;
+                        if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                            if (!keyFound) {
+                                thisLineBack = true;
+                            }
                         }
                     }
 
@@ -104,8 +159,9 @@ export function formatNestings(text: string, config: any): string {
                             thisLineBack = false;
                         }
                     }
-                //});
-                };
+
+                    keyFound = false;
+                }
             }
 
             if (nestingCounterPrevous !== nestingCounter) {
@@ -178,9 +234,9 @@ export function forFormat(text: string, config: any): string {
             modified = 0;
             //check for String-End (check before begin!)
             if (inString && (txt[i] === '"')) {
-               // if (!(txt[i - 1] === '\\')) {  //check for escaped quot
-               inString = false;
-               // }
+                // if (!(txt[i - 1] === '\\')) {  //check for escaped quot
+                inString = false;
+                // }
             }
             else if (!inComment) {//check for String-Begin, but not the same char as close!
                 if (txt[i] === '"') {
@@ -190,7 +246,7 @@ export function forFormat(text: string, config: any): string {
             }
 
             //Linecount 
-            if (txt[i] === LF) { //txt[i] === CRLF || txt[i] === CR || txt[i] === LF
+            if (txt[i] === LF) {
 
                 if (inString) {//check for String error, because there is no way to declara string over multiple Line!
                     log("Error", `Error @ Line ${LineCount} at Column ${ColumnCount} -> no closed string detected!`);
@@ -225,6 +281,7 @@ export function forFormat(text: string, config: any): string {
 
                     let wbf: string = '';//word-bindery-test-char-before
                     let wba: string = '';//word-bindery-test-char-after
+
 
                     //check for KEYWORDS
                     for (j in KEYWORDS) {
@@ -290,7 +347,15 @@ export function forFormat(text: string, config: any): string {
                                 buf += text[i];
 
                                 if (text[i + 1] !== ' ') {
-                                    buf += ' ';
+                                    let debug1 = SINGLE_OPERATORS[j];
+                                    if (SINGLE_OPERATORS[j] === '+' || SINGLE_OPERATORS[j] === '-'){
+                                        if (isNaN(+text[i + 1])){
+                                            buf += ' ';
+                                        }
+                                    }
+                                    else{
+                                        buf += ' ';
+                                    }
                                 }
 
                                 modified = -1;
@@ -299,6 +364,7 @@ export function forFormat(text: string, config: any): string {
                             }
                         }
                     }
+
                 }
 
             }//formating session

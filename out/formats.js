@@ -38,8 +38,42 @@ function formatNestings(text, config) {
                     return codeFragments[i].replace(item, strw); //each String in Line
                 });
                 // remove continuus whitespaces (Item 0 contains all Text???!!!)
+                codeFragments[i] = str2[0].replace(const_3.REGEX.gm_MOR_2_WSP, ' ');
+                //!-----------------------------------------------------------------------------------
+                //! NEW Formattings
+                if (!multilineComment) {
+                    //check for NO_SPACE_ITEMS
+                    for (let item in const_2.NO_SPACE_ITEMS) {
+                        //find space before
+                        if (config.FormatAlsoInComment) {
+                            regex = `(\\s\\${const_2.NO_SPACE_ITEMS[item]})`;
+                        }
+                        else {
+                            regex = `((?![^{]*})\\s\\${const_2.NO_SPACE_ITEMS[item]})`;
+                        }
+                        codeFragments[i] = codeFragments[i].replace(new RegExp(regex, 'g'), `${const_2.NO_SPACE_ITEMS[item]}`);
+                        //find space after
+                        if (config.FormatAlsoInComment) {
+                            regex = `(\\${const_2.NO_SPACE_ITEMS[item]}\\s)`;
+                        }
+                        else {
+                            regex = `((?![^{]*})(\\${const_2.NO_SPACE_ITEMS[item]}\\s))`;
+                        }
+                        codeFragments[i] = codeFragments[i].replace(new RegExp(regex, 'g'), `${const_2.NO_SPACE_ITEMS[item]}`);
+                    }
+                    //* check for Space or crlf after ';'
+                    //! it migt be replaced in strings to?! -> its a Problem? -> fix them so far as posible
+                    if (config.FormatAlsoInComment) {
+                        codeFragments[i] = codeFragments[i].replace(/;(?!\s)/g, `; `);
+                    }
+                    else {
+                        codeFragments[i] = codeFragments[i].replace(/(?![^{]*});(?!\s)/g, `; `);
+                    }
+                }
+                //! END New Formattings
+                //!-----------------------------------------------------------------------------------
                 // and Then ~ back in whitespaces
-                codeFragments[i] = str2[0].replace(const_3.REGEX.gm_MOR_2_WSP, ' ').replace(/\0/gmi, ' ').replace(/u0001/gmi, '\t'); //replace ~ back in whitespaces
+                codeFragments[i] = codeFragments[i].replace(/\0/gmi, ' ').replace(/u0001/gmi, '\t'); //replace ~ back in whitespaces
             }
             if (!multilineComment) {
                 let exclude = false;
@@ -51,14 +85,25 @@ function formatNestings(text, config) {
                         exclude = true;
                     }
                 });
-                //loop in all Nesting Keyworconfigurations
+                //loop in all Nesting Keyworconfigurations 
+                let keyFound = false;
                 for (var ii = 0; ii < nestingdef_1.NESTINGS.length; ii++) {
                     //NESTINGS.some(item => {//format nestings
-                    if (!exclude) { //bugfix on "exit for;"
-                        //begin like IF
+                    if (!exclude) { //(!exclude) ==> bugfix on "exit for;"
+                        //first like if
                         regex = `((?![^{]*})(\\b${nestingdef_1.NESTINGS[ii].keyword})\\b)`;
                         if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
                             nestingCounter++;
+                            keyFound = true;
+                        }
+                    }
+                    //bugfix on "then in a new line"
+                    if (nestingdef_1.NESTINGS[ii].multiline !== '') {
+                        regex = `((?![^{]*})(\\b${nestingdef_1.NESTINGS[ii].multiline})\\b)`;
+                        if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                            if (!keyFound) {
+                                thisLineBack = true;
+                            }
                         }
                     }
                     //midle like ELSE
@@ -81,9 +126,8 @@ function formatNestings(text, config) {
                             thisLineBack = false;
                         }
                     }
-                    //});
+                    keyFound = false;
                 }
-                ;
             }
             if (nestingCounterPrevous !== nestingCounter) {
                 codeFragments[i] = getNesting(nestingCounterPrevous, thisLineBack) + codeFragments[i];
@@ -153,7 +197,7 @@ function forFormat(text, config) {
                 }
             }
             //Linecount 
-            if (txt[i] === const_1.LF) { //txt[i] === CRLF || txt[i] === CR || txt[i] === LF
+            if (txt[i] === const_1.LF) {
                 if (inString) { //check for String error, because there is no way to declara string over multiple Line!
                     (0, functions_1.log)("Error", `Error @ Line ${LineCount} at Column ${ColumnCount} -> no closed string detected!`);
                     (0, functions_1.log)("info", buf);
@@ -229,7 +273,15 @@ function forFormat(text, config) {
                                 }
                                 buf += text[i];
                                 if (text[i + 1] !== ' ') {
-                                    buf += ' ';
+                                    let debug1 = const_2.SINGLE_OPERATORS[j];
+                                    if (const_2.SINGLE_OPERATORS[j] === '+' || const_2.SINGLE_OPERATORS[j] === '-') {
+                                        if (isNaN(+text[i + 1])) {
+                                            buf += ' ';
+                                        }
+                                    }
+                                    else {
+                                        buf += ' ';
+                                    }
                                 }
                                 modified = -1;
                                 //console.log('Operator:[', text[i], ']modified:', modified);
