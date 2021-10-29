@@ -1,5 +1,4 @@
 
-
 {Formatting-Test}
 
 {
@@ -11,10 +10,10 @@ Changelog:
 
 {-------------------------------------------}
 {Futures / Bugs / Issues}
-tmp="\\share\";{Bug - Trowing Error unclosed String, because it escaped -> remove ALL escapes}
-CALL xGatawaySettings ();{ToDo: No space between -> xGatawaySettings()}  
-SYS_Anlage = -1;{ToDo: - before Number!}  
-ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;{Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`}
+tmp="\\share\";{fixed 2021.10.29}
+call xGatawaySettings ( );{fixed 2021.10.29: No space before and between and after brackets call 'xGatawaySettings ( );'==> 'xGatawaySettings()'}  
+SYS_Anlage = -1;{fixed 2021.10.29: no space on -/+ before Number!}  
+ITXStartAppInDirectory ( SYS_ToolsPath + "string ( with ) whitespaces test.", SYS_ToolsPath ) ;{fixed 2021.10.29: Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`}
 {-------------------------------------------}
 
 {-------------------------------------------}
@@ -87,12 +86,12 @@ endif;
 
 
 {------------------------------------------------------------------------------}
-{if-then schal in one line - test}
-	if 	
-	sys_Debug_info >0 
-	then 
-	LogMessage(Funkt + "Erste-MA:["   + Text(iErsteMA,"#") + "]"); 
-	endif;
+{if-then multiline - test}
+if	sys_Debug_info >0 and
+sys_Debug_info < 100 
+then 
+LogMessage(Funkt + "Erste-MA:["   + Text(iErsteMA,"#") + "]"); 
+endif;
 {------------------------------------------------------------------------------}
 
 

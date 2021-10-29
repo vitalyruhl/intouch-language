@@ -11,12 +11,20 @@ export const BACKSLASH = "\\";
 export const FORMATS: string[] = [TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH];
 export const SINGLE_OPERATORS: string[] = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
 export const DOUBLE_OPERATORS: string[] = ['==', '<>', '<=', '=>'];
+export const NO_SPACE_ITEMS: string[] = ['(', ')', '[', ']', ';'];
 export const TRENNER: string[] = [';', ' '];
 
 
-export const KEYWORDS: string[] = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", "next" ,"DIM", "THEN",
+export const KEYWORDS: string[] = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", "next", "DIM", "THEN",
     "EXIT", "EACH", "STEP", "IN", "RETURN", "CALL", "MOD", "AND", "NOT", "IS",
     "OR", "XOR", "Abs", "TO", "SHL", "SHR", "discrete", "integer", "real", "message"];
+
+/* Misk keywords from .json
+  MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR
+  IF|ENDIF|ELSE|WHILE|FOR|NEXT|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL
+  NULL|EOF|AS|True|False
+  discrete|integer|real|message
+*/
 
 
 const gm_TAB_NOT_IN_COMMENT = new RegExp(/(?![^{]*})\t/, 'gm');
@@ -28,8 +36,8 @@ const g_CHECK_CLOSE_COMMENT = new RegExp(/(})/, 'g');
 const gm_GET_NESTING = new RegExp(/^\s*/, 'g');
 const gm_GET_STRING = new RegExp(/(["'])(?:(?=(\\?))\2.)*?\1/, 'gm');
 const gm_GET_WSP_IN_STRING = new RegExp(/\s+(?=(?:(?:[^"]*"){2})*[^"]*"[^"]*$)/, 'gm');//https://stackoverflow.com/questions/36705436/regular-expression-to-select-all-whitespace-that-is-in-quotes
-  
-export const REGEX ={
+
+export const REGEX = {
     gm_TAB_NOT_IN_COMMENT,
     gm_MOR_1_WSP,
     gm_MOR_2_WSP,

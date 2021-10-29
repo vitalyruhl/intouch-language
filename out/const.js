@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.REGEX = exports.KEYWORDS = exports.TRENNER = exports.DOUBLE_OPERATORS = exports.SINGLE_OPERATORS = exports.FORMATS = exports.BACKSLASH = exports.SQUOTE = exports.DQUOTE = exports.CRLF = exports.LF = exports.CR = exports.TAB = void 0;
+exports.REGEX = exports.KEYWORDS = exports.TRENNER = exports.NO_SPACE_ITEMS = exports.DOUBLE_OPERATORS = exports.SINGLE_OPERATORS = exports.FORMATS = exports.BACKSLASH = exports.SQUOTE = exports.DQUOTE = exports.CRLF = exports.LF = exports.CR = exports.TAB = void 0;
 // Character Constants
 exports.TAB = "\t";
 exports.CR = "\r";
@@ -12,10 +12,17 @@ exports.BACKSLASH = "\\";
 exports.FORMATS = [exports.TAB, exports.CR, exports.LF, exports.CRLF, exports.DQUOTE, exports.SQUOTE, exports.BACKSLASH];
 exports.SINGLE_OPERATORS = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
 exports.DOUBLE_OPERATORS = ['==', '<>', '<=', '=>'];
+exports.NO_SPACE_ITEMS = ['(', ')', '[', ']', ';'];
 exports.TRENNER = [';', ' '];
 exports.KEYWORDS = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", "next", "DIM", "THEN",
     "EXIT", "EACH", "STEP", "IN", "RETURN", "CALL", "MOD", "AND", "NOT", "IS",
     "OR", "XOR", "Abs", "TO", "SHL", "SHR", "discrete", "integer", "real", "message"];
+/* Misk keywords from .json
+  MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR
+  IF|ENDIF|ELSE|WHILE|FOR|NEXT|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL
+  NULL|EOF|AS|True|False
+  discrete|integer|real|message
+*/
 const gm_TAB_NOT_IN_COMMENT = new RegExp(/(?![^{]*})\t/, 'gm');
 const gm_MOR_1_WSP = new RegExp(/\s{1,}/, 'gm');
 const gm_MOR_2_WSP = new RegExp(/\s{2,}/, 'gm');

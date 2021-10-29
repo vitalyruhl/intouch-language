@@ -63,8 +63,8 @@ function getConfig() {
     //misk
     exports.config.RemoveEmptyLines = vscode_1.workspace.getConfiguration().get('VBI.formatter.RemoveEmptyLines');
     exports.config.EmptyLinesAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.EmptyLinesAlsoInComment');
-    exports.config.KeywordUppercaseAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.KeywordUppercaseAlsoInComment');
-    exports.config.AllowInlineIFClause = vscode_1.workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
+    exports.config.FormatAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.FormatAlsoInComment');
+    //config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
     //log this
     console.log('getConfig():', exports.config);
     return exports.config;
