@@ -1,5 +1,10 @@
 # Intouch-Language README
 
+<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD001 -->
+<!-- markdownlint-disable MD013 -->
+<!-- markdownlint-disable MD025 -->
+
 <p align="center">
   <br />
   <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/logo.png" alt="Intouch-Language Logo" width="10%" /></a>
@@ -10,9 +15,19 @@
 [![Rating](https://vsmarketplacebadge.apphb.com/rating/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
 
 <br>
+
 <br>
 
 # What's new in Intouch-Language
+
+### V1.1.0
+
+- Add Code-Blocks for Nesting and Folding in code without keywords Start:`{>`, End:`{<`
+- Add **Snipped** cb# : add new Code-Block
+- Add **Snipped** for# : add for-next-block
+- Add **Snipped** func# : add new empty Function
+- correct some spelling mistakes
+- remove debugging settings
 
 ### V1.0.0
 
@@ -47,6 +62,13 @@
 <br>
 <br>
 
+# Test and example
+
+> You can test it on this [File](./test/test.vbi) by press **`shift + alt + F`**
+
+<br>
+<br>
+
 # Installation
 
 - install it in ext.-manager (type Intouch) or from 
@@ -72,7 +94,11 @@
 - Dims: Dim String (Message)
 - If# : If code block
 - Ife : If Else code block
+- for#  : add for-next-block
 - log#: Log-Debug
+- cb# : add new Code-Block
+- func# : add new empty Function
+
 
 <p align="center">
   <br />
@@ -90,13 +116,16 @@
 
 - **Formatter**
   - no issues
-  - no futures planned
+  - Futures planned
+    - Add Comment-highlighting, like `Better Comments` Plugin
+    - Format on selection (now is formatting document!)
 
 <br>
 
 - **Syntax-highlighting**
   - no issues
-  - no futures planned
+  - Futures planned
+    - Add code checker for some errors in code
 
 <br>
 
@@ -117,14 +146,14 @@
 <td align="center">  
 if you prefer a one-time donation
 
-[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/FamilieRuhl)
+[![donate-Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/FamilieRuhl)
 
 </td>
 
 <td align="center">  
 Become a patron, by simply clicking on this button (**very appreciated!**):
 
-[![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/join/6555448/checkout?ru=undefined)
+[![Become a patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/join/6555448/checkout?ru=undefined)
 
 </td>
 </tr>

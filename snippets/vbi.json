@@ -1,21 +1,25 @@
 {
   "Boolean": {
     "prefix": "Dimb",
-    "body": ["Dim bol${1:varName} As Discrete;"],
+    "body": [
+      "Dim bol${1:varName} As Discrete;"
+    ],
     "description": "Boolean declaration"
   },
   "Integer": {
     "prefix": "Dimi",
-    "body": ["Dim int${1:varName} As Integer;"],
+    "body": [
+      "Dim int${1:varName} As Integer;"
+    ],
     "description": "Integer declaration"
   },
   "String": {
     "prefix": "Dims",
-    "body": ["Dim str${1:varName} As Message;"],
+    "body": [
+      "Dim str${1:varName} As Message;"
+    ],
     "description": "String declaration"
   },
-  
-  
   "If": {
     "prefix": "Ife",
     "body": [
@@ -38,12 +42,88 @@
     ],
     "description": "If ElseIf Else code block"
   },
+  "for": {
+    "prefix": "for#",
+    "body": [
+      "",
+      "DIM i AS INTEGER;",
+      "FOR i=0 TO 30 STEP 2",
+      "\t",
+      "NEXT;",
+      ""
+    ],
+    "description": "If ElseIf Else code block"
+  },
   "Log": {
     "prefix": "log#",
     "body": [
-      "IF Sys_Debug_info > 0 THEN LogMessage(\" ------------->text:\" + str${1:varName}); ENDIF;"
+      "IF Sys_Debug_info > 0 THEN LogMessage(\" ------------->text:\" + ${1:varName}); ENDIF;"
     ],
     "description": "Debug-Log"
+  },
+  "debug": {
+    "prefix": "deb#",
+    "body": [
+      "call xHerDebug(Func + \" \" + \"${1:varName}: [\"   + Text(${1:varName}, \"#\") + \"]\", 0);"
+    ],
+    "description": "Debug-Log"
+  },
+  "codeblock": {
+    "prefix": "cb#",
+    "body": [
+      "{------------------------------------------------------------------------------}",
+      "{>Codeblock: }",
+      "\t",
+      "\t",
+      "\t",
+      "{<------------------------------------------------------------------------------}"
+    ],
+    "description": "add new folding code block"
+  },
+  "newFunction": {
+    "prefix": "func#",
+    "body": [
+      "",
+      "dim Func as message;",
+      "Func = \"NewFunction V1.0.0 - \";",
+      "",
+      "{",
+      "Changelog:",
+      "\tV1.0.0\t07.05.2020\tName\tcreate function",
+      "}",
+      "",
+      "{Parameter:",
+      "\t",
+      "}",
+      "",
+      "{example: ",
+      "\t",
+      "}",
+      "",
+      "{------------------------------------------------------------------------------}",
+      "{>Passed parameter:",
+      "\t",
+      "{<------------------------------------------------------------------------------}",
+      "",
+      "{------------------------------------------------------------------------------}",
+      "{>Save Debug-Status}",
+      "\tdim oldDebug as Discrete;",
+      "\toldDebug = Sys_Debug_info;",
+      "\tSys_Debug_info = 1;",
+      "{<------------------------------------------------------------------------------}",
+      "",
+      "{------------------------------------------------------------------------------}",
+      "{>Main Codeblock: }",
+      "\t",
+      "\t",
+      "\t",
+      "{<------------------------------------------------------------------------------}",
+      "",
+      "{>Restore previous debug status!}",
+      "\tSys_Debug_info = oldDebug;",
+      "{<------------------------------------------------------------------------------}",
+      ""
+    ],
+    "description": "add new empty Function"
   }
-  
 }
