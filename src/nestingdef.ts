@@ -29,6 +29,12 @@ export const NESTINGS: NestingInterface[] = [
         end: 'next',
         multiline: '',
     },
+    {
+        keyword: '{>',
+        midle: '{#',
+        end: '{<',
+        multiline: '',
+    },
 
 
 ];

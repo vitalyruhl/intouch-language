@@ -17,14 +17,14 @@ ITXStartAppInDirectory ( SYS_ToolsPath + "string ( with ) whitespaces test.", SY
 {-------------------------------------------}
 
 {-------------------------------------------}
-{Variable definition:}{todo: Nesting on Comment-Block    -------}
+{Variable definition:}
+{>todo: Nesting on Comment-Block    -------}
 dim m as message;
 dim i as integer;
 dim d as discrete;
 dim r as real;
 StartApp SYS_ToolsPath + "\Scheduler.exe " + SQLServer + " " + Database_user + " " + Database_pwd;
-
-{-------------------------------------------}
+{<-------------------------------------------}
 
 
 {-------------------------------------------}
@@ -38,11 +38,12 @@ Funkt ="+/-/<>/==/=/</>";
 
 
 {------------------------------------------------------------------------------}
-{Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
+{>Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
 if sys_Debug_info > 0 then LogMessage(eof Funkt +"if one of the keywords is big, and             spacing or 		tab is removed, then its Wrong! | ["   + Text(iErsteMA,"#")  "]"); endif;
 	if sys_Debug_info >0 then LogMessage(Funkt+ "eof if one of eof is big -> its Wrong! | ["         + Text(iErsteMA,"#")  "]"); endif;
+{#Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
 		  if sys_Debug_info>0 then LogMessage(Funkt+"eof if one of eof is big -> its Wrong! | ["   + Text(iErsteMA,"#")  "]");      endif;
-{------------------------------------------------------------------------------}
+{<------------------------------------------------------------------------------}
 
 
 {------------------------------------------------------------------------------}
