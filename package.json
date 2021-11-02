@@ -113,8 +113,8 @@
 				},
 				"VBI.formatter.BC.BlockCodeExclude": {
 					"type": "string",
-					"default": "{=",
-					"markdownDescription": "Turn this comment line back (exclude from Nesting."
+					"default": "{#",
+					"markdownDescription": "Turn this comment line back (exclude from Nesting)."
 				}
 			}
 		}
