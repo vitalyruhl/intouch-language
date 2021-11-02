@@ -2,7 +2,7 @@
 
 interface NestingInterface {
     keyword: string; //begin of the Nesting (IF)
-    midle: string; //eg else in if-then-else-endit (ELSE)
+    middle: string; //eg else in if-then-else-endif (ELSE)
     end: string; //end of this Nesting (ENDIF)
     multiline: string; //can contain Multiline Keyword (THEN)
 }
@@ -13,28 +13,20 @@ export const EXCLUDE_KEYWORDS: string[] = ["EXIT FOR"];
 export const NESTINGS: NestingInterface[] = [
     {
         keyword: 'if',
-        midle: 'else',
+        middle: 'else',
         end: 'endif',
         multiline: 'then',
     },
     {
         keyword: 'for',
-        midle: '',
+        middle: '',
         end: 'next',
         multiline: '',
     },
     {
         keyword: 'while',
-        midle: '',
+        middle: '',
         end: 'next',
         multiline: '',
-    },
-    {
-        keyword: '{>',
-        midle: '{#',
-        end: '{<',
-        multiline: '',
-    },
-
-
+    }
 ];

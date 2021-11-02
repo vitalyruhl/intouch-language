@@ -77,35 +77,44 @@
 			"type": "object",
 			"title": "Intouch-Language",
 			"properties": {
-				"VBI.formatter.debug": {
-					"type": "boolean",
-					"default": false,
-					"description": "Enable debug modus."
-				},
-				"VBI.formatter.debugToChannel": {
-					"type": "boolean",
-					"default": true,
-					"description": "debug into Channel instead on Dev-tools-console."
-				},
-				"VBI.formatter.allowedNumberOfEmptyLines": {
+				"VBI.formatter.EmptyLine.allowedNumberOfEmptyLines": {
 					"type": "number",
 					"default": 1,
-					"description": "Number of allowed consecutive empty lines."
+					"minimum": 0,
+					"maximum": 100,
+					"markdownDescription": "Number of allowed consecutive empty lines (0-100)."
 				},
-				"VBI.formatter.RemoveEmptyLines": {
+				"VBI.formatter.EmptyLine.RemoveEmptyLines": {
 					"type": "boolean",
 					"default": true,
-					"description": "Delete empty lines."
+					"markdownDescription": "Delete empty lines."
 				},
-				"VBI.formatter.EmptyLinesAlsoInComment": {
+				"VBI.formatter.EmptyLine.EmptyLinesAlsoInComment": {
 					"type": "boolean",
 					"default": false,
-					"description": "Delete empty lines in comments also."
+					"markdownDescription": "Delete empty lines in comments also."
 				},
 				"VBI.formatter.FormatAlsoInComment": {
 					"type": "boolean",
 					"default": false,
-					"description": "Format also in comments to."
+					"markdownDescription": "Allow format in comments."
+				},
+				"VBI.formatter.BC.BlockCodeBegin": {
+					"type": "string",
+					"default": "{>",
+					"minLength": 2,
+					"maxLength": 10,
+					"markdownDescription": "Begin Codeblock."
+				},
+				"VBI.formatter.BC.BlockCodeEnd": {
+					"type": "string",
+					"default": "{<",
+					"markdownDescription": "End Codeblock."
+				},
+				"VBI.formatter.BC.BlockCodeExclude": {
+					"type": "string",
+					"default": "{=",
+					"markdownDescription": "Turn this comment line back (exclude from Nesting."
 				}
 			}
 		}

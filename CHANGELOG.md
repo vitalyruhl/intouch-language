@@ -1,5 +1,18 @@
 # Changelog
 
+<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD001 -->
+<!-- markdownlint-disable MD013 -->
+<!-- markdownlint-disable MD025 -->
+
+### V1.1.0
+
+- 02.11.2021 VitalyRuhl
+- Add Code-Blocks for Nesting and Folding in code without keywords
+- Add **Snipped** cb# : add new Code-Block
+- Add **Snipped** func# : add new empty Function
+- correct some spelling mistakes
+- remove debugging settings
 
 ### V1.0.0
 

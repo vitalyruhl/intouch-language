@@ -52,17 +52,22 @@ function format(range, document, config) {
 //----------------------------------------------------------------
 //----------------------------------------------------------------
 function getConfig() {
+    //https://code.visualstudio.com/api/references/contribution-points
     //debug
-    exports.config.debug = vscode_1.workspace.getConfiguration().get('VBI.formatter.debug');
-    exports.config.debugToChannel = vscode_1.workspace.getConfiguration().get('VBI.formatter.debugToChannel');
-    //Leve emty Lines
-    exports.config.allowedNumberOfEmptyLines = vscode_1.workspace.getConfiguration().get('VBI.formatter.allowedNumberOfEmptyLines');
+    exports.config.debug = false; //workspace.getConfiguration().get('VBI.formatter.debug.active');
+    exports.config.debugToChannel = true; //workspace.getConfiguration().get('VBI.formatter.debug.debugToChannel');
+    //Live empty Lines
+    exports.config.allowedNumberOfEmptyLines = vscode_1.workspace.getConfiguration().get('VBI.formatter.EmptyLine.allowedNumberOfEmptyLines');
     if (exports.config.allowedNumberOfEmptyLines < 0 || exports.config.allowedNumberOfEmptyLines > 50) {
         exports.config.allowedNumberOfEmptyLines = 1;
     }
-    //misk
-    exports.config.RemoveEmptyLines = vscode_1.workspace.getConfiguration().get('VBI.formatter.RemoveEmptyLines');
-    exports.config.EmptyLinesAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.EmptyLinesAlsoInComment');
+    exports.config.RemoveEmptyLines = vscode_1.workspace.getConfiguration().get('VBI.formatter.EmptyLine.RemoveEmptyLines');
+    exports.config.EmptyLinesAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.EmptyLine.EmptyLinesAlsoInComment');
+    //codeblock-Nesting settings
+    exports.config.BlockCodeBegin = vscode_1.workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeBegin');
+    exports.config.BlockCodeEnd = vscode_1.workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeEnd');
+    exports.config.BlockCodeExclude = vscode_1.workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeExclude');
+    //misc
     exports.config.FormatAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.FormatAlsoInComment');
     //config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
     //log this
@@ -71,7 +76,7 @@ function getConfig() {
 }
 exports.getConfig = getConfig;
 /**
- * @param cat Type String --> define Cathegory [info,warn,error]
+ * @param cat Type String --> define Category [info,warn,error]
  * @param o   Rest Parameter, Type Any --> Data to Log
  */
 exports.info = vscode.window.createOutputChannel("VBI-Info");
@@ -137,13 +142,22 @@ function log(cat, ...o) {
                     console.log('WARNING:', o);
                     return;
                 case 'error':
-                    console.log('ERROR:', o);
+                    console.error('ERROR:', o);
                     return;
                 default:
                     console.log('log:', cat, o);
                     return;
             }
         }
+    }
+    else if (cat.toLowerCase() === 'error') { // show Error in vc, and log it to console
+        let err = '';
+        o.map((args) => {
+            err += mapObject(args);
+        });
+        console.error('ERROR:', o);
+        vscode.window.showErrorMessage(err); //.replace(/(\r\n|\n|\r)/gm,"")
+        return;
     }
 }
 exports.log = log;

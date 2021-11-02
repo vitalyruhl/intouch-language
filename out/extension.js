@@ -6,7 +6,8 @@ const functions_1 = require("./functions");
 function activate(context) {
     vscode.commands.registerCommand('vbi-format', () => {
         const { activeTextEditor } = vscode.window;
-        if (activeTextEditor && activeTextEditor.document.languageId === 'intouch') {
+        if (activeTextEditor) {
+            //&& activeTextEditor.document.languageId === 'intouch'
             const { document } = activeTextEditor;
             let start = new vscode.Position(0, 0);
             let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);

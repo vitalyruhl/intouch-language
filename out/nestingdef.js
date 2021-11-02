@@ -5,21 +5,21 @@ exports.EXCLUDE_KEYWORDS = ["EXIT FOR"];
 exports.NESTINGS = [
     {
         keyword: 'if',
-        midle: 'else',
+        middle: 'else',
         end: 'endif',
         multiline: 'then',
     },
     {
         keyword: 'for',
-        midle: '',
+        middle: '',
         end: 'next',
         multiline: '',
     },
     {
         keyword: 'while',
-        midle: '',
+        middle: '',
         end: 'next',
         multiline: '',
-    },
+    }
 ];
 //# sourceMappingURL=nestingdef.js.map

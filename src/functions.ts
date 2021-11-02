@@ -26,7 +26,7 @@ function format(range: vscode.Range, document: vscode.TextDocument, config: any)
 	formatted = document.getText(range); //get actual document text...
 	formatted = forFormat(formatted, config); //Format keywords and operators
 	formatted = formatNestings(formatted, config);//format Nestings
-	
+
 	// todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
 
 
@@ -52,7 +52,7 @@ function format(range: vscode.Range, document: vscode.TextDocument, config: any)
 			return editor.replace(range, formatted);
 		});
 	}
-	
+
 	if (isError) { //only for ts, because a function must return value....
 		return '';
 	}
@@ -63,20 +63,27 @@ function format(range: vscode.Range, document: vscode.TextDocument, config: any)
 //----------------------------------------------------------------
 
 export function getConfig() {
-
+	//https://code.visualstudio.com/api/references/contribution-points
 	//debug
-	config.debug = workspace.getConfiguration().get('VBI.formatter.debug');
-	config.debugToChannel = workspace.getConfiguration().get('VBI.formatter.debugToChannel');
+	config.debug = false; //workspace.getConfiguration().get('VBI.formatter.debug.active');
+	config.debugToChannel = true; //workspace.getConfiguration().get('VBI.formatter.debug.debugToChannel');
 
-	//Leve emty Lines
-	config.allowedNumberOfEmptyLines = workspace.getConfiguration().get('VBI.formatter.allowedNumberOfEmptyLines');
+	//Live empty Lines
+	config.allowedNumberOfEmptyLines = workspace.getConfiguration().get('VBI.formatter.EmptyLine.allowedNumberOfEmptyLines');
 	if (config.allowedNumberOfEmptyLines < 0 || config.allowedNumberOfEmptyLines > 50) {
 		config.allowedNumberOfEmptyLines = 1;
 	}
 
-	//misk
-	config.RemoveEmptyLines = workspace.getConfiguration().get('VBI.formatter.RemoveEmptyLines');
-	config.EmptyLinesAlsoInComment = workspace.getConfiguration().get('VBI.formatter.EmptyLinesAlsoInComment');
+	config.RemoveEmptyLines = workspace.getConfiguration().get('VBI.formatter.EmptyLine.RemoveEmptyLines');
+	config.EmptyLinesAlsoInComment = workspace.getConfiguration().get('VBI.formatter.EmptyLine.EmptyLinesAlsoInComment');
+
+	//codeblock-Nesting settings
+	config.BlockCodeBegin = workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeBegin');
+	config.BlockCodeEnd = workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeEnd');
+	config.BlockCodeExclude = workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeExclude');
+
+
+	//misc
 	config.FormatAlsoInComment = workspace.getConfiguration().get('VBI.formatter.FormatAlsoInComment');
 	//config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
 
@@ -86,7 +93,7 @@ export function getConfig() {
 }
 
 /**
- * @param cat Type String --> define Cathegory [info,warn,error]
+ * @param cat Type String --> define Category [info,warn,error]
  * @param o   Rest Parameter, Type Any --> Data to Log
  */
 export let info = vscode.window.createOutputChannel("VBI-Info");
@@ -165,7 +172,7 @@ export function log(cat: string, ...o: any) {
 					console.log('WARNING:', o);
 					return;
 				case 'error':
-					console.log('ERROR:', o);
+					console.error('ERROR:', o);
 					return;
 				default:
 					console.log('log:', cat, o);
@@ -173,5 +180,17 @@ export function log(cat: string, ...o: any) {
 			}
 		}
 	}
+	else if (cat.toLowerCase() === 'error') { // show Error in vc, and log it to console
+
+		let err: string = '';
+		o.map((args: any) => {
+			err += mapObject(args);
+		});
+		console.error('ERROR:',o);
+		vscode.window.showErrorMessage(err); //.replace(/(\r\n|\n|\r)/gm,"")
+		return;
+	}
+
 
 }
+
