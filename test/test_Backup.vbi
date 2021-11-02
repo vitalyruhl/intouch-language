@@ -1,4 +1,4 @@
-
+{#Test codeblock backline}
 {Formatting-Test}
 
 {
@@ -35,7 +35,7 @@ Funkt= "-";
 Funkt =" -";
 Funkt = "- ";
 Funkt= " - ";
-Funkt ="+/-/<>/==/=/</>";
+Funkt ="+/-/<>/==/=/</>"; 
 {<------------------------------------------------------------------------------>}
 
 
@@ -43,7 +43,7 @@ Funkt ="+/-/<>/==/=/</>";
 {Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
 if sys_Debug_info > 0 then LogMessage(eof Funkt +"if one of the keywords is big, and             spacing or 		tab is removed, then its Wrong! | ["   + Text(iErsteMA,"#")  "]"); endif;
 	if sys_Debug_info >0 then LogMessage(Funkt+ "eof if one of eof is big -> its Wrong! | ["         + Text(iErsteMA,"#")  "]"); endif;
-{=Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings - and codeblock backline}
+				{# Test codeblock backline}
 		  if sys_Debug_info>0 then LogMessage(Funkt+"eof if one of eof is big -> its Wrong! | ["   + Text(iErsteMA,"#")  "]");      endif;
 	if sys_Debug_info>0 then LogMessage(Funkt+"eof if one of eof is big -> its Wrong! | ["   + Text(iErsteMA,"#")  "]");      endif;
 {<------------------------------------------------------------------------------}

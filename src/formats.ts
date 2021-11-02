@@ -16,10 +16,10 @@ export function formatNestings(text: string, config: any): string {
     let multilineComment: boolean = false;
     let thisLineBack: boolean = false;
     let LineCount: number = 1;
-   
-    let FindCodeBlock: boolean = false;
-    let FindEndCodeBlock: boolean = false;
-    let FindCodeBlockBack: boolean = false;
+    let regexCB = `^${config.BlockCodeBegin}`;
+    let regexCEx = `^${config.BlockCodeExclude}`;
+    let regexCE = `^${config.BlockCodeEnd}`;
+
 
     try {
         codeFragments = text.split(CRLF);//split code by Line
@@ -41,20 +41,6 @@ export function formatNestings(text: string, config: any): string {
 
             if (codeFragments[i].search(REGEX.g_CHECK_CLOSE_COMMENT) !== -1) {
                 multilineComment = false;
-            }
-
-            // check for Codeblock
-            // config.BlockCodeExclude
-            let regexCB = `^${config.BlockCodeBegin}`;
-            let regexCEx = `^${config.BlockCodeExclude}`;
-            let regexCE = `^${config.BlockCodeEnd}`;
-
-            if (codeFragments[i].search(new RegExp(regexCB, 'gi')) !== -1) {
-                FindCodeBlock = true;
-            } else  if (codeFragments[i].search(new RegExp(regexCE, 'gi')) !== -1) {
-                FindEndCodeBlock = true;
-            }else  if (codeFragments[i].search(new RegExp(regexCEx, 'gi')) !== -1) {
-                FindCodeBlockBack = true;
             }
 
             let str = codeFragments[i].match(REGEX.gm_GET_STRING); //get all Strings in the Line
@@ -118,27 +104,27 @@ export function formatNestings(text: string, config: any): string {
                 let exclude: boolean = false;
                 codeFragments[i] = codeFragments[i].replace(REGEX.gm_GET_NESTING, ''); //remove all Nestings
 
+                // if (i == 45) {
+                //     let debug = true;
+                // }
 
-
-                
-                if (FindCodeBlock) {//check for Codeblock
+                //* check for Codeblock
+                // bugfix: 02.11.2021 viru -> turn this code after remove all Nestings for correct Nesting-Format
+                if (codeFragments[i].search(new RegExp(regexCB, 'gi')) !== -1) {
                     nestingCounter++;
-                    FindCodeBlock = false;
+                    thisLineBack = true;
                 }
-                else if (FindEndCodeBlock) {//check for end Codeblock
+                else if (codeFragments[i].search(new RegExp(regexCEx, 'gi')) !== -1) {
+                    thisLineBack = true;
+                }
+                else if (codeFragments[i].search(new RegExp(regexCE, 'gi')) !== -1) {
                     nestingCounter--;
                     thisLineBack = true;
-                    FindEndCodeBlock = false;
                     if (nestingCounter < 0) {//just in case
                         nestingCounter = 0;
                         thisLineBack = false;
                     }
                 }
-                else if (FindCodeBlockBack) {//This comment line turn back for structures
-                    thisLineBack = true;
-                    FindCodeBlockBack = false;
-                }
-
                 else {
 
                     EXCLUDE_KEYWORDS.some(item => {
@@ -152,8 +138,6 @@ export function formatNestings(text: string, config: any): string {
                     //loop in all Nesting Keyword configurations 
                     let keyFound: boolean = false;
                     for (var ii = 0; ii < NESTINGS.length; ii++) {
-                        //NESTINGS.some(item => {//format nestings
-
                         if (!exclude) { //(!exclude) ==> bugfix on "exit for;"
                             //first like if
                             regex = `((?![^{]*})(\\b${NESTINGS[ii].keyword})\\b)`;
