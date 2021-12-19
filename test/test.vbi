@@ -53,9 +53,9 @@ if sys_Debug_info > 0 then LogMessage(eof Funkt +"if one of the keywords is big,
 {Test Spacings on +/-/<>/=/==/; }
 c=a+b +d - e+ f;{folowing comment not formated! -> c=a+b +d - e+ f;}
 if sys_pcname==sys_STATION01BiosName then  sys_station=sys_pcname;endif; 
-if sys_pcname ==sys_STATION01BiosName then  sys_station =sys_pcname;endif; 
-if sys_pcname== sys_STATION01BiosName then  sys_station= sys_pcname;endif; 
-if sys_pcname == sys_STATION01BiosName then  sys_station = sys_pcname;endif; 
+if sys_pcname <=sys_STATION01BiosName then  sys_station =sys_pcname;endif; 
+if sys_pcname=> sys_STATION01BiosName then  sys_station= sys_pcname;endif; 
+if sys_pcname <> sys_STATION01BiosName then  sys_station = sys_pcname;endif; 
 {<------------------------------------------------------------------------------}
 
 
