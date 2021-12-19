@@ -20,6 +20,10 @@
 
 # What's new in Intouch-Language
 
+### V1.1.1
+
+- Version issue with format problem on <>, =<, =>, == was published with greater version
+
 ### V1.1.0
 
 - Add Code-Blocks for Nesting and Folding in code without keywords Start:`{>`, End:`{<`
