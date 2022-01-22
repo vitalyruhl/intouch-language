@@ -7,15 +7,20 @@ Changelog:
 	V0.0.2		27.10.2021 		ViRu 	add some Tests and modify commets 
 	V1.0.0		28.10.2021 		ViRu 	add Test for next furures 
 	V1.1.0		02.11.2021 		ViRu 	Add Comment-Blocks for Nesting and Folding in code without keywords 
+	V1.1.1		22.01.2022 		ViRu 	Add add test for new issue on dashed variable, test for #region folding 
 }	
 
+{#region a}	
 {-------------------------------------------}
 {>Futures / Bugs / Issues}
 tmp="\\share\";{fixed 2021.10.29}
 call xGatawaySettings ( );{fixed 2021.10.29: No space before and between and after brackets call 'xGatawaySettings ( );'==> 'xGatawaySettings()'}  
 SYS_Anlage = -1;{fixed 2021.10.29: no space on -/+ before Number!}  
 ITXStartAppInDirectory ( SYS_ToolsPath + "string ( with ) whitespaces test.", SYS_ToolsPath ) ;{fixed 2021.10.29: Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`}
+new-issue-dashed-variable = "this variable shal not be formated"
 {<-------------------------------------------}
+{#endregion a}
+
 
 {-------------------------------------------}
 {Variable definition:}

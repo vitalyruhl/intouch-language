@@ -2,7 +2,7 @@
 	"name": "intouch-language",
 	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021 vitalyruhl",
 	"description": "Intouch-Language syntax highlighting, formatter and code snippets for VSCode",
-	"version": "1.1.1",
+	"version": "1.2.0",
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
@@ -121,10 +121,10 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "rm -rf ./out; npm run compile",
-		"postinstall": "node ./node_modules/vscode/bin/install && tsc",
+		"postinstall": "tsc -p ./",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"test": "npm run compile && node ./node_modules/vscode/bin/test",
+		"lint": "eslint . --ext .ts,.tsx",
 		"publish-patch": "vsce package && vsce publish patch",
 		"publish-minor": "vsce package && vsce publish minor",
 		"publish-major": "vsce package && vsce publish major",
@@ -138,16 +138,15 @@
 		}
 	},
 	"devDependencies": {
-		"@types/node": "",
-		"@types/vscode": "",
-		"eslint": "",
-		"typescript": "",
-		"vscode": "^1.1.37",
-		"vscode-test": ""
+		"@types/vscode": "^1.63.1",
+		"typescript": "^4.5.5",
+		"eslint": "^8.7.0",
+		"@types/node": "^17.0.10"
 	},
 	"__metadata": {
 		"id": "834eb420-2978-4100-b7de-2430fc88e429",
 		"publisherDisplayName": "Vitaly Ruhl",
 		"publisherId": "448eaf8e-6bd4-4b72-b6cd-9af578a789d2"
-	}
+	},
+	"dependencies": {}
 }
