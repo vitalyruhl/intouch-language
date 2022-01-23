@@ -6,7 +6,7 @@
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
-		"vscode": "^1.6.0"
+		"vscode": "^1.63.1"
 	},
 	"repository": {
 		"type": "git",
@@ -118,14 +118,14 @@
 				},
 				"VBI.formatter.Region.BlockCodeBegin": {
 					"type": "string",
-					"default": "{region ",
+					"default": "{region",
 					"minLength": 2,
 					"maxLength": 10,
 					"markdownDescription": "Begin Codeblock."
 				},
 				"VBI.formatter.Region.BlockCodeEnd": {
 					"type": "string",
-					"default": "{endregion ",
+					"default": "{endregion",
 					"markdownDescription": "End Codeblock."
 				},
 				"VBI.formatter.Region.BlockCodeExclude": {
