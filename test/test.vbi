@@ -19,11 +19,12 @@ ITXStartAppInDirectory ( SYS_ToolsPath + "string ( with ) whitespaces test.", SY
 {<-------------------------------------------}
 
 
-{#region check single operators}	
+{region check single operators}	
 SYS_Anlage = -1;{fixed 2021.10.29: no space on -/+ before Number!}  
 c=a+b +d- e+ f -g;{folowing comment not formated! -> c=a+b +d - e+ f;}
-new-issue-dashed-variable-123 = "this variable shal not be formated"
-{#endregion check single operators}
+{# New Region trenner}
+new12-issue-dashed-variable-123 = "this variable shal not be formated"
+{endregion check single operators}
 
 {-------------------------------------------}
 {Variable definition:}

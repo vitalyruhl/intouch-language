@@ -22,11 +22,12 @@
 
 ### V1.2.0
 
-- Add folding between ``{#region xxxx}`` and  ``{#endregion xxxx}``
+- Add folding between ``{region xxxx}`` and  ``{endregion xxxx}``
+- Add Nesting between ``{region xxxx}`` and  ``{endregion xxxx}``
 - Auto closing brackets in strings and comments
 - remove unused dependency with dependabot alert.
 - add wordPattern and indentationRules into language configuration
-- (not ready) fix bug - issue #13, formatter formats dashed variable ``foo-bar`` --> ``foo - bar``
+- fix bug - issue #13, formatter formats dashed variable ``foo-bar`` --> ``foo - bar``
 
 ### V1.1.1
 

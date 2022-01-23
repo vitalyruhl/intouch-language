@@ -67,6 +67,10 @@ function getConfig() {
     exports.config.BlockCodeBegin = vscode_1.workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeBegin');
     exports.config.BlockCodeEnd = vscode_1.workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeEnd');
     exports.config.BlockCodeExclude = vscode_1.workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeExclude');
+    //Region codeblock-Nesting settings
+    exports.config.RegionBlockCodeBegin = vscode_1.workspace.getConfiguration().get('VBI.formatter.Region.BlockCodeBegin');
+    exports.config.RegionBlockCodeEnd = vscode_1.workspace.getConfiguration().get('VBI.formatter.Region.BlockCodeEnd');
+    exports.config.RegionBlockCodeExclude = vscode_1.workspace.getConfiguration().get('VBI.formatter.Region.BlockCodeExclude');
     //misc
     exports.config.FormatAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.FormatAlsoInComment');
     //config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');

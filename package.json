@@ -115,6 +115,23 @@
 					"type": "string",
 					"default": "{#",
 					"markdownDescription": "Turn this comment line back (exclude from Nesting)."
+				},
+				"VBI.formatter.Region.BlockCodeBegin": {
+					"type": "string",
+					"default": "{region ",
+					"minLength": 2,
+					"maxLength": 10,
+					"markdownDescription": "Begin Codeblock."
+				},
+				"VBI.formatter.Region.BlockCodeEnd": {
+					"type": "string",
+					"default": "{endregion ",
+					"markdownDescription": "End Codeblock."
+				},
+				"VBI.formatter.Region.BlockCodeExclude": {
+					"type": "string",
+					"default": "{#",
+					"markdownDescription": "Turn this comment line back (exclude from Nesting)."
 				}
 			}
 		}

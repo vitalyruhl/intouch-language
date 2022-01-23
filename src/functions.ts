@@ -83,6 +83,12 @@ export function getConfig() {
 	config.BlockCodeExclude = workspace.getConfiguration().get('VBI.formatter.BC.BlockCodeExclude');
 
 
+	//Region codeblock-Nesting settings
+	config.RegionBlockCodeBegin = workspace.getConfiguration().get('VBI.formatter.Region.BlockCodeBegin');
+	config.RegionBlockCodeEnd = workspace.getConfiguration().get('VBI.formatter.Region.BlockCodeEnd');
+	config.RegionBlockCodeExclude = workspace.getConfiguration().get('VBI.formatter.Region.BlockCodeExclude');
+
+
 	//misc
 	config.FormatAlsoInComment = workspace.getConfiguration().get('VBI.formatter.FormatAlsoInComment');
 	//config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');

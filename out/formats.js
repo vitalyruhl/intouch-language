@@ -18,6 +18,9 @@ function formatNestings(text, config) {
     let regexCB = `^${config.BlockCodeBegin}`;
     let regexCEx = `^${config.BlockCodeExclude}`;
     let regexCE = `^${config.BlockCodeEnd}`;
+    let regexRegionCB = `^${config.RegionBlockCodeBegin}`;
+    let regexRegionCEx = `^${config.RegionBlockCodeExclude}`;
+    let regexRegionCE = `^${config.RegionBlockCodeEnd}`;
     try {
         codeFragments = text.split(const_1.CRLF); //split code by Line
         for (let i = 0; i < codeFragments.length - 1; i++) {
@@ -97,6 +100,23 @@ function formatNestings(text, config) {
                     thisLineBack = true;
                 }
                 else if (codeFragments[i].search(new RegExp(regexCE, "gi")) !== -1) {
+                    nestingCounter--;
+                    thisLineBack = true;
+                    if (nestingCounter < 0) {
+                        //just in case
+                        nestingCounter = 0;
+                        thisLineBack = false;
+                    }
+                    //check for region Nesting
+                }
+                else if (codeFragments[i].search(new RegExp(regexRegionCB, "gi")) !== -1) {
+                    nestingCounter++;
+                    thisLineBack = true;
+                }
+                else if (codeFragments[i].search(new RegExp(regexRegionCEx, "gi")) !== -1) {
+                    thisLineBack = true;
+                }
+                else if (codeFragments[i].search(new RegExp(regexRegionCE, "gi")) !== -1) {
                     nestingCounter--;
                     thisLineBack = true;
                     if (nestingCounter < 0) {

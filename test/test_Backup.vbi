@@ -7,154 +7,161 @@ Changelog:
 	V0.0.2		27.10.2021 		ViRu 	add some Tests and modify commets 
 	V1.0.0		28.10.2021 		ViRu 	add Test for next furures 
 	V1.1.0		02.11.2021 		ViRu 	Add Comment-Blocks for Nesting and Folding in code without keywords 
-	V1.1.1		22.01.2022 		ViRu 	Add add test for new issue on dashed variable 
-}	
-
-{-------------------------------------------}
-{>Futures / Bugs / Issues}
-tmp="\\share\";{fixed 2021.10.29}
-call xGatawaySettings ( );{fixed 2021.10.29: No space before and between and after brackets call 'xGatawaySettings ( );'==> 'xGatawaySettings()'}  
-SYS_Anlage = -1;{fixed 2021.10.29: no space on -/+ before Number!}  
-ITXStartAppInDirectory ( SYS_ToolsPath + "string ( with ) whitespaces test.", SYS_ToolsPath ) ;{fixed 2021.10.29: Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`}
-new-issue-dashed-variable = "this variable shal not be formated"
-{<-------------------------------------------}
-
-{-------------------------------------------}
-{Variable definition:}
-{>todo: Nesting on Comment-Block (Block of code below shall be nested and can be foldet)}
-{Comment-Block Folding-String can be changed in Setting between 2 an 10 Character}
-dim m as message;
-dim i as integer;
-dim d as discrete;
-dim r as real;
-StartApp SYS_ToolsPath + "\Scheduler.exe " + SQLServer + " " + Database_user + " " + Database_pwd;
-{<-------------------------------------------}
+	V1.1.1		22.01.2022 		ViRu 	Add add test for new issue on dashed variable, test for #region folding 
+	}	
 
 
-{>-------------------------------------------<}
-{test for spacing in string --> DONT FORMAT THIS!}
-Funkt= "-";
-Funkt =" -";
-Funkt = "- ";
-Funkt= " - ";
-Funkt ="+/-/<>/==/=/</>"; 
-{<------------------------------------------------------------------------------>}
-
-
-{>------------------------------------------------------------------------------}
-{Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
-if sys_Debug_info > 0 then LogMessage(eof Funkt +"if one of the keywords is big, and             spacing or 		tab is removed, then its Wrong! | ["   + Text(iErsteMA,"#")  "]"); endif;
-	if sys_Debug_info >0 then LogMessage(Funkt+ "eof if one of eof is big -> its Wrong! | ["         + Text(iErsteMA,"#")  "]"); endif;
-		{# Test codeblock backline}
-		  if sys_Debug_info>0 then LogMessage(Funkt+"eof if one of eof is big -> its Wrong! | ["   + Text(iErsteMA,"#")  "]");      endif;
-				if sys_Debug_info>0 then LogMessage(Funkt+"eof if one of eof is big -> its Wrong! | ["   + Text(iErsteMA,"#")  "]");      endif;
-{<------------------------------------------------------------------------------}
-
-
-{>------------------------------------------------------------------------------}
-{Test Spacings on +/-/<>/=/==/; }
-c=a+b +d - e+ f;{folowing comment not formated! -> c=a+b +d - e+ f;}
-if sys_pcname==sys_STATION01BiosName then  sys_station=sys_pcname;endif; 
-if sys_pcname <=sys_STATION01BiosName then  sys_station =sys_pcname;endif; 
-if sys_pcname=> sys_STATION01BiosName then  sys_station= sys_pcname;endif; 
-if sys_pcname <> sys_STATION01BiosName then  sys_station = sys_pcname;endif; 
-{<------------------------------------------------------------------------------}
-
-
-{------------------------------------------------------------------------------}
-{if-then Nesting-Test}
-if sys_pcname <> sys_STATION01BiosName then 
-	if sys_pcname <>sys_STATION02BiosName then 
-		if sys_pcname<> sys_STATION03BiosName then 
-if sys_pcname<>sys_STATION04BiosName then 
-	if sys_pcname <>sys_STATION05BiosName then 
-if sys_pcname<> sys_STATION06BiosName then 
-			if sys_pcname<= sys_STATION07BiosName then 
-if sys_pcname=>sys_STATION08BiosName then 
-if sys_pcname =>sys_STATION09BiosName then 
-if sys_STATION01Online then
-sys_STATION09BiosName = sys_pcname;
-STATION1:sys_STATION09Online = 1;
-ELSE
-sys_STATION01BiosName = sys_pcname;
-endif;
-endif;  
-endif;
-endif;
-endif;
-endif;
-endif;
-endif;
-endif;
-endif;
-{------------------------------------------------------------------------------}
-
-
-
-{------------------------------------------------------------------------------}
-{>if-then multiline - test}
-if	sys_Debug_info >0 and
-sys_Debug_info < 100 
-then 
-LogMessage(Funkt + "Erste-MA:["   + Text(iErsteMA,"#") + "]"); 
-endif;
-{<------------------------------------------------------------------------------}
-
-
-{------------------------------------------------------------------------------}
-{nesting-test for}
-for i = 1 to StringLen(sInputString){Warum ist index bei Intouch-Strings mit 1 beginnend und nicht 0?}
-
-SZ = StringMid(sInputString,i,1);
-
-if SZ == sDelimiter then {Trennzeichen gefunden}
-Splitt = Splitt + 1;
-
-if Splitt == iIndex then {das richtige Element gefunden}
-IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "True Splitt("+ text(Splitt,"#") + ")/i:("+ text(i,"#") + "):[" + Temp_Return + "]"); ENDIF;	
-exit for;
-else
-IF Sys_Debug_info > 0 THEN LogMessage(Funkt + " Splitt("+ text(i,"#") + "):[" + Temp_Return + "]"); ENDIF;	
-Temp_Return = "";
-endif;	
-else
-Temp_Return = Temp_Return + SZ; {Zum Schluss wird der Rest ausgegeben!!!}
-endif;
-next;	
-
-{------------------------------------------------------------------------------}
-
-
-{------------------------------------------------------------------------------}
-{<Wrong Codeblog-Settings test:
-if that if is Big after Formatting, then the code is wrong...
-if sys_Debug_info > 0 then LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); endif;
-if sys_Debug_info > 0 then LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung           + "]"); endif;
-{<------------------------------------------------------------------------------}
-
-
-
-{>------------------------------------------------------------------------------}
-{Formating-Test comment:
-	if that if is Big after Formatting, then the code is wrong...
-	if sys_Debug_info > 0 then LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); endif;
-	if sys_Debug_info > 0 then LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung           + "]"); endif;
-{<------------------------------------------------------------------------------}
-
-
-
-
-
-{------------------------------------------------------------------------------}
-{Line-Spacing-Test -> Global standart setting is 1 empty line}
-
-
-
-
-
-
-
-
-
-{End epty-line-test}
-{-------------------------------------------}
+		{-------------------------------------------}
+		{>Futures / Bugs / Issues}
+		tmp="\\share\";{fixed 2021.10.29}
+		call xGatawaySettings ( );{fixed 2021.10.29: No space before and between and after brackets call 'xGatawaySettings ( );'==> 'xGatawaySettings()'}  
+		ITXStartAppInDirectory ( SYS_ToolsPath + "string ( with ) whitespaces test.", SYS_ToolsPath ) ;{fixed 2021.10.29: Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`}
+		{<-------------------------------------------}
+		
+		
+		{region check single operators}	
+		SYS_Anlage = -1;{fixed 2021.10.29: no space on -/+ before Number!}  
+		c=a+b +d- e+ f -g;{folowing comment not formated! -> c=a+b +d - e+ f;}
+		{# New Region trenner}
+		new-issue-dashed-variable-123 = "this variable shal not be formated"
+		{endregion check single operators}
+		
+		{-------------------------------------------}
+		{Variable definition:}
+		{>todo: Nesting on Comment-Block (Block of code below shall be nested and can be foldet)}
+		{Comment-Block Folding-String can be changed in Setting between 2 an 10 Character}
+		dim m as message;
+		dim i as integer;
+		dim d as discrete;
+		dim r as real;
+		StartApp SYS_ToolsPath + "\Scheduler.exe " + SQLServer + " " + Database_user + " " + Database_pwd;
+		{<-------------------------------------------}
+		
+		
+		{>-------------------------------------------<}
+		{test for spacing in string --> DONT FORMAT THIS!}
+		Funkt= "-";
+		Funkt =" -";
+		Funkt = "- ";
+		Funkt= " - ";
+		Funkt ="+/-/<>/==/=/</>"; 
+		{<------------------------------------------------------------------------------>}
+		
+		
+		{>------------------------------------------------------------------------------}
+		{Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
+		if sys_Debug_info > 0 then LogMessage(eof Funkt +"if one of the keywords is big, and             spacing or 		tab is removed, then its Wrong! | ["   + Text(iErsteMA,"#")  "]"); endif;
+			if sys_Debug_info >0 then LogMessage(Funkt+ "eof if one of eof is big -> its Wrong! | ["         + Text(iErsteMA,"#")  "]"); endif;
+				{# Test codeblock backline}
+				  if sys_Debug_info>0 then LogMessage(Funkt+"eof if one of eof is big -> its Wrong! | ["   + Text(iErsteMA,"#")  "]");      endif;
+						if sys_Debug_info>0 then LogMessage(Funkt+"eof if one of eof is big -> its Wrong! | ["   + Text(iErsteMA,"#")  "]");      endif;
+		{<------------------------------------------------------------------------------}
+		
+		
+		{>------------------------------------------------------------------------------}
+		{Test Spacings on +/-/<>/=/==/; }
+		if sys_pcname==sys_STATION01BiosName then  sys_station=sys_pcname;endif; 
+		if sys_pcname <=sys_STATION01BiosName then  sys_station =sys_pcname;endif; 
+		if sys_pcname=> sys_STATION01BiosName then  sys_station= sys_pcname;endif; 
+		if sys_pcname <> sys_STATION01BiosName then  sys_station = sys_pcname;endif; 
+		{<------------------------------------------------------------------------------}
+		
+		
+		{------------------------------------------------------------------------------}
+		{if-then Nesting-Test}
+		if sys_pcname <> sys_STATION01BiosName then 
+			if sys_pcname <>sys_STATION02BiosName then 
+				if sys_pcname<> sys_STATION03BiosName then 
+		if sys_pcname<>sys_STATION04BiosName then 
+			if sys_pcname <>sys_STATION05BiosName then 
+		if sys_pcname<> sys_STATION06BiosName then 
+					if sys_pcname<= sys_STATION07BiosName then 
+		if sys_pcname=>sys_STATION08BiosName then 
+		if sys_pcname =>sys_STATION09BiosName then 
+		if sys_STATION01Online then
+		sys_STATION09BiosName = sys_pcname;
+		STATION1:sys_STATION09Online = 1;
+		ELSE
+		sys_STATION01BiosName = sys_pcname;
+		endif;
+		endif;  
+		endif;
+		endif;
+		endif;
+		endif;
+		endif;
+		endif;
+		endif;
+		endif;
+		{------------------------------------------------------------------------------}
+		
+		
+		
+		{------------------------------------------------------------------------------}
+		{>if-then multiline - test}
+		if	sys_Debug_info >0 and
+		sys_Debug_info < 100 
+		then 
+		LogMessage(Funkt + "Erste-MA:["   + Text(iErsteMA,"#") + "]"); 
+		endif;
+		{<------------------------------------------------------------------------------}
+		
+		
+		{------------------------------------------------------------------------------}
+		{nesting-test for}
+		for i = 1 to StringLen(sInputString){Warum ist index bei Intouch-Strings mit 1 beginnend und nicht 0?}
+		
+		SZ = StringMid(sInputString,i,1);
+		
+		if SZ == sDelimiter then {Trennzeichen gefunden}
+		Splitt = Splitt + 1;
+		
+		if Splitt == iIndex then {das richtige Element gefunden}
+		IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "True Splitt("+ text(Splitt,"#") + ")/i:("+ text(i,"#") + "):[" + Temp_Return + "]"); ENDIF;	
+		exit for;
+		else
+		IF Sys_Debug_info > 0 THEN LogMessage(Funkt + " Splitt("+ text(i,"#") + "):[" + Temp_Return + "]"); ENDIF;	
+		Temp_Return = "";
+		endif;	
+		else
+		Temp_Return = Temp_Return + SZ; {Zum Schluss wird der Rest ausgegeben!!!}
+		endif;
+		next;	
+		
+		{------------------------------------------------------------------------------}
+		
+		
+		{------------------------------------------------------------------------------}
+		{<Wrong Codeblog-Settings test:
+		if that if is Big after Formatting, then the code is wrong...
+		if sys_Debug_info > 0 then LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); endif;
+		if sys_Debug_info > 0 then LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung           + "]"); endif;
+		{<------------------------------------------------------------------------------}
+		
+		
+		
+		{>------------------------------------------------------------------------------}
+		{Formating-Test comment:
+			if that if is Big after Formatting, then the code is wrong...
+			if sys_Debug_info > 0 then LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); endif;
+			if sys_Debug_info > 0 then LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung           + "]"); endif;
+		{<------------------------------------------------------------------------------}
+		
+		
+		
+		
+		
+		{------------------------------------------------------------------------------}
+		{Line-Spacing-Test -> Global standart setting is 1 empty line}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		{End epty-line-test}
+		{-------------------------------------------}
+		
