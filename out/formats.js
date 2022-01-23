@@ -7,9 +7,9 @@ const functions_1 = require("./functions");
 const nestingdef_1 = require("./nestingdef");
 const const_3 = require("./const");
 function formatNestings(text, config) {
-    let buf = '';
+    let buf = "";
     let codeFragments = [];
-    let regex = '';
+    let regex = "";
     let nestingCounter = 0;
     let nestingCounterPrevious = 0;
     let multilineComment = false;
@@ -22,7 +22,8 @@ function formatNestings(text, config) {
         codeFragments = text.split(const_1.CRLF); //split code by Line
         for (let i = 0; i < codeFragments.length - 1; i++) {
             LineCount = i + 1; //only for Log and Error
-            if (codeFragments[i] === '') { //not in empty lines goes faster...
+            if (codeFragments[i] === "") {
+                //not in empty lines goes faster...
                 continue;
             }
             //check for multiline comment
@@ -35,13 +36,13 @@ function formatNestings(text, config) {
             }
             let str = codeFragments[i].match(const_3.REGEX.gm_GET_STRING); //get all Strings in the Line
             if (str) {
-                let str2 = str.map(item => {
-                    let strw = item.replace(/\s(?<!\t)/gmi, '\0'); //replace whitespace in each String on ~
-                    strw = strw.replace(/\t/gmi, 'u0001'); //replace TAB in each String on ~~~~
+                let str2 = str.map((item) => {
+                    let strw = item.replace(/\s(?<!\t)/gim, "\0"); //replace whitespace in each String on ~
+                    strw = strw.replace(/\t/gim, "u0001"); //replace TAB in each String on ~~~~
                     return codeFragments[i].replace(item, strw); //each String in Line
                 });
                 // remove continues whitespace (Item 0 contains all Text???!!!)
-                codeFragments[i] = str2[0].replace(const_3.REGEX.gm_MOR_2_WSP, ' ');
+                codeFragments[i] = str2[0].replace(const_3.REGEX.gm_MOR_2_WSP, " ");
                 //!-----------------------------------------------------------------------------------
                 //! NEW formatting's
                 if (!multilineComment) {
@@ -54,7 +55,7 @@ function formatNestings(text, config) {
                         else {
                             regex = `((?![^{]*})\\s\\${const_2.NO_SPACE_ITEMS[item]})`;
                         }
-                        codeFragments[i] = codeFragments[i].replace(new RegExp(regex, 'g'), `${const_2.NO_SPACE_ITEMS[item]}`);
+                        codeFragments[i] = codeFragments[i].replace(new RegExp(regex, "g"), `${const_2.NO_SPACE_ITEMS[item]}`);
                         //find space after
                         if (config.FormatAlsoInComment) {
                             regex = `(\\${const_2.NO_SPACE_ITEMS[item]}\\s)`;
@@ -62,7 +63,7 @@ function formatNestings(text, config) {
                         else {
                             regex = `((?![^{]*})(\\${const_2.NO_SPACE_ITEMS[item]}\\s))`;
                         }
-                        codeFragments[i] = codeFragments[i].replace(new RegExp(regex, 'g'), `${const_2.NO_SPACE_ITEMS[item]}`);
+                        codeFragments[i] = codeFragments[i].replace(new RegExp(regex, "g"), `${const_2.NO_SPACE_ITEMS[item]}`);
                     }
                     //* check for Space or crlf after ';'
                     //! it might be replaced in strings to?! -> its a Problem? -> fix them so far as possible
@@ -76,76 +77,81 @@ function formatNestings(text, config) {
                 //! END New formatting's
                 //!-----------------------------------------------------------------------------------
                 // and Then ~ back in whitespace
-                codeFragments[i] = codeFragments[i].replace(/\0/gmi, ' ').replace(/u0001/gmi, '\t'); //replace ~ back in whitespaces
+                codeFragments[i] = codeFragments[i]
+                    .replace(/\0/gim, " ")
+                    .replace(/u0001/gim, "\t"); //replace ~ back in whitespaces
             }
             if (!multilineComment) {
                 let exclude = false;
-                codeFragments[i] = codeFragments[i].replace(const_3.REGEX.gm_GET_NESTING, ''); //remove all Nestings
+                codeFragments[i] = codeFragments[i].replace(const_3.REGEX.gm_GET_NESTING, ""); //remove all Nestings
                 // if (i == 45) {
                 //     let debug = true;
                 // }
                 //* check for Codeblock
                 // bugfix: 02.11.2021 viru -> turn this code after remove all Nestings for correct Nesting-Format
-                if (codeFragments[i].search(new RegExp(regexCB, 'gi')) !== -1) {
+                if (codeFragments[i].search(new RegExp(regexCB, "gi")) !== -1) {
                     nestingCounter++;
                     thisLineBack = true;
                 }
-                else if (codeFragments[i].search(new RegExp(regexCEx, 'gi')) !== -1) {
+                else if (codeFragments[i].search(new RegExp(regexCEx, "gi")) !== -1) {
                     thisLineBack = true;
                 }
-                else if (codeFragments[i].search(new RegExp(regexCE, 'gi')) !== -1) {
+                else if (codeFragments[i].search(new RegExp(regexCE, "gi")) !== -1) {
                     nestingCounter--;
                     thisLineBack = true;
-                    if (nestingCounter < 0) { //just in case
+                    if (nestingCounter < 0) {
+                        //just in case
                         nestingCounter = 0;
                         thisLineBack = false;
                     }
                 }
                 else {
-                    nestingdef_1.EXCLUDE_KEYWORDS.some(item => {
+                    nestingdef_1.EXCLUDE_KEYWORDS.some((item) => {
                         //show for Excludes from Nesting
                         regex = `((?![^{]*})(${item}))`;
-                        if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                        if (codeFragments[i].search(new RegExp(regex, "i")) !== -1) {
                             exclude = true;
                         }
                     });
-                    //loop in all Nesting Keyword configurations 
+                    //loop in all Nesting Keyword configurations
                     let keyFound = false;
                     for (var ii = 0; ii < nestingdef_1.NESTINGS.length; ii++) {
-                        if (!exclude) { //(!exclude) ==> bugfix on "exit for;"
+                        if (!exclude) {
+                            //(!exclude) ==> bugfix on "exit for;"
                             //first like if
                             regex = `((?![^{]*})(\\b${nestingdef_1.NESTINGS[ii].keyword})\\b)`;
-                            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                            if (codeFragments[i].search(new RegExp(regex, "i")) !== -1) {
                                 nestingCounter++;
                                 keyFound = true;
                             }
                         }
                         //bugfix on "then in a new line"
-                        if (nestingdef_1.NESTINGS[ii].multiline !== '') {
+                        if (nestingdef_1.NESTINGS[ii].multiline !== "") {
                             regex = `((?![^{]*})(\\b${nestingdef_1.NESTINGS[ii].multiline})\\b)`;
-                            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                            if (codeFragments[i].search(new RegExp(regex, "i")) !== -1) {
                                 if (!keyFound) {
                                     thisLineBack = true;
                                 }
                             }
                         }
                         //middle like ELSE
-                        if (nestingdef_1.NESTINGS[ii].middle !== '') {
+                        if (nestingdef_1.NESTINGS[ii].middle !== "") {
                             regex = `((?![^{]*})(\\b${nestingdef_1.NESTINGS[ii].middle})\\b)`;
-                            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                            if (codeFragments[i].search(new RegExp(regex, "i")) !== -1) {
                                 thisLineBack = true;
                                 break;
                             }
                         }
                         //end like ENDIF
                         regex = `((?![^{]*})(\\b${nestingdef_1.NESTINGS[ii].end})\\b)`;
-                        if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                        if (codeFragments[i].search(new RegExp(regex, "i")) !== -1) {
                             nestingCounter--;
                             if (nestingCounterPrevious !== nestingCounter) {
                                 thisLineBack = true;
                                 break;
                             }
-                            if (nestingCounter < 0) { //just in case
+                            if (nestingCounter < 0) {
+                                //just in case
                                 nestingCounter = 0;
                                 thisLineBack = false;
                             }
@@ -155,12 +161,14 @@ function formatNestings(text, config) {
                 }
             }
             if (nestingCounterPrevious !== nestingCounter) {
-                codeFragments[i] = getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
+                codeFragments[i] =
+                    getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
                 nestingCounterPrevious = nestingCounter;
                 thisLineBack = false; //reset this Flag
             }
             else {
-                codeFragments[i] = getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
+                codeFragments[i] =
+                    getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
                 thisLineBack = false; //reset this Flag
             }
         }
@@ -178,7 +186,7 @@ function formatNestings(text, config) {
 exports.formatNestings = formatNestings;
 //edit.delete(line.rangeIncludingLineBreak);
 function getNesting(n, thisLineBack) {
-    let temp = '';
+    let temp = "";
     if (n !== 0) {
         for (let i = 0; i < n; i++) {
             if (thisLineBack) {
@@ -193,8 +201,8 @@ function getNesting(n, thisLineBack) {
 }
 function forFormat(text, config) {
     // todo: 2021.10.28 viru -> this is to complicated! -> refactor it like Nesting!
-    let txt = text.split('');
-    let buf = '';
+    let txt = text.split("");
+    let buf = "";
     let i = 0;
     let modified = 0;
     let inComment = false;
@@ -210,20 +218,22 @@ function forFormat(text, config) {
         else {
             modified = 0;
             //check for String-End (check before begin!)
-            if (inString && (txt[i] === '"')) {
+            if (inString && txt[i] === '"') {
                 // if (!(txt[i - 1] === '\\')) {  //check for escaped quot
                 inString = false;
                 // }
             }
-            else if (!inComment) { //check for String-Begin, but not the same char as close!
+            else if (!inComment) {
+                //check for String-Begin, but not the same char as close!
                 if (txt[i] === '"') {
                     inString = true;
                     //log("info", `Info @ Line ${LineCount} at Column ${ColumnCount} -> Open string detected!`);
                 }
             }
-            //Line count 
+            //Line count
             if (txt[i] === const_1.LF) {
-                if (inString) { //check for String error, because there is no way to declare string over multiple Line!
+                if (inString) {
+                    //check for String error, because there is no way to declare string over multiple Line!
                     (0, functions_1.log)("Error", `Error @ Line ${LineCount} at Column ${ColumnCount} -> no closed string detected!`);
                     (0, functions_1.log)("info", buf);
                     return text; //return unformatet text
@@ -232,34 +242,38 @@ function forFormat(text, config) {
                 ColumnCount = 0;
             }
             //check for comment-error
-            if (!inComment && (txt[i] === '}')) {
+            if (!inComment && txt[i] === "}") {
                 (0, functions_1.log)("Error", `Error @ Line ${LineCount} at Column ${ColumnCount} -> closed comment bracket witout Open comment bracket!`);
                 (0, functions_1.log)("Error", buf);
                 return text; //return unformatted text
             }
-            else if (txt[i] === '{') { //check for Comment-Begin
+            else if (txt[i] === "{") {
+                //check for Comment-Begin
                 inComment = true;
             }
-            else if (inComment && (txt[i] === '}')) { //check for Comment-End
+            else if (inComment && txt[i] === "}") {
+                //check for Comment-End
                 inComment = false;
             }
             //formatting session
             if (!inString) {
-                if (!(modified > 0) && (!inComment || config.KeywordUppercaseAlsoInComment)) {
+                if (!(modified > 0) &&
+                    (!inComment || config.KeywordUppercaseAlsoInComment)) {
                     let j;
-                    let wbf = ''; //word-bindery-test-char-before
-                    let wba = ''; //word-bindery-test-char-after
+                    let wbf = ""; //word-bindery-test-char-before
+                    let wba = ""; //word-bindery-test-char-after
                     //check for KEYWORDS
                     for (j in const_2.KEYWORDS) {
                         let k;
-                        let tt = '';
+                        let tt = "";
                         wbf = text[i - 1];
                         for (k = 0; k <= const_2.KEYWORDS[j].length - 1; k++) {
                             tt += text[i + k];
                             wba = text[i + k + 1];
                         }
                         if (tt.toLowerCase() === const_2.KEYWORDS[j].toLowerCase()) {
-                            if (CheckCRLForWhitespace(wbf) && CheckCRLForWhitespace(wba)) { //check Word-Binary
+                            if (CheckCRLForWhitespace(wbf) && CheckCRLForWhitespace(wba)) {
+                                //check Word-Binary
                                 tt = const_2.KEYWORDS[j].toUpperCase() + wba;
                                 buf += tt;
                                 modified = tt.length - 1;
@@ -270,19 +284,19 @@ function forFormat(text, config) {
                     if (!(modified > 0)) {
                         for (j in const_2.DOUBLE_OPERATORS) {
                             let k;
-                            let tt = '';
+                            let tt = "";
                             wbf = text[i - 1];
                             for (k = 0; k <= const_2.DOUBLE_OPERATORS[j].length - 1; k++) {
                                 tt += text[i + k];
                                 wba = text[i + k + 1];
                             }
                             if (tt === const_2.DOUBLE_OPERATORS[j]) {
-                                if (text[i - 1] !== ' ') {
-                                    buf += ' ';
+                                if (text[i - 1] !== " ") {
+                                    buf += " ";
                                 }
                                 buf += const_2.DOUBLE_OPERATORS[j];
-                                if (text[i + 2] !== ' ') {
-                                    buf += ' ';
+                                if (text[i + 2] !== " ") {
+                                    buf += " ";
                                 }
                                 modified = 1;
                                 break;
@@ -293,19 +307,32 @@ function forFormat(text, config) {
                     if (!(modified > 0)) {
                         for (j in const_2.SINGLE_OPERATORS) {
                             if (text[i] === const_2.SINGLE_OPERATORS[j]) {
-                                if (text[i - 1] !== ' ') {
-                                    buf += ' ';
+                                if (const_2.SINGLE_OPERATORS[j] === "-") {
+                                    if (text[i + 1] === " " || text[i + 1] === const_1.TAB) {
+                                        //23.01.2022 check '-' as single Operator, because it can be used in variables
+                                        buf += " ";
+                                    }
+                                }
+                                else if (text[i - 1] !== " ") {
+                                    //check for space before operator
+                                    buf += " ";
                                 }
                                 buf += text[i];
-                                if (text[i + 1] !== ' ') {
-                                    let debug1 = const_2.SINGLE_OPERATORS[j];
-                                    if (const_2.SINGLE_OPERATORS[j] === '+' || const_2.SINGLE_OPERATORS[j] === '-') {
+                                if (text[i + 1] !== " ") {
+                                    //check for space after operator
+                                    // let debug1 = SINGLE_OPERATORS[j];
+                                    // if (SINGLE_OPERATORS[j] === '+' || SINGLE_OPERATORS[j] === '-') {
+                                    if (const_2.SINGLE_OPERATORS[j] === "-") {
+                                        // do nothing!
+                                    }
+                                    else if (const_2.SINGLE_OPERATORS[j] === "+") {
+                                        //23.01.2022 remove '-' as single Operator, because it can be used in variables
                                         if (isNaN(+text[i + 1])) {
-                                            buf += ' ';
+                                            buf += " ";
                                         }
                                     }
                                     else {
-                                        buf += ' ';
+                                        buf += " ";
                                     }
                                 }
                                 modified = -1;
@@ -316,7 +343,8 @@ function forFormat(text, config) {
                     }
                 }
             } //formatting session
-            if (modified === 0) { //insert only when on this session not modified!
+            if (modified === 0) {
+                //insert only when on this session not modified!
                 buf += txt[i];
             }
         } //not modified
@@ -327,6 +355,6 @@ function forFormat(text, config) {
 exports.forFormat = forFormat;
 function CheckCRLForWhitespace(s) {
     //https://stackoverflow.com/questions/69709447/problem-to-create-a-regex-expression-in-js-to-select-keywords-in-text-but-excl/69734464?noredirect=1#comment123265818_69734464
-    return const_2.FORMATS.concat(const_2.SINGLE_OPERATORS, const_2.DOUBLE_OPERATORS, const_2.TRENNER).some(item => s === item);
+    return const_2.FORMATS.concat(const_2.SINGLE_OPERATORS, const_2.DOUBLE_OPERATORS, const_2.TRENNER).some((item) => s === item);
 }
 //# sourceMappingURL=formats.js.map

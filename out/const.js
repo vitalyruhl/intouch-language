@@ -11,6 +11,7 @@ exports.SQUOTE = "\'";
 exports.BACKSLASH = "\\";
 exports.FORMATS = [exports.TAB, exports.CR, exports.LF, exports.CRLF, exports.DQUOTE, exports.SQUOTE, exports.BACKSLASH];
 exports.SINGLE_OPERATORS = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
+// export const SINGLE_OPERATORS: string[] = ['=', '+', '<', '>', '*', '/', '%', '!', '~', '|'];//23.01.2022 remove - as single Operator, because it can be used in variables
 exports.DOUBLE_OPERATORS = ['==', '<>', '<=', '=>'];
 exports.NO_SPACE_ITEMS = ['(', ')', '[', ']', ';'];
 exports.TRENNER = [';', ' '];
@@ -24,14 +25,16 @@ exports.KEYWORDS = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", 
   discrete|integer|real|message
 */
 const gm_TAB_NOT_IN_COMMENT = new RegExp(/(?![^{]*})\t/, 'gm');
-const gm_MOR_1_WSP = new RegExp(/\s{1,}/, 'gm');
-const gm_MOR_2_WSP = new RegExp(/\s{2,}/, 'gm');
-const gm_MOR_2_WSP_NO_TAB = new RegExp(/\s{2,}(?<!\t)/, 'gm');
+const gm_MOR_1_WSP = new RegExp(/\s{1,}/, 'gm'); //more then one whitespace
+const gm_MOR_2_WSP = new RegExp(/\s{2,}/, 'gm'); //more then two whitespace
+const gm_MOR_2_WSP_NO_TAB = new RegExp(/\s{2,}(?<!\t)/, 'gm'); //more then one whitespace, but is not a tabulator
 const g_CHECK_OPEN_COMMENT = new RegExp(/(}*{)/, 'g');
 const g_CHECK_CLOSE_COMMENT = new RegExp(/(})/, 'g');
 const gm_GET_NESTING = new RegExp(/^\s*/, 'g');
 const gm_GET_STRING = new RegExp(/(["'])(?:(?=(\\?))\2.)*?\1/, 'gm');
 const gm_GET_WSP_IN_STRING = new RegExp(/\s+(?=(?:(?:[^"]*"){2})*[^"]*"[^"]*$)/, 'gm'); //https://stackoverflow.com/questions/36705436/regular-expression-to-select-all-whitespace-that-is-in-quotes
+const gm_GET_ALL_WORDS = new RegExp(/(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\\"\,\.\<\>\/\?\s]+)/, 'gm');
+const gm_GET_ALL_Numbers = new RegExp(/-?\d*\d/, 'gm');
 exports.REGEX = {
     gm_TAB_NOT_IN_COMMENT,
     gm_MOR_1_WSP,
@@ -41,6 +44,8 @@ exports.REGEX = {
     gm_GET_NESTING,
     gm_GET_STRING,
     gm_GET_WSP_IN_STRING,
-    gm_MOR_2_WSP_NO_TAB
+    gm_MOR_2_WSP_NO_TAB,
+    gm_GET_ALL_WORDS,
+    gm_GET_ALL_Numbers
 };
 //# sourceMappingURL=const.js.map

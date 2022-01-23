@@ -9,8 +9,8 @@ export const BACKSLASH = "\\";
 
 
 export const FORMATS: string[] = [TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH];
-// export const SINGLE_OPERATORS: string[] = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
-export const SINGLE_OPERATORS: string[] = ['=', '+', '<', '>', '*', '/', '%', '!', '~', '|'];
+export const SINGLE_OPERATORS: string[] = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
+// export const SINGLE_OPERATORS: string[] = ['=', '+', '<', '>', '*', '/', '%', '!', '~', '|'];//23.01.2022 remove - as single Operator, because it can be used in variables
 export const DOUBLE_OPERATORS: string[] = ['==', '<>', '<=', '=>'];
 export const NO_SPACE_ITEMS: string[] = ['(', ')', '[', ']', ';'];
 export const TRENNER: string[] = [';', ' '];
@@ -26,7 +26,6 @@ export const KEYWORDS: string[] = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "
   NULL|EOF|AS|True|False
   discrete|integer|real|message
 */
-
 
 const gm_TAB_NOT_IN_COMMENT = new RegExp(/(?![^{]*})\t/, 'gm');
 const gm_MOR_1_WSP = new RegExp(/\s{1,}/, 'gm'); //more then one whitespace
