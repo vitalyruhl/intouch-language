@@ -328,17 +328,19 @@ function forFormat(text, config) {
                         for (j in const_2.SINGLE_OPERATORS) {
                             if (text[i] === const_2.SINGLE_OPERATORS[j]) {
                                 if (const_2.SINGLE_OPERATORS[j] === "-") {
-                                    if (text[i + 1] === " " || text[i + 1] === const_1.TAB) {
-                                        //23.01.2022 check '-' as single Operator, because it can be used in variables
+                                    //23.01.2022 check '-' as single Operator, because it can be used in variables
+                                    let tstSwp = text[i + 1] == " " && text[i - 1] != " "; // 2022.01.25 Bugfix
+                                    let tstNmb = text[i + 1] == " " && text[i - 1] != " " && isNaN(+text[i + 1]); // 2022.01.25 Bugfix
+                                    if (tstSwp) {
                                         buf += " ";
                                     }
                                 }
-                                else if (text[i - 1] !== " ") {
+                                else if (text[i - 1] != " ") {
                                     //check for space before operator
                                     buf += " ";
                                 }
                                 buf += text[i];
-                                if (text[i + 1] !== " ") {
+                                if (text[i + 1] != " ") {
                                     //check for space after operator
                                     // let debug1 = SINGLE_OPERATORS[j];
                                     // if (SINGLE_OPERATORS[j] === '+' || SINGLE_OPERATORS[j] === '-') {

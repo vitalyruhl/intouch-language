@@ -20,6 +20,10 @@
 
 # What's new in Intouch-Language
 
+### V1.2.1
+
+- bugfix trailing whitespace before ``-``
+
 ### V1.2.0
 
 - Add folding between ``{region xxxx}`` and  ``{endregion xxxx}``
