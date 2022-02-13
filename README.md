@@ -4,6 +4,7 @@
 <!-- markdownlint-disable MD001 -->
 <!-- markdownlint-disable MD013 -->
 <!-- markdownlint-disable MD025 -->
+<!-- markdownlint-disable MD026 -->
 
 <p align="center">
   <br />
@@ -13,42 +14,6 @@
 [![Version](https://vsmarketplacebadge.apphb.com/version/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
 [![Installs](https://vsmarketplacebadge.apphb.com/installs-short/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
 [![Rating](https://vsmarketplacebadge.apphb.com/rating/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
-
-<br>
-
-<br>
-
-# What's new in Intouch-Language
-
-### V1.2.1
-
-- bugfix trailing whitespace before ``-``
-
-### V1.2.0
-
-- Add folding between ``{region xxxx}`` and  ``{endregion xxxx}``
-- Add Nesting between ``{region xxxx}`` and  ``{endregion xxxx}``
-- Auto closing brackets in strings and comments
-- remove unused dependency with dependabot alert.
-- add wordPattern and indentationRules into language configuration
-- fix bug - issue #13, formatter formats dashed variable ``foo-bar`` --> ``foo - bar``
-
-### V1.1.1
-
-- Version issue with format problem on <>, =<, =>, == was published with greater version
-
-### V1.1.0
-
-- Add Code-Blocks for Nesting and Folding in code without keywords Start:`{>`, End:`{<`
-- Add **Snipped** cb# : add new Code-Block
-- Add **Snipped** for# : add for-next-block
-- Add **Snipped** func# : add new empty Function
-- correct some spelling mistakes
-- remove debugging settings
-
-### V1.0.0
-
-- Add **Formatting Function**
 
 <br>
 <br>
@@ -87,17 +52,17 @@
 <br>
 
 # Installation
-
-- install it in ext.-manager (type Intouch) or from 
+- Standatd Installation:
+  - install it in ext.-manager (type Intouch) or from 
   [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
-- (Beta Version) copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
-  - `cd ~/.vscode/extensions/`
-  - `git clone https://github.com/vitalyruhl/intouch-language.git`
-  - open shell and type `npm i`
+- Install from Github:
+  - copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
+    - `cd ~/.vscode/extensions/`
+    - `git clone https://github.com/vitalyruhl/intouch-language.git`
+  - open shell there and type `npm i`
   - run: `npm run compile`, or `npm run watch` if you want to make changes in src folder.
   - you must restart the VS-Code after installation, to apply new settings
 
-> Save your code as `.vbi` or `.vi` for automatic language recognition.
 
 <p align="center">
   <br />
@@ -106,19 +71,33 @@
 
 # Snippets
 
-- Dimb: Dim Boolean (Discrete)
-- Dimi: Dim Integer
-- Dims: Dim String (Message)
-- If# : If code block
-- Ife : If Else code block
-- for#  : add for-next-block
-- log#: Log-Debug
-- cb# : add new Code-Block
-- func# : add new empty Function
-
+- Dimb -> Dim Boolean (Discrete)
+- Dimi -> Dim Integer
+- Dims -> Dim String (Message)
+- If#  -> If code block
+- Ife  -> If Else code block
+- for# -> add for-next-block
+- log# -> Log-Debug
+- cb# -> add new Code-Block
+- func# -> add new empty Function
 
 <p align="center">
   <br />
+  <br />
+</p>
+
+# Others
+
+> Save your code as `.vbi` or `.vi` for automatic language recognition.
+
+- - -
+
+> Better-Comment Plugin
+- [Use this Branch (beta) from github - it works on all Languages](https://github.com/vitalyruhl/better-comments/tree/all-languages)
+
+<p align="center">
+  <br />
+  <hr />
   <br />
 </p>
 
@@ -132,9 +111,10 @@
 # Todo
 
 - **Formatter**
-  - no issues
+  - Issues
+    - Bug 13.02.2022 ``For-next`` not in plan when there are an ``EXIT FOR`` statement
+    - Bug 13.02.2022 Nesting bug -> code in multiline comment will formatted to?!
   - Futures planned
-    - Add Comment-highlighting, like `Better Comments` Plugin
     - Format on selection (now is formatting document!)
 
 <br>
@@ -153,6 +133,46 @@
 <br>
 <br>
 
+---
+
+# What's new in Intouch-Language
+
+### V1.2.2
+
+- bugfix on snippets
+
+### V1.2.1
+
+- bugfix trailing whitespace before ``-``
+
+### V1.2.0
+
+- Add folding between ``{region xxxx}`` and  ``{endregion xxxx}``
+- Add Nesting between ``{region xxxx}`` and  ``{endregion xxxx}``
+- Auto closing brackets in strings and comments
+- remove unused dependency with dependabot alert.
+- add wordPattern and indentationRules into language configuration
+- fix bug - issue #13, formatter formats dashed variable ``foo-bar`` --> ``foo - bar``
+
+### V1.1.1
+
+- Version issue with format problem on <>, =<, =>, == was published with greater version
+
+### V1.1.0
+
+- Add Code-Blocks for Nesting and Folding in code without keywords Start:`{>`, End:`{<`
+- Add **Snipped** cb# : add new Code-Block
+- Add **Snipped** for# : add for-next-block
+- Add **Snipped** func# : add new empty Function
+- correct some spelling mistakes
+- remove debugging settings
+
+### V1.0.0
+
+- Add **Formatting Function**
+
+<br>
+<br>
 
 ---
 
@@ -183,6 +203,6 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
 
 ## Copyright
 
-`2021 (c)Vitaly Ruhl`
+`2021-2022 (c)Vitaly Ruhl`
 
 License: GNU General Public License v3.0
