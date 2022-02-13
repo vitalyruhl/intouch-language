@@ -93,7 +93,7 @@
 - - -
 
 > Better-Comment Plugin
-- [Use this Branch (beta) from github - it works on all Languages](https://github.com/vitalyruhl/better-comments/tree/all-languages)
+- [Use this Branch (beta) from github - it works on all Languages](https://github.com/aaron-bond/better-comments/tree/all-languages)
 
 <p align="center">
   <br />
