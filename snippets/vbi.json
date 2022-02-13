@@ -27,8 +27,6 @@
       "\t",
       "Else",
       "\t",
-      "EndIf;",
-      "\t",
       "EndIf;"
     ],
     "description": "If Else code block"
@@ -57,7 +55,7 @@
   "Log": {
     "prefix": "log#",
     "body": [
-      "IF Sys_Debug_info > 0 THEN LogMessage(\" ------------->text:\" + ${1:varName}); ENDIF;"
+      "LogMessage(\"text:\" + ${1:varName});"
     ],
     "description": "Debug-Log"
   },
