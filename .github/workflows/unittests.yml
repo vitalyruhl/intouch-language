@@ -1,0 +1,35 @@
+
+name: Unit-Testing
+
+on:
+  push:
+    branches:[bugfixing,future*]
+  pull_request:
+    branches:[master]
+
+    
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node-version: [12.x, 14.x, 15.x]
+    runs-on: ${{ matrix.os }} 
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm i
+
+      - name: compile and run Test
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm run test:ci
