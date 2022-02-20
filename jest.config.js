@@ -1,15 +1,19 @@
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+const path = require('path') //https://github.com/microsoft/vscode-test/issues/37
+
 module.exports = {
   preset: 'ts-jest',
-  testEnvironment: 'node',
-  
+  testEnvironment: './src/test/vscode-environment.js',
   coverageReporters:[
     "lcov", "text"
   ],
   testPathIgnorePatterns:[
       'out/test',
   ],
-  "modulePaths": ["src","node_modules\@types\vscode"],
+  moduleNameMapper: {
+    vscode: path.join(__dirname, 'test-jest', 'vscode.js')  // <----- most important line
+  },
+  modulePaths: ['<rootDir>'],
   coverageThreshold:{
       global:{
           branches:50,
