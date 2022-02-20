@@ -1,3 +1,4 @@
+
 import * as vscode from 'vscode';
 import { workspace, window } from 'vscode';
 import { forFormat, formatNestings } from './formats';
@@ -200,3 +201,6 @@ export function log(cat: string, ...o: any) {
 
 }
 
+export function cloneArray(arr){
+	return [...arr]
+}
