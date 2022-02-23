@@ -11,7 +11,7 @@ module.exports = {
       'out/test',
   ],
   moduleNameMapper: {
-    vscode: path.join(__dirname, 'test-jest', 'vscode.js')  // <----- most important line
+    vscode: path.join(__dirname, 'test', 'vscode.js')  // <----- most important line
   },
   modulePaths: ['<rootDir>'],
   coverageThreshold:{
