@@ -1,11 +1,10 @@
-
 name: Unit-Testing
 on:
   push:
-    branches:[bugfixing,master]
+    branches: [bugfixing,master]
   pull_request:
-    branches:[master]
-  
+    branches: [master]
+ 
 jobs:
   build:
     strategy:
