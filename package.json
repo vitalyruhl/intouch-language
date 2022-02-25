@@ -141,7 +141,6 @@
 		"postinstall": "npm run compile",
 		"compile": "tsc -p ./",
 		"test": "npm run clear:out && npm run compile && node ./out/test/runTest.js",
-		"test:ci": "npm run test",
 		"watch": "tsc -watch -p ./",
 		"lint": "eslint . --ext .ts,.tsx",
 		"publish-patch": "npm run compile && vsce package && vsce publish patch",
