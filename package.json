@@ -140,7 +140,7 @@
 		"vscode:prepublish": "npm run compile",
 		"postinstall": "npm run compile",
 		"compile": "tsc -p ./",
-		"test": "npm run clear:out && npm run compile && node ./out/test/runTest.js",
+		"test": "npm run compile && node ./out/test/runTest.js",
 		"watch": "tsc -watch -p ./",
 		"lint": "eslint . --ext .ts,.tsx",
 		"publish-patch": "npm run compile && vsce package && vsce publish patch",
