@@ -9,7 +9,7 @@ export function run(): Promise<void> {
 		reporter: 'list'
 	});
 	// mocha.useColors(true);
-
+//ui: 'tdd',
 	const testsRoot = path.resolve(__dirname, '..');
 
 	return new Promise((c, e) => {
