@@ -50,14 +50,14 @@
       "NEXT;",
       ""
     ],
-    "description": "If ElseIf Else code block"
+    "description": "FOR-NEXT code block"
   },
   "Log": {
     "prefix": "log#",
     "body": [
       "LogMessage(\"text:\" + ${1:varName});"
     ],
-    "description": "Debug-Log"
+    "description": "LogMessage()"
   },
   "debug": {
     "prefix": "deb#",
