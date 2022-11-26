@@ -137,6 +137,14 @@
 
 # What's new in Intouch-Language
 
+### V1.2.4
+
+- Update dependencies
+
+### V1.2.3
+
+- some bugfixes
+
 ### V1.2.2
 
 - bugfix on snippets

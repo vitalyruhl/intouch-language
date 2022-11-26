@@ -141,6 +141,7 @@ TEXT1 = TEXT1 + StringMid(TAB_AAF.Comment,TABINDEX,1);
 
 FOR TABINDEX = TABINDEX TO StringLen(TAB_AAF.Comment)
 BYTE = StringToIntg(StringRight(TAB_AAF.Reference,6));
+NEXT;
 
 RestartWindowViewer( );
 SYS_TSClient1_Name = TseGetClientNodeName( );
