@@ -1,6 +1,7 @@
 {
     "$schema": "http://json-schema.org/schema#",
-    "id": "https://raw.githubusercontent.com/vitalyruhl/intouch-language/blob/master/syntaxes/schema.json",
+    "id": "448eaf8e-6bd4-4b72-b6cd-9af578a789d2",
+    "link": "https://raw.githubusercontent.com/vitalyruhl/intouch-language/blob/master/syntaxes/schema.json",
     "$ref": "#/definitions/root",
     "definitions": {
       "root": {
@@ -177,6 +178,8 @@
               "entity.other",
               "entity.other.attribute-name",
               "entity.other.inherited-class",
+              "entity.modifires",
+              "entity.numbers",
               "header",
               "invalid",
               "invalid.deprecated",
@@ -188,6 +191,8 @@
               "keyword.operator.new",
               "keyword.other",
               "keyword.other.unit",
+              "keyword.constant",
+              "keyword.function",
               "markup",
               "markup.bold",
               "markup.changed",
@@ -259,7 +264,9 @@
               "variable.language",
               "variable.name",
               "variable.other",
-              "variable.parameter"
+              "variable.other.constant",
+              "variable.parameter",
+              "variable.parameter.function"
             ]
           }
         ]

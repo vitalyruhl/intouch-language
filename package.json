@@ -1,8 +1,8 @@
 {
 	"name": "intouch-language",
-	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021 vitalyruhl",
+	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021-2022 vitalyruhl",
 	"description": "Intouch-Language syntax highlighting, formatter and code snippets for VSCode",
-	"version": "1.2.4",
+	"version": "1.3.0",
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
@@ -16,23 +16,37 @@
 		"url": "https://github.com/vitalyruhl/intouch-language/issues"
 	},
 	"license": "GNU",
+	"galleryBanner": {
+		"color": "#030404",
+		"theme": "dark"
+	},
 	"categories": [
 		"Programming Languages",
 		"Formatters",
-		"Snippets"
+		"Snippets",
+		"Themes"
 	],
 	"keywords": [
 		"Intouch",
 		"Invensys",
 		"Wonderware",
 		"Aveva",
-		"formatter"
+		"formatter",
+		"theme",
+		"dark"
 	],
 	"main": "./out/extension",
 	"activationEvents": [
 		"onLanguage:intouch"
 	],
 	"contributes": {
+		"themes": [
+			{
+				"label": "Intouch Dark",
+				"uiTheme": "vs-dark",
+				"path": "./themes/dark.json"
+			}
+		],
 		"languages": [
 			{
 				"id": "intouch",
@@ -137,9 +151,11 @@
 		}
 	},
 	"scripts": {
+		"start": "nodemon --watch src src/index.js",
+		"build:theme": "node src/index.js",
 		"vscode:prepublish": "npm run compile",
-		"postinstall": "npm run compile",
-		"compile": "tsc -p ./",
+		"postinstall": "npm run compile && node src/index.js",
+		"compile": "tsc -p ./ && node src/index.js",
 		"test": "npm run compile && node ./out/test/runTest.js",
 		"watch": "tsc -watch -p ./",
 		"lint": "eslint . --ext .ts,.tsx",
@@ -170,7 +186,10 @@
 		"glob": "^8.0.3",
 		"mocha": "^10.1.0",
 		"source-map-support": "^0.5.21",
-		"typescript": "^4.9.3"
+		"typescript": "^4.9.3",
+		"@primer/primitives": "^2.0.1",
+		"color": "^3.1.2",
+		"nodemon": "^2.0.3"
 	},
 	"__metadata": {
 		"id": "834eb420-2978-4100-b7de-2430fc88e429",

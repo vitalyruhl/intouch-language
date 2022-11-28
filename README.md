@@ -137,6 +137,11 @@
 
 # What's new in Intouch-Language
 
+### V1.3.0
+
+- add own dark theme based on [GitHub (Dark Classic) VS Code theme](https://github.com/BerriJ/github-vscode-theme-dark-classic) from BerriJ
+- some bugfixes in regex for Keywords
+
 ### V1.2.4
 
 - Update dependencies
