@@ -34,7 +34,7 @@ INIWriteString(SYS_ProjektPath + "\histprv.ini",SYS_LoggingServer,"Path",StringR
 
 DIM file AS INTEGER;
 file = InfoFile( "C:\Program Files (x86)\Wonderware\InTouch\Intouch.exe",1, $Second);
-IF file ==1 THEN
+IF file <> 1 THEN
 	SYS_InstallPath = "C:\Program Files (x86)\Wonderware\InTouch";
 ELSE
 	file =      InfoFile( "C:\Program Files\Wonderware\InTouch\Intouch.exe",1, $Second );
@@ -141,6 +141,7 @@ TEXT1 = TEXT1 + StringMid(TAB_AAF.Comment,TABINDEX,1);
 
 FOR TABINDEX = TABINDEX TO StringLen(TAB_AAF.Comment)
 BYTE = StringToIntg(StringRight(TAB_AAF.Reference,6));
+NEXT;
 
 RestartWindowViewer( );
 SYS_TSClient1_Name = TseGetClientNodeName( );

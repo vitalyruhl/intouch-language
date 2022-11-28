@@ -1,12 +1,12 @@
 {
 	"name": "intouch-language",
-	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021 vitalyruhl",
+	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021-2022 vitalyruhl",
 	"description": "Intouch-Language syntax highlighting, formatter and code snippets for VSCode",
-	"version": "1.2.2",
+	"version": "1.3.1",
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
-		"vscode": "^1.63.1"
+		"vscode": "^1.73.1"
 	},
 	"repository": {
 		"type": "git",
@@ -16,23 +16,37 @@
 		"url": "https://github.com/vitalyruhl/intouch-language/issues"
 	},
 	"license": "GNU",
+	"galleryBanner": {
+		"color": "#030404",
+		"theme": "dark"
+	},
 	"categories": [
 		"Programming Languages",
 		"Formatters",
-		"Snippets"
+		"Snippets",
+		"Themes"
 	],
 	"keywords": [
 		"Intouch",
 		"Invensys",
 		"Wonderware",
 		"Aveva",
-		"formatter"
+		"formatter",
+		"theme",
+		"dark"
 	],
 	"main": "./out/extension",
 	"activationEvents": [
 		"onLanguage:intouch"
 	],
 	"contributes": {
+		"themes": [
+			{
+				"label": "Intouch Dark",
+				"uiTheme": "vs-dark",
+				"path": "./themes/dark.json"
+			}
+		],
 		"languages": [
 			{
 				"id": "intouch",
@@ -137,15 +151,21 @@
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "rm -rf ./out; npm run compile",
-		"postinstall": "tsc -p ./",
-		"compile": "tsc -p ./",
+		"start": "nodemon --watch src src/index.js",
+		"build:theme": "node src/index.js",
+		"vscode:prepublish": "npm run compile",
+		"postinstall": "npm run compile && node src/index.js",
+		"compile": "tsc -p ./ && node src/index.js",
+		"test": "npm run compile && node ./out/test/runTest.js",
 		"watch": "tsc -watch -p ./",
 		"lint": "eslint . --ext .ts,.tsx",
-		"publish-patch": "vsce package && vsce publish patch",
-		"publish-minor": "vsce package && vsce publish minor",
-		"publish-major": "vsce package && vsce publish major",
-		"publish": "vsce package && vsce publish"
+		"publish-patch": "npm run compile && vsce package && vsce publish patch",
+		"publish-minor": "npm run compile && vsce package && vsce publish minor",
+		"publish-major": "npm run compile && vsce package && vsce publish major",
+		"publish": "npm run compile && vsce package && vsce publish",
+		"refresh": "rm ./out -rf && rm ./package-lock.json -f && rm ./node_modules -rf && npm i && npm run compile",
+		"clear:all": "rm ./out -rf && rm ./package-lock.json -f && rm ./node_modules -rf",
+		"clear:out": "rm ./out -rf"
 	},
 	"capabilities": {
 		"virtualWorkspaces": true,
@@ -155,10 +175,21 @@
 		}
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.63.1",
-		"typescript": "^4.5.5",
-		"eslint": "^8.7.0",
-		"@types/node": "^17.0.10"
+		"@types/glob": "^8.0.0",
+		"@types/mocha": "^10.0.0",
+		"@types/node": "^18.11.9",
+		"@types/vscode": "^1.73.1",
+		"@typescript-eslint/eslint-plugin": "^5.44.0",
+		"@typescript-eslint/parser": "^5.44.0",
+		"@vscode/test-electron": "^2.2.0",
+		"eslint": "^8.28.0",
+		"glob": "^8.0.3",
+		"mocha": "^10.1.0",
+		"source-map-support": "^0.5.21",
+		"typescript": "^4.9.3",
+		"color": "^4.2.3",
+		"nodemon": "^2.0.20",
+		"@primer/primitives": "^2.0.1"
 	},
 	"__metadata": {
 		"id": "834eb420-2978-4100-b7de-2430fc88e429",

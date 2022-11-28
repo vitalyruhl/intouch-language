@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.log = exports.info = exports.getConfig = exports.formatTE = exports.config = void 0;
+exports.cloneArray = exports.log = exports.info = exports.getConfig = exports.formatTE = exports.config = void 0;
 const vscode = require("vscode");
 const vscode_1 = require("vscode");
 const formats_1 = require("./formats");
@@ -165,4 +165,8 @@ function log(cat, ...o) {
     }
 }
 exports.log = log;
+function cloneArray(arr) {
+    return [...arr];
+}
+exports.cloneArray = cloneArray;
 //# sourceMappingURL=functions.js.map

@@ -1,0 +1,28 @@
+name: Unit-Testing
+on:
+  push:
+    branches: [bugfixing,master]
+  pull_request:
+    branches: [master]
+ 
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node-version: [14.x, 15.x]
+    runs-on: ${{ matrix.os }} 
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm i
+    - run: xvfb-run -a npm test
+      if: runner.os == 'Linux'
+    - run: npm test
+      if: runner.os != 'Linux'
+   

@@ -4,7 +4,7 @@
 {
 Changelog:
 	V0.0.1		25.10.2021 		ViRu 	define Tests
-	V0.0.2		27.10.2021 		ViRu 	add some Tests and modify commets 
+	V0.0.2		27.10.2021 		ViRu 	add some Tests and modify comments 
 	V1.0.0		28.10.2021 		ViRu 	add Test for next furures 
 	V1.1.0		02.11.2021 		ViRu 	Add Comment-Blocks for Nesting and Folding in code without keywords 
 	V1.1.1		22.01.2022 		ViRu 	Add add test for new issue on dashed variable, test for #region folding 
@@ -58,9 +58,9 @@ ITXStartAppInDirectory ( SYS_ToolsPath + "string ( with ) whitespaces test.", SY
 
 {region check single operators}	
 SYS_Anlage = -1;{fixed 2021.10.29: no space on -/+ before Number!}  
-c=a+b +d- e+ f -g - x;{folowing comment not formated! -> c=a+b +d - e+ f;}
+c=a+b +d- e+ f -g - x;{following comment not formatted! -> c=a+b +d - e+ f;}
 {# New Region trenner}
-new12-issue-dashed-variable-123 = "this variable shal not be formated"
+new12-issue-dashed-variable-123 = "this variable shall not be formatted"
 {endregion check single operators}
 
 {-------------------------------------------}

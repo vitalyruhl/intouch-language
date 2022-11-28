@@ -1,230 +1,235 @@
 {
-	"$schema": "./schema.json",
-	"name": "Intouch",
-	"fileTypes": [ ".vbi" ],
-  	"scopeName": "source.vbi",
-	"comment": "Modified from the original Scott Spences (VSCode VBA) [https://github.com/spences10/vscode-vba#syntax-highlighting] and (OCL) [https://github.com/martinring/vscode-ocl]",
-	"foldingStartMarker": "(?i:(THEN|while|For|{region|(^\\s*//\\s*#?region\\b))(\\s*.*$|\\b))",
-	"foldingStopMarker": "(?i:({endregion|endif;|(^\\s*//\\s*#?endregion\\b))(\\s*.*$|\\b))",
-	"patterns": [
-		{ "include": "#comments" },
-		{ "include": "#contexts" },
-		{ "include": "#constraints" },
-		{ "include": "#keywords" },
-		{ "include": "#restricted" },
+  "$schema": "./schema.json",
+  "name": "Intouch",
+  "fileTypes": [".vbi"],
+  "scopeName": "source.vbi",
+  "comment": "Modified from the original Scott Spences (VSCode VBA) [https://github.com/spences10/vscode-vba#syntax-highlighting] and (OCL) [https://github.com/martinring/vscode-ocl]",
+  "foldingStartMarker": "(?i:(THEN|while|For|{region|(^\\s*//\\s*#?region\\b))(\\s*.*$|\\b))",
+  "foldingStopMarker": "(?i:({endregion|endif;|(^\\s*//\\s*#?endregion\\b))(\\s*.*$|\\b))",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#contexts" },
+    { "include": "#dotfields" },
+    { "include": "#constraints" },
+    { "include": "#keywords" },
+    { "include": "#restricted" },
+    { "include": "#strings" },
+    { "include": "#calls" },
+    { "include": "#HermesKeywords" }
+  ],
+  "repository": {
+    "constraints": {
+      "patterns": [
+        {
+          "match": "\\b(pre|post|inv)(\\s+([\\p{L}_$][\\p{L}_$0-9]*)\\s*:)?",
+          "captures": {
+            "1": { "name": "entity.name" },
+            "3": { "name": "entity.name.section" }
+          }
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.single"
+        }
+      ]
+    },
+    "contexts": {
+      "patterns": [
+        {
+          "begin": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\())(\\s*::\\s*([\\p{L}_$][\\p{L}_$*0-9]*))\\s*\\(",
+          "end": "\\)",
+          "beginCaptures": {
+            "1": { "name": "keyword" },
+            "4": { "name": "entity.name.section" },
+            "5": { "name": "entity.name.type" },
+            "7": { "name": "entity.name.method.function" }
+          },
+          "patterns": [{ "include": "#parameters" }]
+        },
+        {
+          "match": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\())(\\s*::\\s*([\\p{L}_$][\\p{L}_$*0-9]*))\\s*:\\s*([\\p{L}_$][\\p{L}_$*0-9]*)",
+          "captures": {
+            "1": { "name": "keyword" },
+            "4": { "name": "entity.name.section" },
+            "5": { "name": "entity.name.type" },
+            "7": { "name": "variable.other" },
+            "8": { "name": "entity.name.type" }
+          }
+        },
+        {
+          "match": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\()|\\s*:)",
+          "captures": {
+            "1": { "name": "keyword" },
+            "4": { "name": "entity.name.section" },
+            "5": { "name": "entity.name.type" }
+          }
+        },
+        {
+          "match": "\\s+(==|\\+=|<=|>=|=>|<>|<|>|\\+|-|=)\\s",
+          "name": "entity.modifires",
+          "comment": "equals"
+        },
+        {
+          "match": "[0-9]",
+          "name": "entity.numbers",
+          "comment": "numbers"
+        }
+      ]
+    },
+    "calls": {
+      "patterns": [
+        {
+          "match": "\\b\\s*(\\.|->)\\s*([\\p{L}_$][\\p{L}_$0-9]*)\\s*\\(",
+          "captures": {
+            "2": { "name": "entity.name.function" }
+          }
+        }
+      ]
+    },
+    "dotfields": {
+      "patterns": [
+        {
+          "match": "(?i:([\\.]{1}(Comment|Name|ReferenceComplete|Reference|AlarmComment|EngUnits|Value))\\b)", 
+          "name": "variable.parameter",
+          "matchOld": "(((?i:(\\.Comment|\\.Name|\\.Reference|\\.AlarmComment|\\.EngUnits|\\.ReferenceComplete|\\.Value)))\\b)",
+          "comment": "Intouch Dotfields"
+        },
+        {
+          "match": "(?i:([\\.]{1}(SQLString|Caption|ConnectionString|GetRowNumber|GetRowColumnValue|Execute|Disconnect|SetColumnWidth))\\b)",
+          "matchOld": "(((?i:(\\.GetRowNumber|\\.GetRowColumnValue|\\.Execute|\\.Disconnect|\\.SetColumnWidth)))\\b)",
+          "name": "variable.parameter",
+          "comment": "SQL Dotfields"
+        },
+        {
+          "match": "(((?i:(\\.DisplayMode|\\.ChartLength|\\.MinRange|\\.MaxRange|HTUpdateToCurrentTime)))\\b)",
+          "name": "variable.parameter",
+          "comment": "Trend Dotfields"
+        },
+        {
+          "match": "(?i:(\\$)\\w*)",
+          "name": "variable.other",
+          "comment": "Systemvariable '$' are like dotfields..."
+        }
+      ]
+    },
+    "HermesKeywords": {
+      "patterns": [
+        {
+          "match": "(?i:\\b(SYS_|MA_|SMEL_|HER_)\\w*)",
+          "name": "variable.other",
+          "comment": "Systemvariablen (Hermes - OWN)"
+        },
 
-		{ "include": "#strings" },
-		{ "include": "#calls" },
-		{ "include": "#HermesKeywords" 	},
-		{ "include": "#dotfields"		}
-	  ],
-	  "repository": {
-		"constraints": {
-		  "patterns": [
-			{
-			  "match": "\\b(pre|post|inv)(\\s+([\\p{L}_$][\\p{L}_$0-9]*)\\s*:)?",
-			  "captures": {
-				"1": { "name": "keyword.vbi" },
-				"3": { "name": "entity.name.section" }
-			  }
-			}
-		  ]
-		},
-		"strings": {
-		  "patterns": [
-			{
-				"begin": "\"",
-				"end": "\"",
-			  "name": "string.quoted.single.vbi"
-			}
-		  ]
-		},
-		"contexts": {
-		  "patterns": [
-			{
-			  "begin": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\())(\\s*::\\s*([\\p{L}_$][\\p{L}_$*0-9]*))\\s*\\(",
-			  "end": "\\)",
-			  "beginCaptures": {
-				"1": { "name": "keyword.vbi" },
-				"4": { "name": "entity.name.section" },
-				"5": { "name": "entity.name.type" },
-				"7": { "name": "entity.name.method.function" }
-			  },
-			  "patterns": [
-				{ "include": "#parameters" }
-			  ]
-			},
-			{
-			  "match": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\())(\\s*::\\s*([\\p{L}_$][\\p{L}_$*0-9]*))\\s*:\\s*([\\p{L}_$][\\p{L}_$*0-9]*)",
-			  "captures": {
-				"1": { "name": "keyword.vbi" },
-				"4": { "name": "entity.name.section" },
-				"5": { "name": "entity.name.type" },
-				"7": { "name": "variable.other" },
-				"8": { "name": "entity.name.type" }
-			  }
-			},
-			{
-			  "match": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\()|\\s*:)",
-			  "captures": {
-				"1": { "name": "keyword.vbi" },
-				"4": { "name": "entity.name.section" },
-				"5": { "name": "entity.name.type" }
-			  }
-			}
-		  ]
-		},
-		"calls": {
-		  "patterns": [
-			{
-			  "match": "\\b\\s*(\\.|->)\\s*([\\p{L}_$][\\p{L}_$0-9]*)\\s*\\(",
-			  "captures": {
-				"2": { "name": "entity.name.method.function" }
-			  }
-			}
-		  ]
-		},	
-		"dotfields": {
-			"patterns": [
-				{
-					"match": "(((?i:(\\.Comment|\\.Name|\\.Reference|\\.AlarmComment|\\.EngUnits|\\.ReferenceComplete|\\.Value)))\\b)",
-					"name": "variable.name.vbi",
-					"comment": "Intouch Dotfields"
-				},
-				{
-					"match": "(((?i:(\\.GetRowNumber|\\.GetRowColumnValue|\\.Execute|\\.Disconnect|\\.SetColumnWidth)))\\b)",
-					"name": "variable.name.vbi",
-					"comment": "SQL Dotfields"
-				},
-				{
-					"match": "(((?i:(\\.DisplayMode|\\.ChartLength|\\.MinRange|\\.MaxRange|HTUpdateToCurrentTime)))\\b)",
-					"name": "variable.name.vbi",
-					"comment": "Trend Dotfields"
-				},
-				{
-					"match": "(?i:(\\$)\\w*)",
-					"name": "variable.name.vbi",
-					"comment": "Systemvariable '$' are like dotfields..."
-				}
-			]
-		},
-		"HermesKeywords": {
-			"patterns": [
-				{
-					"match": "(?i:\\b(SYS_|MA_|SMEL_|HER_)\\w*)",
-					"name": "variable.parameter.vbi",
-					"comment": "Systemvariablen (Hermes - OWN)"
-				},
-				
-				
-				{
-					"match": "(?i:\\s*\\b(GetSplittByIndex|HerGATEWAYanzeigeAktualisieren|HerGATEWAYtriggerFreigabe|HerGATEWAYueberwachen|SetReferenceBool|SetReferenceByte|SetReferenceDINT|SetReferenceDINTs|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord|SetVarInputBoolsch|SetVarToggleBoolsch|BDEDatenLesen|BDEDatenSpeichern|BDEDatenSuchen|BDESchichtSchreiben|BDESchichtwerteDatenOK|BDESchichtwerteZuweisen|BDETageswerteDatenOK|BDETageswerteSchreiben|BDETageswerteZuweisen|BZBetriebsstunden|BZZaehlerAbfragen|ExterneModuleUeberwachen|FUWerte|GetSplittByIndex|HerBACKUP|HerProViewStart|HideAllPLS|KonfigLesen|KonfigSpeichern|QFFilter|QFFilterRegler15Schritt|QFLuftwerte|QFRinne|SessionUserInfoAkt|Sollwertaenderung|StatusExtApp|StatusleistenInfofelder|SWReal|wwalmdbtrigger|xAnlagenConfig|xBZVZSettings|xGatawaySettings|xHerGATEWAYSettings|xLoggingConfig|xSetDateiPfade|xSetSQLConfig|xSetTSStation|xSetUhrzeitserver)\\b\\s*)",
-					"name": "support.function.vb.vbi",
-					"comment": "Hermes Own functions 1"
-				}
-				,
-				
-				{
-					"match": "(?i:\\s*\\b(xSTATION9BiosName|xSTATION8BiosName|xSTATION7BiosName|xSTATION6BiosName|xSTATION5BiosName|xSTATION4BiosName|xSTATION3BiosName|xSTATION2BiosName|xSTATION1BiosName)\\b\\s*)",
-					"name": "support.function.vb.vbi",
-					"comment": "Hermes Own functions 2"
-				}
-			]
-		},
-		"comments": {	
-					"name": "comment.block.vbi",
-					"begin": "{",
-					"end": "}"	
-		},
-		"keywords": {
-		  "patterns": [
-			{
-			  "name": "keyword.control.vbi",
-			  "match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR)\\b)"
-			},
-			
-			{
-				"match": "(?i:\\b(IF|ENDIF|ELSE|WHILE|FOR|NEXT|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
-				"name": "keyword.control.vbi",
-				"comment": "vbi Regular Keywords"
-			},
-			
-			{
-				"match": "(?i:\\s*\\b(Ack|AddPermission|almAckAll|almAckDisplay|almAckGroup|almAckPriority|almAckRecent|almAckSelect|almAckSelectedGroup|almAckSelectedPriority|almAckSelectedTag|almAckTag|almDefQuery|almMoveWindow|almQuery|almSelectAll|almSelectGroup|almSelectionCount|almSelectItem|almSelectPriority|almSelectTag|almSetQueryByName|almShowStats|almSuppressAll|almSuppressDisplay|almSuppressGroup|almSuppressPriority|almSuppressRetain|almSuppressSelected|almSuppressSelectedGroup|almSuppressSelectedPriority|almSuppressSelectedTag|almSuppressTag|almUnselectAll|almUnsuppressAll|AnnotateLayout|APUFindAlarmGroupInstance|APUFindFileInstance|APUFindPrinterInstance|APUGetAlarmGroupText|APUGetConfigurationFilePath|APUGetInstanceCount|APUGetPrinterJobCount|APUGetPrinterName|APUGetPrinterStatus|APUGetQueryAlarmState|APUGetQueryFromPriority|APUGetQueryProcessingState|APUGetQueryToPriority|APUIsInstanceUsed|APUSetAlarmGroupText|APUSetQueryAlarmState|APUSetQueryFromPriority|APUSetQueryToPriority|APUSetTimeoutValues|APUStartInstance|APUStartQuery|APUStopInstance|APUStopQuery|APUTranslateErrorCode)\\b\\s*)",
-				"name": "keyword.vbi",
-				"comment": "IT-functions Misc Teil 1"
-			},
-			{
-				"match": "(?i:\\s*\\b(AttemptInvisibleLogon|ChangePassword|ChangeWindowColor|CreateFilenameFromDate|DateTimeGMT|DialogStringEntry|DialogValueEntry|EnableDisableKeys|FilePrint|FileSelect|GetAccountStatus|GetDiscOffMsg|GetDiscOnMsg|GetNodeName|GetPropertyD|GetPropertyI|GetPropertyM|GetWindowName|Hide|HideSelf|HTGetLastError|HTGetPenName|HTGetTimeAtScooter|HTGetTimeStringAtScooter|HTGetValue|HTGetValueAtScooter|HTGetValueAtZone|HTScrollLeft|HTScrollRight|HTSelectTag|HTSetPenName|HTUpdateToCurrentTime|HTZoomIn|HTZoomOut|InfoAppStatus|InfoAppTitleExpand|InfoWinEnv|InTouchVersion|InvisibleVerifyCredentials|IODisableFailover|IOForceFailover|IOGetAccessNameStatus|IOGetActiveSourceName|IOGetApplication|IOGetNode|IOGetTopic|IOReinitAccessName|IOReinitialize|IOSetAccessName|IOSetItem|IOSetRemoteReferences|IOStartUninitConversations|IsAnyAsyncFunctionBusy|IsAssignedRole|ITXAppActivate|ITXCheckDate|ITXConvertDate|ITXConvertDateString|ITXConvertDateTime|ITXConvertDateTimeString)\\b\\s*)",
-				"name": "keyword.vbi",
-				"comment": "IT-functions Misc Teil 2"
-			},
-			{
-				"match": "(?i:\\s*\\b(ITXCreateDate|ITXCreateDateTime|ITXCreateDateTimeUTC|ITXShowHelpByNumber|ITXShowHelpByString|LaunchTagViewer|LogMessage|Logoff|LogonCurrentUser|MessageBox|MoveWindow|NumberRecipes|OpenWindowsList|PlaySound|PostLogonDialog|PrintHT|PrintScreen|PrintWindow|ptGetTrendType|ptLoadTrendCfg|ptPanCurrentPen|ptPanTime|ptPauseTrend|ptRefreshTrend|ptSaveTrendCfg|ptSetCurrentPen|ptSetPen|ptSetPenEx|ptSetTimeAxis|ptSetTimeAxisToCurrent|ptSetTrend|ptSetTrendType|ptZoomCurrentPen|ptZoomTime|PwdUserAdd|PwdUserDelete|PwdUserEdit|PwdUserGetIndex|PwdUserRead|QueryGroupMembership|ReloadWindowViewer|RestartWindowViewer|SendKeys|SendMail|SendSMTPMail|SendSMTPMailwAttachment|SetPropertyD|SetPropertyI|SetPropertyM|SetTagEU|SetWindowPrinter|Show|ShowAt|ShowHome|ShowTopLeftAt|StringCompareEncrypted|SwitchDisplayLanguage|SysBeep|SystemIsNT|TagExists|TseGetClientId|TseGetClientNodeName|TseQueryRunningOnClient|TseQueryRunningOnConsole|UTCDateTime|wcAddItem|wcClear|wcDeleteItem|wcDeleteSelection|wcErrorMessage|wcFindItem|wcGetItem|wcGetItemData|wcInsertItem|wcLoadList|wcLoadText|wcSaveList|wcSaveText|wcSetItemData|WindowState|WWAlwaysOnTop|WWBeep32|WWCntx32|WWContext|WWControl|WWControlPanel|WWDosCommand|WWExecute|WWIsDayLightSaving|WWMoveWindow|WWMultiMonitorNode|WWPoke|WWPrimaryMonitorHeight|WWPrimaryMonitorWidth|WWRequest|WWStartApp|WWVirtualMonitorHeight|WWVirtualMonitorWidth)\\b\\s*)",
-				"name": "keyword.vbi",
-				"comment": "IT-functions Misc Teil 3"
-			},
-			{
-				"match": "(?i:\\s*\\b(Abs|ArcCos|ArcSin|ArcTan|Clip_cursor|ConvertTemp|Cos|Exp|GeoArea|GeoEqualSideArea|GeoVolume|GetCursorPosition|Hide_cursor|Int|Log|LogN|MetFromStdFluid|MetFromStdLinear|MetFromStdWeight|Pi|Restore_clip|Round|SetCursorPosition|Sgn|Show_cursor|Sin|Sqrt|StdFromMetFluid|StdFromMetLinear|StdFromMetWeight|Tan|Trunc)\\b\\s*)",
-				"name": "keyword.vbi",
-				"comment": "IT-functions-Math"
-			},
-			{
-				"match": "(?i:\\s*\\b(ActivateApp|CreateFilenameFromDate|FileCopy|FileDelete|FileMove|FileReadFields|FileReadMessage|FileWriteFields|FileWriteMessage|GetDiscOffMsg|GetDiscOnMsg|InfoAppActive|InfoAppTitle|InfoDisk|InfoDosEnv|InfoFile|InfoInTouchAppDir|InfoResources|INIReadInteger|INIReadString|INIWriteInteger|INIWriteString|IORRGetItemActiveState|IORRGetSystemInfo|IORRWriteState|IsNodeAppRunning|ITXCreateDirectory|ITXCreateSubDirectory|ITXGetProfileInt|ITXGetProfileString|ITXPutProfileInt|ITXPutProfileString|ITXRemoveDirectory|ITXRemoveSubDirectory|ITXResizeApplication|ITXSetLocalTime|ITXSetSystemDate|ITXSetSystemTime|ITXStartAppInDirectory|ITXWindowCtrl|SetTagEU|StartApp|SysBeep|SystemIsNT|TagExists|WWBeep32|WWCntx32|WWGetServiceExeName|WWGetServiceName|WWGetServiceStatus|WWServiceControl|WWServiceControlError|WWShutDownWin95|WWShutDownWinNT40)\\b\\s*)",
-				"name": "keyword.vbi",
-				"comment": "IT-functions-System"
-			},
-			
-			{
-				"match": "(?i:\\s*\\b(NULL|EOF|AS|True|False)\\b)",
-				"name": "keyword.control.vbi"
-			},
-			
-			{
-				"match": "(?i:\\s*\\b(DText|StringASCII|StringChar|StringCompare|StringCompareNoCase|StringFromGMTTimeToLocal|StringFromIntg|StringFromReal|StringFromTime|StringFromTimeLocal|StringInString|StringLeft|StringLen|StringLower|StringMid|StringReplace|StringRight|StringSpace|StringTest|StringToIntg|StringToReal|StringTrim|StringUpper|Text|wwStringFromTime)\\b\\s*)",
+        {
+          "match": "(?i:\\s*\\b(GetSplittByIndex|HerGATEWAYanzeigeAktualisieren|HerGATEWAYtriggerFreigabe|HerGATEWAYueberwachen|SetReferenceBool|SetReferenceByte|SetReferenceDINT|SetReferenceDINTs|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord|SetVarInputBoolsch|SetVarToggleBoolsch|BDEDatenLesen|BDEDatenSpeichern|BDEDatenSuchen|BDESchichtSchreiben|BDESchichtwerteDatenOK|BDESchichtwerteZuweisen|BDETageswerteDatenOK|BDETageswerteSchreiben|BDETageswerteZuweisen|BZBetriebsstunden|BZZaehlerAbfragen|ExterneModuleUeberwachen|FUWerte|GetSplittByIndex|HerBACKUP|HerProViewStart|HideAllPLS|KonfigLesen|KonfigSpeichern|QFFilter|QFFilterRegler15Schritt|QFLuftwerte|QFRinne|SessionUserInfoAkt|Sollwertaenderung|StatusExtApp|StatusleistenInfofelder|SWReal|wwalmdbtrigger|xAnlagenConfig|xBZVZSettings|xGatawaySettings|xHerGATEWAYSettings|xLoggingConfig|xSetDateiPfade|xSetSQLConfig|xSetTSStation|xSetUhrzeitserver)\\b\\s*)",
+          "name": "keyword.other",
+          "comment": "Hermes Own functions 1"
+        },
+        {
+          "match": "(?i:\\s*\\b(xSTATION9BiosName|xSTATION8BiosName|xSTATION7BiosName|xSTATION6BiosName|xSTATION5BiosName|xSTATION4BiosName|xSTATION3BiosName|xSTATION2BiosName|xSTATION1BiosName)\\b\\s*)",
+          "name": "support.function",
+          "comment": "Hermes Own functions 2"
+        }
+      ]
+    },
+    "comments": {
+      "name": "comment.block",
+      "begin": "{",
+      "end": "}"
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control",
+          "match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR)\\b)"
+        },
 
-				"name": "keyword.vbi",
-				"comment": "Intouch String functions"
-			},
-			{
-				"match": "(?i:\\s*\\b(RecipeDelete|RecipeGetMessage|RecipeLoad|RecipeSave|RecipeSelectNextRecipe|RecipeSelectPreviousRecipe|RecipeSelectRecipe|RecipeSelectUnit|SPCEXSetDataset|SPCEXSetEndDate|SPCEXSetEndTime|SPCEXSetOutputFile|SPCEXSetProduct|SPCEXSetStartDate|SPCEXSetStartTime|SQLAppendStatement|SQLClearParam|SQLClearStatement|SQLClearTable|SQLCommit|SQLConnect|SQLCreateTable|SQLDelete|SQLDisconnect|SQLDropTable|SQLEnd|SQLErrorMsg|SQLExecute|SQLFirst|SQLGetRecord|SQLInsert|SQLInsertEnd|SQLInsertExecute|SQLInsertPrepare|SQLLast|SQLLoadStatement|SQLManageDSN|SQLNext|SQLNumRows|SQLPrepareStatement|SQLPrev|SQLRollback|SQLSelect|SQLSetParamChar|SQLSetParamDate|SQLSetParamDateTime|SQLSetParamDecimal|SQLSetParamFloat|SQLSetParamInt|SQLSetParamLong|SQLSetParamNull|SQLSetParamTime|SQLSetStatement|SQLTransact|SQLUpdate|SQLUpdateCurrent)\\b\\s*)",
-				"name": "keyword.vbi.vbi",
-				"comment": "Intouch AddOns functions"
-			}
-		  ]
-		},
-		"restricted": {
-		  "patterns": [
-			{
-			  "name": "support.type.vbi",
-			  "match": "(?i:\\b(discrete|integer|real|message)\\b)",
-			  "comment": "Intouch Variablentypes"
-			}
-		  ]
-		},
-		
-		"parameters": {
-		  "patterns": [
-			{
-			  "match": "\\s*([^,:\\s\\)\\(]*)\\s*:\\s*([^,:\\s\\)\\(]*)\\s*",
-			  "captures": {
-				"1": { "name": "variable.parameter" },
-				"2": { "name": "entity.name.type" }
-			  }
-			}
-		  ]
-		},
-		"arguments": {
-		  "patterns": [
-			{ "include": "#keywords" },
-			{
-			  "match": "\\s*([^,:\\s\\)\\(]*)\\s*",
-			  "captures": {
-				"1": { "name": "variable.parameter" }
-			  }
-			}
-		  ]
-		}
-	  }
-	}
-	
+        {
+          "match": "(?i:\\b(AS|IF|ENDIF|ELSE|WHILE|FOR|NEXT|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
+          "name": "keyword",
+          "comment": "vbi Regular Keywords"
+        },
+
+        {
+          "match": "(?i:\\s*\\b(Ack|AddPermission|almAckAll|almAckDisplay|almAckGroup|almAckPriority|almAckRecent|almAckSelect|almAckSelectedGroup|almAckSelectedPriority|almAckSelectedTag|almAckTag|almDefQuery|almMoveWindow|almQuery|almSelectAll|almSelectGroup|almSelectionCount|almSelectItem|almSelectPriority|almSelectTag|almSetQueryByName|almShowStats|almSuppressAll|almSuppressDisplay|almSuppressGroup|almSuppressPriority|almSuppressRetain|almSuppressSelected|almSuppressSelectedGroup|almSuppressSelectedPriority|almSuppressSelectedTag|almSuppressTag|almUnselectAll|almUnsuppressAll|AnnotateLayout|APUFindAlarmGroupInstance|APUFindFileInstance|APUFindPrinterInstance|APUGetAlarmGroupText|APUGetConfigurationFilePath|APUGetInstanceCount|APUGetPrinterJobCount|APUGetPrinterName|APUGetPrinterStatus|APUGetQueryAlarmState|APUGetQueryFromPriority|APUGetQueryProcessingState|APUGetQueryToPriority|APUIsInstanceUsed|APUSetAlarmGroupText|APUSetQueryAlarmState|APUSetQueryFromPriority|APUSetQueryToPriority|APUSetTimeoutValues|APUStartInstance|APUStartQuery|APUStopInstance|APUStopQuery|APUTranslateErrorCode)\\b\\s*)",
+          "name": "keyword.function",
+          "comment": "IT-functions Misc Teil 1"
+        },
+        {
+          "match": "(?i:\\s*\\b(AttemptInvisibleLogon|ChangePassword|ChangeWindowColor|CreateFilenameFromDate|DateTimeGMT|DialogStringEntry|DialogValueEntry|EnableDisableKeys|FilePrint|FileSelect|GetAccountStatus|GetDiscOffMsg|GetDiscOnMsg|GetNodeName|GetPropertyD|GetPropertyI|GetPropertyM|GetWindowName|Hide|HideSelf|HTGetLastError|HTGetPenName|HTGetTimeAtScooter|HTGetTimeStringAtScooter|HTGetValue|HTGetValueAtScooter|HTGetValueAtZone|HTScrollLeft|HTScrollRight|HTSelectTag|HTSetPenName|HTUpdateToCurrentTime|HTZoomIn|HTZoomOut|InfoAppStatus|InfoAppTitleExpand|InfoWinEnv|InTouchVersion|InvisibleVerifyCredentials|IODisableFailover|IOForceFailover|IOGetAccessNameStatus|IOGetActiveSourceName|IOGetApplication|IOGetNode|IOGetTopic|IOReinitAccessName|IOReinitialize|IOSetAccessName|IOSetItem|IOSetRemoteReferences|IOStartUninitConversations|IsAnyAsyncFunctionBusy|IsAssignedRole|ITXAppActivate|ITXCheckDate|ITXConvertDate|ITXConvertDateString|ITXConvertDateTime|ITXConvertDateTimeString)\\b\\s*)",
+          "name": "keyword.function",
+          "comment": "IT-functions Misc Teil 2"
+        },
+        {
+          "match": "(?i:\\s*\\b(ITXCreateDate|ITXCreateDateTime|ITXCreateDateTimeUTC|ITXShowHelpByNumber|ITXShowHelpByString|LaunchTagViewer|LogMessage|Logoff|LogonCurrentUser|MessageBox|MoveWindow|NumberRecipes|OpenWindowsList|PlaySound|PostLogonDialog|PrintHT|PrintScreen|PrintWindow|ptGetTrendType|ptLoadTrendCfg|ptPanCurrentPen|ptPanTime|ptPauseTrend|ptRefreshTrend|ptSaveTrendCfg|ptSetCurrentPen|ptSetPen|ptSetPenEx|ptSetTimeAxis|ptSetTimeAxisToCurrent|ptSetTrend|ptSetTrendType|ptZoomCurrentPen|ptZoomTime|PwdUserAdd|PwdUserDelete|PwdUserEdit|PwdUserGetIndex|PwdUserRead|QueryGroupMembership|ReloadWindowViewer|RestartWindowViewer|SendKeys|SendMail|SendSMTPMail|SendSMTPMailwAttachment|SetPropertyD|SetPropertyI|SetPropertyM|SetTagEU|SetWindowPrinter|Show|ShowAt|ShowHome|ShowTopLeftAt|StringCompareEncrypted|SwitchDisplayLanguage|SysBeep|SystemIsNT|TagExists|TseGetClientId|TseGetClientNodeName|TseQueryRunningOnClient|TseQueryRunningOnConsole|UTCDateTime|wcAddItem|wcClear|wcDeleteItem|wcDeleteSelection|wcErrorMessage|wcFindItem|wcGetItem|wcGetItemData|wcInsertItem|wcLoadList|wcLoadText|wcSaveList|wcSaveText|wcSetItemData|WindowState|WWAlwaysOnTop|WWBeep32|WWCntx32|WWContext|WWControl|WWControlPanel|WWDosCommand|WWExecute|WWIsDayLightSaving|WWMoveWindow|WWMultiMonitorNode|WWPoke|WWPrimaryMonitorHeight|WWPrimaryMonitorWidth|WWRequest|WWStartApp|WWVirtualMonitorHeight|WWVirtualMonitorWidth)\\b\\s*)",
+          "name": "keyword.function",
+          "comment": "IT-functions Misc Teil 3"
+        },
+        {
+          "match": "(?i:\\s*\\b(Abs|ArcCos|ArcSin|ArcTan|Clip_cursor|ConvertTemp|Cos|Exp|GeoArea|GeoEqualSideArea|GeoVolume|GetCursorPosition|Hide_cursor|Int|Log|LogN|MetFromStdFluid|MetFromStdLinear|MetFromStdWeight|Pi|Restore_clip|Round|SetCursorPosition|Sgn|Show_cursor|Sin|Sqrt|StdFromMetFluid|StdFromMetLinear|StdFromMetWeight|Tan|Trunc)\\b\\s*)",
+          "name": "keyword",
+          "comment": "IT-functions-Math"
+        },
+        {
+          "match": "(?i:\\s*\\b(ActivateApp|CreateFilenameFromDate|FileCopy|FileDelete|FileMove|FileReadFields|FileReadMessage|FileWriteFields|FileWriteMessage|GetDiscOffMsg|GetDiscOnMsg|InfoAppActive|InfoAppTitle|InfoDisk|InfoDosEnv|InfoFile|InfoInTouchAppDir|InfoResources|INIReadInteger|INIReadString|INIWriteInteger|INIWriteString|IORRGetItemActiveState|IORRGetSystemInfo|IORRWriteState|IsNodeAppRunning|ITXCreateDirectory|ITXCreateSubDirectory|ITXGetProfileInt|ITXGetProfileString|ITXPutProfileInt|ITXPutProfileString|ITXRemoveDirectory|ITXRemoveSubDirectory|ITXResizeApplication|ITXSetLocalTime|ITXSetSystemDate|ITXSetSystemTime|ITXStartAppInDirectory|ITXWindowCtrl|SetTagEU|StartApp|SysBeep|SystemIsNT|TagExists|WWBeep32|WWCntx32|WWGetServiceExeName|WWGetServiceName|WWGetServiceStatus|WWServiceControl|WWServiceControlError|WWShutDownWin95|WWShutDownWinNT40)\\b\\s*)",
+          "name": "keyword.function",
+          "comment": "IT-functions-System"
+        },
+
+        {
+          "match": "(?i:\\s*\\b(NULL|EOF|True|False)\\b)",
+          "name": "keyword.constant"
+        },
+
+        {
+          "match": "(?i:\\s*\\b(DText|StringASCII|StringChar|StringCompare|StringCompareNoCase|StringFromGMTTimeToLocal|StringFromIntg|StringFromReal|StringFromTime|StringFromTimeLocal|StringInString|StringLeft|StringLen|StringLower|StringMid|StringReplace|StringRight|StringSpace|StringTest|StringToIntg|StringToReal|StringTrim|StringUpper|Text|wwStringFromTime)\\b\\s*)",
+
+          "name": "keyword.function",
+          "comment": "Intouch String functions"
+        },
+        {
+          "match": "(?i:\\s*\\b(RecipeDelete|RecipeGetMessage|RecipeLoad|RecipeSave|RecipeSelectNextRecipe|RecipeSelectPreviousRecipe|RecipeSelectRecipe|RecipeSelectUnit|SPCEXSetDataset|SPCEXSetEndDate|SPCEXSetEndTime|SPCEXSetOutputFile|SPCEXSetProduct|SPCEXSetStartDate|SPCEXSetStartTime|SQLAppendStatement|SQLClearParam|SQLClearStatement|SQLClearTable|SQLCommit|SQLConnect|SQLCreateTable|SQLDelete|SQLDisconnect|SQLDropTable|SQLEnd|SQLErrorMsg|SQLExecute|SQLFirst|SQLGetRecord|SQLInsert|SQLInsertEnd|SQLInsertExecute|SQLInsertPrepare|SQLLast|SQLLoadStatement|SQLManageDSN|SQLNext|SQLNumRows|SQLPrepareStatement|SQLPrev|SQLRollback|SQLSelect|SQLSetParamChar|SQLSetParamDate|SQLSetParamDateTime|SQLSetParamDecimal|SQLSetParamFloat|SQLSetParamInt|SQLSetParamLong|SQLSetParamNull|SQLSetParamTime|SQLSetStatement|SQLTransact|SQLUpdate|SQLUpdateCurrent)\\b\\s*)",
+          "name": "keyword.function",
+          "comment": "Intouch AddOns functions"
+        }
+      ]
+    },
+    "restricted": {
+      "patterns": [
+        {
+          "name": "keyword.datatype",
+          "match": "(?i:(\\b(discrete|integer|real|message)\\b))",
+          "comment": "Intouch Variablentypes"
+        }
+      ]
+    },
+
+    "parameters": {
+      "patterns": [
+        {
+          "match": "\\s*([^,:\\s\\)\\(]*)\\s*:\\s*([^,:\\s\\)\\(]*)\\s*",
+          "captures": {
+            "1": { "name": "variable.parameter" },
+            "2": { "name": "entity.name.type" }
+          }
+        }
+      ]
+    },
+    "arguments": {
+      "patterns": [
+        { "include": "#keywords" },
+        {
+          "match": "\\s*([^,:\\s\\)\\(]*)\\s*",
+          "captures": {
+            "1": { "name": "keyword.other" }
+          }
+        }
+      ]
+    }
+  }
+}
