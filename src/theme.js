@@ -128,7 +128,7 @@ function getTheme({ style, name }) {
       "breadcrumbPicker.background": "#2b3036",
 
       "editor.foreground": editorForeground,
-      "editor.background": primer.gray[0],
+      "editor.background": "#0d1117", //primer.gray[0],
       "editorWidget.background": "#1f2428",
       "editor.foldBackground": "#282e33",
       "editor.lineHighlightBackground": "#2b3036",
