@@ -183,11 +183,11 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 # What's new in Intouch-Language
 
-### V1.3.0
+### V1.4.0
 
 - Correct some bugs in regex for syntax-highlighting
 - Theme -> Add more compatibility to other languages
-- Add more compatibility to other Themes (e. g. material-theme)
+- Add more compatibility to other Themes (e.g. material-theme)
 
 ### V1.3.0
 

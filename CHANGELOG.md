@@ -5,6 +5,51 @@
 <!-- markdownlint-disable MD013 -->
 <!-- markdownlint-disable MD025 -->
 
+### V1.4.0
+
+- 29.11.2022 VitalyRuhl
+- Correct some bugs in regex for syntax-highlighting
+- Theme -> Add more compatibility to other languages
+- Add more compatibility to other Themes (e.g. material-theme)
+
+### V1.3.0
+
+- 28.11.2022 VitalyRuhl
+- Add own dark theme based on [GitHub (Dark Classic) VS Code theme](https://github.com/BerriJ/github-vscode-theme-dark-classic) from BerriJ
+- Some bugfixes in regex for Keywords
+
+### V1.2.4
+
+- 12.11.2022 VitalyRuhl
+- Update dependencies
+
+### V1.2.3
+
+- Bome bugfixes
+
+### V1.2.2
+
+- Bugfix on snippets
+
+### V1.2.1
+
+- 25.01.2022 VitalyRuhl
+- Bugfix trailing whitespace before `-`
+
+### V1.2.0
+
+- 23.01.2022 VitalyRuhl
+- Add folding between `{region xxxx}` and `{endregion xxxx}`
+- Add Nesting between `{region xxxx}` and `{endregion xxxx}`
+- Auto closing brackets in strings and comments.
+- Remove unused dependency with dependabot alert.
+- Add wordPattern and indentationRules into language configuration.
+- <fix bug - issue #13, formatter formats dashed variable `foo-bar` --> `foo - bar`
+
+### V1.1.1
+
+- Version issue with format problem on <>, =<, =>, == was published with greater version
+
 ### V1.1.0
 
 - 02.11.2021 VitalyRuhl
