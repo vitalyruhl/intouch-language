@@ -1,98 +1,96 @@
 
 DIM Funkt AS MESSAGE;
-Funkt = "FUWerte V1.0.0 - "; 
+Func = "FU V1.0.0 - "; 
 
 {
 Changelog:
-	V1.0.0		07.05.2020 		ViRu 	Erstellversion
+V1.0.0		07.05.2020 		ViRu 	create
 }
 
 {------------------------------------------------------------------------------}
-{Übergabe ausgeben:}
-IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "Erste-MA:[" + Text(iErsteMA,"#")+ "]"); ENDIF; 
-IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "Bezeichnung:[" + sFUBezeichnung + "]"); ENDIF; 
+{Printout parameter:}
+IF Sys_Debug_info > 0 THEN LogMessage(Func + "First-MA:[" + Text(iFirstMA,"#")+ "]"); ENDIF; 
+IF Sys_Debug_info > 0 THEN LogMessage(Func + "Description:[" + sFUDescription + "]"); ENDIF; 
 {------------------------------------------------------------------------------}
 
 '------------------------------------------------------------------------------------------------------------------
-'1. check for new comments are working
+'1. check FOR new comments are working
 
+FU_Setpoint.Name = "MA_" + Text(iFirstMA + 0, "0000"); 
+FU_Setpoint.name
+FU_Setpoint.NAME 'new comment
 
-FU_Sollwert.Name = "MA_" + Text(iErsteMA + 0, "0000"); 
-FU_Sollwert.name
-FU_Sollwert.NAME 'new comment
+bla.blup("hihi"); {oter dotted functions}
 
 ShowTopLeftAt("TAB_HER_FU", $ObjHor -($ObjHor - SYS_MouseX)- 250, SYS_MouseY - 100); 
 
-IF Sys_Debug_info > 0 OR Punkte > 0 THEN LogMessage(" ------------->SetReferenceBool-Full_Topic korrigiert:" + Full_Topic); ENDIF; 
+IF Sys_Debug_info > 0 OR Points > 0 THEN LogMessage(" ------------->SetReferenceBool-Full_Topic:" + Full_Topic); ENDIF; 
 
 Temp_Return = Full_Topic + ".S7:[" + StringLeft(Topic,4)+ "]DB" + Text(DB,"0000")+ ",X" + Text(byte,"0000")+ "." + Text(bit,"0"); 
 
 RETURN Temp_Return;
 
-{#region Testregion (Region-Folding funzt nich!)}
-INIWriteInteger("WIN.INI","InTouch","SQLQueryTimeOut",600); {~~~ Timeout für SQL-Abfragen setzen in Sekunden ~~~}
-AT09_FehlerStatus.AlarmComment = "Verbindung zu " + AT09_Name + " unterbrochen!"; {nach längerer Pause funzt kommentar nicht}
+{#region Testregion (Region-Folding does not work yet!)}
+INIWriteInteger("WIN.INI","InTouch","SQLQueryTimeOut",600); {~~~ Timeout for SQL in Sek ~~~}
+AT09_ErrorStat.AlarmComment = "Connection to " + AT09_Name + " ERROR!";
 INIWriteString(SYS_ProjektPath + "\histprv.ini",SYS_LoggingServer,"Path",StringReplace(PFAD,SYS_LocalDataPathPrefix,"\\" + SYS_LoggingServer + "\" + SYS_RemoteDataPathPrefix,0,1,0)); 
 {#endregion ende Testregion}
 
 DIM file AS INTEGER;
 file = InfoFile("C:\Program Files (x86)\Wonderware\InTouch\Intouch.exe",1, $Second); 
 IF file <> 1 THEN
-	SYS_InstallPath = "C:\Program Files (x86)\Wonderware\InTouch"; 
+SYS_InstallPath = "C:\Program Files (x86)\Wonderware\InTouch"; 
 ELSE
-	file = InfoFile("C:\Program Files\Wonderware\InTouch\Intouch.exe",1, $Second); 
+file = InfoFile("C:\Program Files\Wonderware\InTouch\Intouch.exe",1, $Second); 
+IF file == 1 THEN
+	SYS_InstallPath = "C:\Program Files\Wonderware\InTouch"; 
+ELSE
+	file = InfoFile("C:\Programme\Wonderware\InTouch\Intouch.exe",1, $Second); 
 	IF file == 1 THEN
-		SYS_InstallPath = "C:\Program Files\Wonderware\InTouch"; 
-	ELSE
-		file = InfoFile("C:\Programme\Wonderware\InTouch\Intouch.exe",1, $Second); 
-		IF file == 1 THEN
-			SYS_InstallPath = "C:\Programme\Wonderware\InTouch"; 
-		ENDIF;
+		SYS_InstallPath = "C:\Programme\Wonderware\InTouch"; 
 	ENDIF;
+ENDIF;
 ENDIF;
 
 IF TseQueryRunningOnClient()  == 1 THEN
-	IOSetAccessName("IOStatus", "", "VIEW" + TseGetClientId(), "IOStatus"); 
-	IOSetAccessName("VIEW", "", "VIEW" + TseGetClientId(), "VIEW"); 
+IOSetAccessName("IOStatus", "", "VIEW" + TseGetClientId(), "IOStatus"); 
+IOSetAccessName("VIEW", "", "VIEW" + TseGetClientId(), "VIEW"); 
 ENDIF;
 
 DIM Sys_HMSGPath AS MESSAGE;
-Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","HERMES Systeme GmbH",1,-1,0); {Sys_HMSGPath = "C:\Program Files (x86)\HERMES Systeme GmbH";}
+Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","Tools",1,-1,0); {Sys_HMSGPath = "C:\Program Files (x86)\Tools";}
 
-DIM Sys_HMSGPath AS MESSAGE;
-Sys_HMSGPath = StringReplace(SYS_InstallPath,"Wonderware\InTouch","HERMES Systeme GmbH",1,-1,0); {Sys_HMSGPath = "C:\Program Files (x86)\HERMES Systeme GmbH";}
-
-WWContext("AT04_HV_USV_1_RZ_2_gelb",640,300,100,40,SYS_ContextMsg.Name,"N04-12Q1 "); 
+WWContext("AT04_HV_USV_1_RZ_2",640,300,100,40,SYS_ContextMsg.Name,"N04-12Q1 "); 
 
 MA_Stift3.EngUnits = "n.b."; 
 LogMessage("$ Her_SQLNodes = " + HER_SQLNodes); 
-BDE_B07_Beckentemp_Auto.Reference = MA_0497.Reference ; 
+BDE_B07_Auto.Reference = MA_0497.Reference ; 
 
-REIHE = #HerAnlagenname.GetRowNumber();
-HER_AnlagennameID = #HerAnlagenname.GetRowColumnValue(REIHE,0);
-HILF = #HerAnlagenname.GetRowColumnValue(REIHE,1);
-HER_AnlagennameName = StringTrim(HILF,3);
+Var1 = #HerAName.GetRowNumber();
+HER_AnlagennameID = #HerAName.GetRowColumnValue(Var1,0);
+Var2 = #HerAName.GetRowColumnValue(Var1,1);
+HER_AnlagennameName = StringTrim(Var2,3);
 
-#HerAnlagenname.SQLString = "SELECT * FROM HerAnlagenname ORDER BY AnlagennameID"; 
-#HerAnlagenname.Execute();
+#HerAName.SQLString = "SELECT * FROM HerAName ORDER BY AnlagennameID"; 
+#HerAName.Execute();
 
 { Shutdown}
-#HerAntriebe.Disconnect();
+#HerDrive.Disconnect();
 
 { Startup}
-#HerAntriebe.ConnectionString  = HER_ConfigConnectString;
-#HerAntriebe.Caption = "Antriebe"; 
-#HerAntriebe.SQLString = "SELECT * FROM HerAntriebe"; 
-#HerAntriebe.Execute ();
-#HerAntriebe.SetColumnWidth ( 1, 885);
-#HerAntriebe.SetColumnWidth ( 2, 250);
+#HerDrive.ConnectionString  = HER_ConfigConnectString;
+#HerDrive.Caption = "Drives"; 
+#HerDrive.SQLString = "SELECT * FROM HerDrive"; 
+#HerDrive.Execute ();
+#HerDrive.SetColumnWidth ( 1, 885);
+#HerDrive.SetColumnWidth ( 2, 250);
 
-REIHE = #HerEinheit.GetRowNumber ();
-HER_EinheitID = #HerEinheit.GetRowColumnValue(REIHE,0);
-HILF = #HerEinheit.GetRowColumnValue (REIHE,1);
-HER_EinheitName = StringTrim(HILF,3);
+Var1 = #HerUnits.GetRowNumber ();
+HER_UnitsID = #HerUnits.GetRowColumnValue(Var1,0);
+Var2 = #HerUnits.GetRowColumnValue (Var1,1);
+HER_UnitsName = StringTrim(Var2,3);
 
-ANZAHL = SQLNumRows(HER_ConnectionID);
+Count = SQLNumRows(HER_ConnectionID);
 HER_SQLStatus = SQLFirst(HER_ConnectionID);
 
 SYS_ProjektPath = InfoInTouchAppDir(); 
@@ -101,45 +99,43 @@ SYS_UhrInt = ITXCreateDateTime ($Year,$Month,$Day,$Hour,$Minute,$Second);
 
 WWStartApp("taskkill /im wwalmlogger.exe /f","INVISIBLE"); 
 WWControl(InfoAppTitleExpand("LogViewer"),"Close"); 
-HER_ConfigStatus = SQLDisconnect(HER_ConfigConnectionID);
+Her_CFS = SQLDisconnect(HER_ConnectionID);
 
-CALL KonfigSpeichern( );
+CALL SaveConfig( );
 
-IF SYS_User.ReferenceComplete == 1 AND SYS_UserPassword.ReferenceComplete == 1 THEN
+IF SYS_U.ReferenceComplete == 1 AND SYS_UP.ReferenceComplete == 1 THEN
 
-	APSave_SQLStatus = SQLInsertEnd(APSave_ConnectionID,AP_StatementId);
-	APSave_SQLStatus = SQLClearStatement(APSave_ConnectionID,AP_StatementId);
-	APSave_SQLStatus = SQLDisconnect(APSave_ConnectionID);
-	AP_SQLStatus = SQLNext(AP_ConnectionID);
+APSave_SQLStatus = SQLInsertEnd(APSave_ConnectionID,AP_StatementId);
+APSave_SQLStatus = SQLClearStatement(APSave_ConnectionID,AP_StatementId);
+APSave_SQLStatus = SQLDisconnect(APSave_ConnectionID);
+AP_SQLStatus = SQLNext(AP_ConnectionID);
 
-	AP_AnzahlZaehlerSave = SQLNumRows(AP_ConnectionID);
-	AP_SQLStatus = SQLGetRecord(AP_ConnectionID,1);
-	APSave_SQLStatus = SQLConnect(APSave_ConnectionID,HER_SQLConnectString);
-	APSave_SQLStatus = SQLInsertPrepare(APSave_ConnectionID,"HerAPWerte","HerAPWerte",AP_StatementId); 
-	AP_SaveIndex = 1;
+AP_CountSave = SQLNumRows(AP_ConnectionID);
+AP_SQLStatus = SQLGetRecord(AP_ConnectionID,1);
+APSave_SQLStatus = SQLConnect(APSave_ConnectionID,HER_SQLConnectString);
+APSave_SQLStatus = SQLInsertPrepare(APSave_ConnectionID,"HerAPWerte","HerAPWerte",AP_StatementId); 
+AP_SaveIndex = 1;
 
-	IF SYS_STATION01BiosName <> "-" THEN SYS_STATION01_Nodename = IOGetNode("STATION1"); ENDIF; 
+IF SYS_STATION01BiosName <> "-" THEN SYS_STATION01_Nodename = IOGetNode("SERVER1"); ENDIF; 
 
-	MAX_Trend.DisplayMode = 3;
-	MAX_Trend.ChartLength = 3600;
-	MAX_Trend.MinRange = 0;
-	MAX_Trend.MaxRange = 100;
-	HTUpdateToCurrentTime( MAX_Trend.Name );
-	MAX_KanalNummer = 1 ;
-	MAX_Kanal.DisplayMode = 3;
-	HTUpdateToCurrentTime(MAX_Kanal.Name);
+MAX_Trend.DisplayMode = 3;
+MAX_Trend.ChartLength = 3600;
+MAX_Trend.MinRange = 0;
+MAX_Trend.MaxRange = 100;
+HTUpdateToCurrentTime( MAX_Trend.Name );
+MAX_ChannelNummer = 1 ;
+MAX_Channel.DisplayMode = 3;
+HTUpdateToCurrentTime(MAX_Channel.Name);
 
-	AP_UebersichtNameZaehler00.Value = BZ_UebersichtName;
 
-	TEXT1 = TEXT1 + StringMid(TAB_AAF.Comment,TABINDEX,1);
+TEXT1 = TEXT1 + StringMid(TAB_AAF.Comment,TABINDEX,1);
 
-	FOR TABINDEX = TABINDEX TO StringLen(TAB_AAF.Comment)
-		BYTE = StringToIntg(StringRight(TAB_AAF.Reference,6));
-	NEXT;
-	
-dim a[] to [1,2];
+FOR TABINDEX = TABINDEX TO StringLen(TAB_AAF.Comment)
+	BYTE = StringToIntg(StringRight(TAB_AAF.Reference,6));
+NEXT;
 
-	RestartWindowViewer( );
-	SYS_TSClient1_Name = TseGetClientNodeName( );
-	SYS_CurrentWinUser = InfoDosEnv("USERNAME"); 
+
+RestartWindowViewer( );
+SYS_TSClient1_Name = TseGetClientNodeName( );
+SYS_CurrentWinUser = InfoDosEnv("USERNAME"); 
 
