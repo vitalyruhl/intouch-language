@@ -3,7 +3,7 @@ const getTheme = require("./theme");
 
 const darkTheme = getTheme({
   style: "dark",
-  name: "GitHub Dark Classic",
+  name: "Intouch Dark",
 });
 
 fs.mkdir("./themes", { recursive: true })

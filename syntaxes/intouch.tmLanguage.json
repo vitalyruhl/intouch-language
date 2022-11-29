@@ -8,147 +8,26 @@
   "foldingStopMarker": "(?i:({endregion|endif;|(^\\s*//\\s*#?endregion\\b))(\\s*.*$|\\b))",
   "patterns": [
     { "include": "#comments" },
-    { "include": "#contexts" },
-    { "include": "#dotfields" },
-    { "include": "#constraints" },
     { "include": "#keywords" },
-    { "include": "#restricted" },
+    { "include": "#dotfields" },
     { "include": "#strings" },
-    { "include": "#calls" },
-    { "include": "#HermesKeywords" }
+    { "include": "#HermesKeywords" },
+    { "include": "#several" }
   ],
   "repository": {
-    "constraints": {
-      "patterns": [
-        {
-          "match": "\\b(pre|post|inv)(\\s+([\\p{L}_$][\\p{L}_$0-9]*)\\s*:)?",
-          "captures": {
-            "1": { "name": "entity.name" },
-            "3": { "name": "entity.name.section" }
-          }
-        }
-      ]
-    },
-    "strings": {
-      "patterns": [
-        {
-          "begin": "\"",
-          "end": "\"",
-          "name": "string.quoted.single"
-        }
-      ]
-    },
-    "contexts": {
-      "patterns": [
-        {
-          "begin": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\())(\\s*::\\s*([\\p{L}_$][\\p{L}_$*0-9]*))\\s*\\(",
-          "end": "\\)",
-          "beginCaptures": {
-            "1": { "name": "keyword" },
-            "4": { "name": "entity.name.section" },
-            "5": { "name": "entity.name.type" },
-            "7": { "name": "entity.name.method.function" }
-          },
-          "patterns": [{ "include": "#parameters" }]
-        },
-        {
-          "match": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\())(\\s*::\\s*([\\p{L}_$][\\p{L}_$*0-9]*))\\s*:\\s*([\\p{L}_$][\\p{L}_$*0-9]*)",
-          "captures": {
-            "1": { "name": "keyword" },
-            "4": { "name": "entity.name.section" },
-            "5": { "name": "entity.name.type" },
-            "7": { "name": "variable.other" },
-            "8": { "name": "entity.name.type" }
-          }
-        },
-        {
-          "match": "(context)\\s+((([\\p{L}_$][\\p{L}_$0-9]*)\\s*::\\s*)*)([\\p{L}_$][\\p{L}_$0-9]*(?![\\p{L}_$0-9]|\\s*\\()|\\s*:)",
-          "captures": {
-            "1": { "name": "keyword" },
-            "4": { "name": "entity.name.section" },
-            "5": { "name": "entity.name.type" }
-          }
-        },
-        {
-          "match": "\\s+(==|\\+=|<=|>=|=>|<>|<|>|\\+|-|=)\\s",
-          "name": "entity.modifires",
-          "comment": "equals"
-        },
-        {
-          "match": "[0-9]",
-          "name": "entity.numbers",
-          "comment": "numbers"
-        }
-      ]
-    },
-    "calls": {
-      "patterns": [
-        {
-          "match": "\\b\\s*(\\.|->)\\s*([\\p{L}_$][\\p{L}_$0-9]*)\\s*\\(",
-          "captures": {
-            "2": { "name": "entity.name.function" }
-          }
-        }
-      ]
-    },
-    "dotfields": {
-      "patterns": [
-        {
-          "match": "(?i:([\\.]{1}(Comment|Name|ReferenceComplete|Reference|AlarmComment|EngUnits|Value))\\b)", 
-          "name": "variable.parameter",
-          "matchOld": "(((?i:(\\.Comment|\\.Name|\\.Reference|\\.AlarmComment|\\.EngUnits|\\.ReferenceComplete|\\.Value)))\\b)",
-          "comment": "Intouch Dotfields"
-        },
-        {
-          "match": "(?i:([\\.]{1}(SQLString|Caption|ConnectionString|GetRowNumber|GetRowColumnValue|Execute|Disconnect|SetColumnWidth))\\b)",
-          "matchOld": "(((?i:(\\.GetRowNumber|\\.GetRowColumnValue|\\.Execute|\\.Disconnect|\\.SetColumnWidth)))\\b)",
-          "name": "variable.parameter",
-          "comment": "SQL Dotfields"
-        },
-        {
-          "match": "(((?i:(\\.DisplayMode|\\.ChartLength|\\.MinRange|\\.MaxRange|HTUpdateToCurrentTime)))\\b)",
-          "name": "variable.parameter",
-          "comment": "Trend Dotfields"
-        },
-        {
-          "match": "(?i:(\\$)\\w*)",
-          "name": "variable.other",
-          "comment": "Systemvariable '$' are like dotfields..."
-        }
-      ]
-    },
-    "HermesKeywords": {
-      "patterns": [
-        {
-          "match": "(?i:\\b(SYS_|MA_|SMEL_|HER_)\\w*)",
-          "name": "variable.other",
-          "comment": "Systemvariablen (Hermes - OWN)"
-        },
+    "MISC-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {},
 
-        {
-          "match": "(?i:\\s*\\b(GetSplittByIndex|HerGATEWAYanzeigeAktualisieren|HerGATEWAYtriggerFreigabe|HerGATEWAYueberwachen|SetReferenceBool|SetReferenceByte|SetReferenceDINT|SetReferenceDINTs|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord|SetVarInputBoolsch|SetVarToggleBoolsch|BDEDatenLesen|BDEDatenSpeichern|BDEDatenSuchen|BDESchichtSchreiben|BDESchichtwerteDatenOK|BDESchichtwerteZuweisen|BDETageswerteDatenOK|BDETageswerteSchreiben|BDETageswerteZuweisen|BZBetriebsstunden|BZZaehlerAbfragen|ExterneModuleUeberwachen|FUWerte|GetSplittByIndex|HerBACKUP|HerProViewStart|HideAllPLS|KonfigLesen|KonfigSpeichern|QFFilter|QFFilterRegler15Schritt|QFLuftwerte|QFRinne|SessionUserInfoAkt|Sollwertaenderung|StatusExtApp|StatusleistenInfofelder|SWReal|wwalmdbtrigger|xAnlagenConfig|xBZVZSettings|xGatawaySettings|xHerGATEWAYSettings|xLoggingConfig|xSetDateiPfade|xSetSQLConfig|xSetTSStation|xSetUhrzeitserver)\\b\\s*)",
-          "name": "keyword.other",
-          "comment": "Hermes Own functions 1"
-        },
-        {
-          "match": "(?i:\\s*\\b(xSTATION9BiosName|xSTATION8BiosName|xSTATION7BiosName|xSTATION6BiosName|xSTATION5BiosName|xSTATION4BiosName|xSTATION3BiosName|xSTATION2BiosName|xSTATION1BiosName)\\b\\s*)",
-          "name": "support.function",
-          "comment": "Hermes Own functions 2"
-        }
-      ]
-    },
-    "comments": {
-      "name": "comment.block",
-      "begin": "{",
-      "end": "}"
-    },
     "keywords": {
       "patterns": [
         {
           "name": "keyword.control",
           "match": "(?i:\\b(MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR)\\b)"
         },
-
+        {
+          "name": "keyword.datatype",
+          "match": "(?i:(\\b(discrete|integer|real|message)\\b))",
+          "comment": "Intouch Variablentypes"
+        },
         {
           "match": "(?i:\\b(AS|IF|ENDIF|ELSE|WHILE|FOR|NEXT|DIM|THEN|EXIT|EACH|STEP|IN|RETURN|CALL)\\b)",
           "name": "keyword",
@@ -199,37 +78,431 @@
         }
       ]
     },
-    "restricted": {
+
+    "dotfields": {
       "patterns": [
         {
-          "name": "keyword.datatype",
-          "match": "(?i:(\\b(discrete|integer|real|message)\\b))",
-          "comment": "Intouch Variablentypes"
+          "match": "(?i:([\\.]{1}(Comment|Name|ReferenceComplete|Reference|AlarmComment|EngUnits|Value))\\b)",
+          "name": "variable.parameter.vbi",
+          "matchOld": "(((?i:(\\.Comment|\\.Name|\\.Reference|\\.AlarmComment|\\.EngUnits|\\.ReferenceComplete|\\.Value)))\\b)",
+          "comment": "Intouch Dotfields"
+        },
+        {
+          "match": "(?i:([\\.]{1}(SQLString|Caption|ConnectionString|GetRowNumber|GetRowColumnValue|Execute|Disconnect|SetColumnWidth))\\b)",
+          "matchOld": "(((?i:(\\.GetRowNumber|\\.GetRowColumnValue|\\.Execute|\\.Disconnect|\\.SetColumnWidth)))\\b)",
+          "name": "variable.parameter.vbi",
+          "comment": "SQL Dotfields"
+        },
+        {
+          "match": "(((?i:(\\.DisplayMode|\\.ChartLength|\\.MinRange|\\.MaxRange|HTUpdateToCurrentTime)))\\b)",
+          "name": "variable.parameter.vbi",
+          "comment": "Trend Dotfields"
+        },
+        {
+          "match": "(?i:(\\$)\\w*)",
+          "name": "variable.parameter.dotfield.vbi",
+          "comment": "Systemvariable '$' are like dotfields..."
+        },
+        {
+          "match": "(?i:(#)\\w*)",
+          "name": "variable.parameter.trend.vbi",
+          "comment": "Systemvariable '#' are trend..."
+        },
+        {
+          "comment": "all other dot.callsFunctions",
+          "match": "\\b\\s*(\\.|->)\\s*([\\p{L}_$][\\p{L}_$0-9]*)\\s*\\(",
+          "captures": {
+            "2": { "name": "variable.parameter.vbi" }
+          }
         }
       ]
     },
 
-    "parameters": {
+    "HermesKeywords": {
       "patterns": [
         {
-          "match": "\\s*([^,:\\s\\)\\(]*)\\s*:\\s*([^,:\\s\\)\\(]*)\\s*",
+          "match": "(?i:\\b(SYS_|MA_|SMEL_|HER_)\\w*)",
+          "name": "variable.other",
+          "comment": "Systemvariablen (Hermes - OWN)"
+        },
+
+        {
+          "match": "(?i:\\s*\\b(GetSplittByIndex|HerGATEWAYanzeigeAktualisieren|HerGATEWAYtriggerFreigabe|HerGATEWAYueberwachen|SetReferenceBool|SetReferenceByte|SetReferenceDINT|SetReferenceDINTs|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord|SetVarInputBoolsch|SetVarToggleBoolsch|BDEDatenLesen|BDEDatenSpeichern|BDEDatenSuchen|BDESchichtSchreiben|BDESchichtwerteDatenOK|BDESchichtwerteZuweisen|BDETageswerteDatenOK|BDETageswerteSchreiben|BDETageswerteZuweisen|BZBetriebsstunden|BZZaehlerAbfragen|ExterneModuleUeberwachen|FUWerte|GetSplittByIndex|HerBACKUP|HerProViewStart|HideAllPLS|KonfigLesen|KonfigSpeichern|QFFilter|QFFilterRegler15Schritt|QFLuftwerte|QFRinne|SessionUserInfoAkt|Sollwertaenderung|StatusExtApp|StatusleistenInfofelder|SWReal|wwalmdbtrigger|xAnlagenConfig|xBZVZSettings|xGatawaySettings|xHerGATEWAYSettings|xLoggingConfig|xSetDateiPfade|xSetSQLConfig|xSetTSStation|xSetUhrzeitserver)\\b\\s*)",
+          "name": "keyword.other",
+          "comment": "Hermes Own functions 1"
+        },
+        {
+          "match": "(?i:\\s*\\b(xSTATION9BiosName|xSTATION8BiosName|xSTATION7BiosName|xSTATION6BiosName|xSTATION5BiosName|xSTATION4BiosName|xSTATION3BiosName|xSTATION2BiosName|xSTATION1BiosName)\\b\\s*)",
+          "name": "support.function",
+          "comment": "Hermes Own functions 2"
+        }
+      ]
+    },
+
+    "constraints": {
+      "patterns": [
+        {
+          "match": "\\b(pre|post|inv)(\\s+([\\p{L}_$][\\p{L}_$0-9]*)\\s*:)?",
           "captures": {
-            "1": { "name": "variable.parameter" },
-            "2": { "name": "entity.name.type" }
+            "1": { "name": "entity.name" },
+            "3": { "name": "entity.name.section" }
           }
         }
       ]
     },
-    "arguments": {
+
+    "strings": {
       "patterns": [
-        { "include": "#keywords" },
         {
-          "match": "\\s*([^,:\\s\\)\\(]*)\\s*",
-          "captures": {
-            "1": { "name": "keyword.other" }
-          }
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.double.vbi"
         }
       ]
-    }
+    },
+
+    "comments-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {},
+    "comments": {
+      "patterns": [
+        { "include": "#block_comment" },
+        { "include": "#line_comment_new" },
+        { "include": "#line_comment" }
+      ]
+    },
+
+    "block_comment": {
+      "name": "comment.block.vbi",
+      "begin": "\\s*+({)",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.comment.begin.vbi" }
+      },
+      "end": "(})",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.comment.end.vbi" }
+      }
+    },
+
+    "line_comment": {
+      "name": "punctuation.definition.comment.vbi",
+      "begin": "{",
+      "end": "}"
+    },
+
+    "line_comment_new": {
+      "name": "comment",
+      "namee": "punctuation.definition.comment.vbi",
+      "begin": "'",
+      "end": ".*$"
+    },
+
+    "several-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {},
+    "several": {
+      "patterns": [
+        { "include": "#number_literal" },
+        { "include": "#operator" },
+        { "include": "#comma" },
+        { "include": "#assignment_operator" },
+        { "include": "#square_brackets" },
+        { "include": "#empty_square_brackets" },
+        { "include": "#semicolon" },
+        { "include": "#block" }
+      ]
+    },
+
+    "number_literal": {
+      "match": "(?<!\\w)\\.?\\d(?:(?:[0-9a-zA-Z_\\.]|')|(?<=[eEpP])[+-])*",
+      "captures": {
+        "0": {
+          "patterns": [
+            {
+              "begin": "(?=.)",
+              "end": "$|(?=\\\\end\\{minted\\})",
+              "patterns": [
+                {
+                  "match": "(\\G0[xX])([0-9a-fA-F](?:[0-9a-fA-F]|((?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)?((?:(?<=[0-9a-fA-F])\\.|\\.(?=[0-9a-fA-F])))([0-9a-fA-F](?:[0-9a-fA-F]|((?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)?((?<!')([pP])(\\+?)(\\-?)((?:[0-9](?:[0-9]|(?:(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)))?([lLfF](?!\\w))?((?:\\w(?<![0-9a-fA-FpP])\\w*)?$)",
+                  "captures": {
+                    "1": { "name": "keyword.other.unit.hexadecimal.vbi" },
+                    "2": {
+                      "name": "constant.numeric.hexadecimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "3": {
+                      "name": "punctuation.separator.constant.numeric.vbi"
+                    },
+                    "4": { "name": "constant.numeric.hexadecimal.vbi" },
+                    "5": {
+                      "name": "constant.numeric.hexadecimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "6": {
+                      "name": "punctuation.separator.constant.numeric.vbi"
+                    },
+                    "8": {
+                      "name": "keyword.other.unit.exponent.hexadecimal.vbi"
+                    },
+                    "9": {
+                      "name": "keyword.operator.plus.exponent.hexadecimal.vbi"
+                    },
+                    "10": {
+                      "name": "keyword.operator.minus.exponent.hexadecimal.vbi"
+                    },
+                    "11": {
+                      "name": "constant.numeric.exponent.hexadecimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "12": {
+                      "name": "keyword.other.unit.suffix.floating-point.vbi"
+                    },
+                    "13": { "name": "keyword.other.unit.user-defined.vbi" }
+                  }
+                },
+                {
+                  "match": "(\\G(?=[0-9.])(?!0[xXbB]))([0-9](?:[0-9]|((?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)?((?:(?<=[0-9])\\.|\\.(?=[0-9])))([0-9](?:[0-9]|((?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)?((?<!')([eE])(\\+?)(\\-?)((?:[0-9](?:[0-9]|(?:(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)))?([lLfF](?!\\w))?((?:\\w(?<![0-9eE])\\w*)?$)",
+                  "captures": {
+                    "2": {
+                      "name": "constant.numeric.decimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "3": {
+                      "name": "punctuation.separator.constant.numeric.vbi"
+                    },
+                    "4": { "name": "constant.numeric.decimal.point.vbi" },
+                    "5": {
+                      "name": "constant.numeric.decimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "6": {
+                      "name": "punctuation.separator.constant.numeric.vbi"
+                    },
+                    "8": { "name": "keyword.other.unit.exponent.decimal.vbi" },
+                    "9": {
+                      "name": "keyword.operator.plus.exponent.decimal.vbi"
+                    },
+                    "10": {
+                      "name": "keyword.operator.minus.exponent.decimal.vbi"
+                    },
+                    "11": {
+                      "name": "constant.numeric.exponent.decimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "12": {
+                      "name": "keyword.other.unit.suffix.floating-point.vbi"
+                    },
+                    "13": { "name": "keyword.other.unit.user-defined.vbi" }
+                  }
+                },
+                {
+                  "match": "(\\G0[bB])([01](?:[01]|((?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)((?:(?:(?:(?:(?:[uU]|[uU]ll?)|[uU]LL?)|ll?[uU]?)|LL?[uU]?)|[fF])(?!\\w))?((?:\\w(?<![0-9])\\w*)?$)",
+                  "captures": {
+                    "1": { "name": "keyword.other.unit.binary.vbi" },
+                    "2": {
+                      "name": "constant.numeric.binary.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "3": {
+                      "name": "punctuation.separator.constant.numeric.vbi"
+                    },
+                    "4": { "name": "keyword.other.unit.suffix.integer.vbi" },
+                    "5": { "name": "keyword.other.unit.user-defined.vbi" }
+                  }
+                },
+                {
+                  "match": "(\\G0)((?:[0-7]|((?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))+)((?:(?:(?:(?:(?:[uU]|[uU]ll?)|[uU]LL?)|ll?[uU]?)|LL?[uU]?)|[fF])(?!\\w))?((?:\\w(?<![0-9])\\w*)?$)",
+                  "captures": {
+                    "1": { "name": "keyword.other.unit.octal.vbi" },
+                    "2": {
+                      "name": "constant.numeric.octal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "3": {
+                      "name": "punctuation.separator.constant.numeric.vbi"
+                    },
+                    "4": { "name": "keyword.other.unit.suffix.integer.vbi" },
+                    "5": { "name": "keyword.other.unit.user-defined.vbi" }
+                  }
+                },
+                {
+                  "match": "(\\G0[xX])([0-9a-fA-F](?:[0-9a-fA-F]|((?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)((?<!')([pP])(\\+?)(\\-?)((?:[0-9](?:[0-9]|(?:(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)))?((?:(?:(?:(?:(?:[uU]|[uU]ll?)|[uU]LL?)|ll?[uU]?)|LL?[uU]?)|[fF])(?!\\w))?((?:\\w(?<![0-9a-fA-FpP])\\w*)?$)",
+                  "captures": {
+                    "1": { "name": "keyword.other.unit.hexadecimal.vbi" },
+                    "2": {
+                      "name": "constant.numeric.hexadecimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "3": {
+                      "name": "punctuation.separator.constant.numeric.vbi"
+                    },
+                    "5": {
+                      "name": "keyword.other.unit.exponent.hexadecimal.vbi"
+                    },
+                    "6": {
+                      "name": "keyword.operator.plus.exponent.hexadecimal.vbi"
+                    },
+                    "7": {
+                      "name": "keyword.operator.minus.exponent.hexadecimal.vbi"
+                    },
+                    "8": {
+                      "name": "constant.numeric.exponent.hexadecimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "9": { "name": "keyword.other.unit.suffix.integer.vbi" },
+                    "10": { "name": "keyword.other.unit.user-defined.vbi" }
+                  }
+                },
+                {
+                  "match": "(\\G(?=[0-9.])(?!0[xXbB]))([0-9](?:[0-9]|((?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)((?<!')([eE])(\\+?)(\\-?)((?:[0-9](?:[0-9]|(?:(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])))*)))?((?:(?:(?:(?:(?:[uU]|[uU]ll?)|[uU]LL?)|ll?[uU]?)|LL?[uU]?)|[fF])(?!\\w))?((?:\\w(?<![0-9eE])\\w*)?$)",
+                  "captures": {
+                    "2": {
+                      "name": "constant.numeric.decimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "3": {
+                      "name": "punctuation.separator.constant.numeric.vbi"
+                    },
+                    "5": { "name": "keyword.other.unit.exponent.decimal.vbi" },
+                    "6": {
+                      "name": "keyword.operator.plus.exponent.decimal.vbi"
+                    },
+                    "7": {
+                      "name": "keyword.operator.minus.exponent.decimal.vbi"
+                    },
+                    "8": {
+                      "name": "constant.numeric.exponent.decimal.vbi",
+                      "patterns": [
+                        {
+                          "match": "(?<=[0-9a-fA-F])'(?=[0-9a-fA-F])",
+                          "name": "punctuation.separator.constant.numeric.vbi"
+                        }
+                      ]
+                    },
+                    "9": { "name": "keyword.other.unit.suffix.integer.vbi" },
+                    "10": { "name": "keyword.other.unit.user-defined.vbi" }
+                  }
+                },
+                {
+                  "match": "(?:(?:[0-9a-zA-Z_\\.]|')|(?<=[eEpP])[+-])+",
+                  "name": "invalid.illegal.constant.numeric.vbi"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+
+    "operator": {
+      "match": "\\s+(==|\\+=|<=|>=|=>|<>|<|>|\\+|-|=)\\s",
+      "name": "keyword.operator.comparison.vbi",
+      "comment": "OPERATORS"
+    },
+
+    "semicolon": {
+      "match": ";",
+      "name": "punctuation.terminator.statement.vbi"
+    },
+
+    "comma": {
+      "match": ",",
+      "name": "punctuation.separator.delimiter.comma.vbi"
+    },
+
+    "assignment_operator": {
+      "match": "\\=",
+      "name": "keyword.operator.assignment.vbi"
+    },
+
+    "square_brackets": {
+      "name": "meta.bracket.square.access.vbi",
+      "begin": "([a-zA-Z_][a-zA-Z_0-9]*|(?<=[\\]\\)]))?(\\[)(?!\\])",
+      "beginCaptures": {
+        "1": { "name": "variable.other.object.vbi" },
+        "2": { "name": "punctuation.definition.begin.bracket.square.vbi" }
+      },
+      "end": "\\]|(?=\\\\end\\{minted\\})",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.end.bracket.square.vbi" }
+      }
+    },
+
+    "empty_square_brackets": {
+      "name": "storage.modifier.array.bracket.square.vbi",
+      "match": "(?-mix:(?-mix:(?<!delete))\\\\[\\\\s*\\\\])"
+    },
+
+    "block": {
+      "name": "meta.block.vbi",
+      "begin": "({|^(if|for|while))",
+      "beginCaptures": {
+        "1": { "name": "punctuation.section.block.begin.bracket.curly.vbi" }
+      },
+      "end": "(}|(?=\\s*#\\s*(?:elif|else|endif|NEXT)\\b))|(?=\\\\end\\{minted\\})",
+      "endCaptures": {
+        "1": { "name": "punctuation.section.block.end.bracket.curly.vbi" }
+      }
+    },
+
+    "unready-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {},
+
+
+
+
+
+
+    "END-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {}
   }
 }

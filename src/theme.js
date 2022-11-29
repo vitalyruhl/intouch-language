@@ -225,6 +225,7 @@ function getTheme({ style, name }) {
           foreground: primer.red[4],
         },
       },
+      
       {
         scope: "entity.name.tag",
         settings: {
@@ -232,11 +233,29 @@ function getTheme({ style, name }) {
         },
       },
       {
-        scope: "entity.numbers",
+        scope: [
+          "entity.numbers",
+          "constant.numeric.hexadecimal",
+          "punctuation.separator.constant.numeric",
+          "keyword.other.unit.hexadecimal",
+          "keyword.other.unit.exponent.hexadecimal",
+          "keyword.other.unit.suffix.floating-point",
+          "keyword.other.unit.user-defined",
+          "keyword.other.unit.exponent.decimal",
+          "keyword.operator.plus.exponent.decimal",
+          "constant.numeric.exponent.decimal",
+          "keyword.other.unit.suffix.floating-point",
+          "keyword.other.unit.binary",
+          "constant.numeric.binary",
+          "keyword.other.unit.suffix.integer",
+          "constant.numeric.decimal"
+        ],
         settings: {
-          foreground: primer.red[6],
+          foreground: primer.red[4],
         },
       },
+      
+      
       {
         scope: "entity.name.function",
         settings: {
@@ -261,7 +280,13 @@ function getTheme({ style, name }) {
         scope: "keyword.other",
         settings: {
           //fontStyle: "italic",
-          foreground: primer.blue[5],
+          foreground: primer.red[6],
+        },
+      },
+      {
+        scope: "keyword.other.numbers",
+        settings: {
+          foreground: primer.red[3],
         },
       },
       {
@@ -286,6 +311,30 @@ function getTheme({ style, name }) {
         },
       },
       {
+        scope: "keyword.operator",
+        settings: {
+          foreground: primer.red[6],
+        },
+      },
+      {
+        scope: "keyword.operator.comparison",
+        settings: {
+          foreground: primer.red[6],
+        },
+      },
+      {
+        scope: "keyword.operator.assignment",
+        settings: {
+          foreground: primer.red[4],
+        },
+      },
+      {
+        scope: "keyword.operator.other",
+        settings: {
+          foreground: primer.red[4],
+        },
+      },
+      {
         scope: ["storage", "storage.type"],
         settings: {
           foreground: primer.red[6],
@@ -306,6 +355,15 @@ function getTheme({ style, name }) {
           "string",
           "punctuation.definition.string",
           "string punctuation.section.embedded source",
+        ],
+        settings: {
+          foreground: primer.orange[7],
+        },
+      },
+      {
+        scope: [
+          "string.quoted.double",
+          "string.quoted.single",
         ],
         settings: {
           foreground: primer.orange[7],
@@ -348,6 +406,18 @@ function getTheme({ style, name }) {
         },
       },
       {
+        scope: "variable.parameter.dotfield",
+        settings: {
+          foreground:  primer.orange[6],
+        },
+      },
+      {
+        scope: "variable.parameter.trend",
+        settings: {
+          foreground:  primer.orange[6],
+        },
+      },
+      {
         scope: [
           "variable.other.constant",
           "variable.language",
@@ -360,28 +430,28 @@ function getTheme({ style, name }) {
         scope: "invalid.broken",
         settings: {
           fontStyle: "italic",
-          foreground: primer.red[7],
+          foreground: primer.red[2],
         },
       },
       {
         scope: "invalid.deprecated",
         settings: {
           fontStyle: "italic",
-          foreground: primer.red[7],
+          foreground: primer.red[2],
         },
       },
       {
         scope: "invalid.illegal",
         settings: {
           fontStyle: "italic",
-          foreground: primer.red[7],
+          foreground: primer.red[2],
         },
       },
       {
         scope: "invalid.unimplemented",
         settings: {
           fontStyle: "italic",
-          foreground: primer.red[7],
+          foreground: primer.red[2],
         },
       },
       {
@@ -396,7 +466,7 @@ function getTheme({ style, name }) {
       {
         scope: "message.error",
         settings: {
-          foreground: primer.red[7],
+          foreground: primer.red[1],
         },
       },
       {
