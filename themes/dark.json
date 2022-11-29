@@ -195,9 +195,25 @@
       }
     },
     {
-      "scope": "entity.numbers",
+      "scope": [
+        "entity.numbers",
+        "constant.numeric.hexadecimal",
+        "punctuation.separator.constant.numeric",
+        "keyword.other.unit.hexadecimal",
+        "keyword.other.unit.exponent.hexadecimal",
+        "keyword.other.unit.suffix.floating-point",
+        "keyword.other.unit.user-defined",
+        "keyword.other.unit.exponent.decimal",
+        "keyword.operator.plus.exponent.decimal",
+        "constant.numeric.exponent.decimal",
+        "keyword.other.unit.suffix.floating-point",
+        "keyword.other.unit.binary",
+        "constant.numeric.binary",
+        "keyword.other.unit.suffix.integer",
+        "constant.numeric.decimal"
+      ],
       "settings": {
-        "foreground": "#f97583"
+        "foreground": "#d73a49"
       }
     },
     {
@@ -222,7 +238,13 @@
     {
       "scope": "keyword.other",
       "settings": {
-        "foreground": "#2188ff"
+        "foreground": "#f97583"
+      }
+    },
+    {
+      "scope": "keyword.other.numbers",
+      "settings": {
+        "foreground": "#cb2431"
       }
     },
     {
@@ -241,6 +263,30 @@
       "scope": "keyword.function",
       "settings": {
         "foreground": "#2188ff"
+      }
+    },
+    {
+      "scope": "keyword.operator",
+      "settings": {
+        "foreground": "#f97583"
+      }
+    },
+    {
+      "scope": "keyword.operator.comparison",
+      "settings": {
+        "foreground": "#f97583"
+      }
+    },
+    {
+      "scope": "keyword.operator.assignment",
+      "settings": {
+        "foreground": "#d73a49"
+      }
+    },
+    {
+      "scope": "keyword.operator.other",
+      "settings": {
+        "foreground": "#d73a49"
       }
     },
     {
@@ -267,6 +313,15 @@
         "string",
         "punctuation.definition.string",
         "string punctuation.section.embedded source"
+      ],
+      "settings": {
+        "foreground": "#ffd1ac"
+      }
+    },
+    {
+      "scope": [
+        "string.quoted.double",
+        "string.quoted.single"
       ],
       "settings": {
         "foreground": "#ffd1ac"
@@ -309,6 +364,18 @@
       }
     },
     {
+      "scope": "variable.parameter.dotfield",
+      "settings": {
+        "foreground": "#ffab70"
+      }
+    },
+    {
+      "scope": "variable.parameter.trend",
+      "settings": {
+        "foreground": "#ffab70"
+      }
+    },
+    {
       "scope": [
         "variable.other.constant",
         "variable.language"
@@ -321,28 +388,28 @@
       "scope": "invalid.broken",
       "settings": {
         "fontStyle": "italic",
-        "foreground": "#fdaeb7"
+        "foreground": "#b31d28"
       }
     },
     {
       "scope": "invalid.deprecated",
       "settings": {
         "fontStyle": "italic",
-        "foreground": "#fdaeb7"
+        "foreground": "#b31d28"
       }
     },
     {
       "scope": "invalid.illegal",
       "settings": {
         "fontStyle": "italic",
-        "foreground": "#fdaeb7"
+        "foreground": "#b31d28"
       }
     },
     {
       "scope": "invalid.unimplemented",
       "settings": {
         "fontStyle": "italic",
-        "foreground": "#fdaeb7"
+        "foreground": "#b31d28"
       }
     },
     {
@@ -357,7 +424,7 @@
     {
       "scope": "message.error",
       "settings": {
-        "foreground": "#fdaeb7"
+        "foreground": "#9e1c23"
       }
     },
     {
