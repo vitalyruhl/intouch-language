@@ -61,6 +61,34 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 <br>
 <br>
 
+## Example diffrent themes
+
+<table align="center" width="100%" border="0">
+  <tr>
+    <td align="center" border="0">
+    <p>Intouch Theme Dark</p>
+    <a title="Intouch Theme Dark" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/intouchTheme.jpg" alt="Intouch Theme Dark" width="60%" /></a>
+    </td>
+    <td align="center" border="0">
+    <p>VSC Theme Dark+</p>
+    <a title="VSC Theme Dark+" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/VSC_Dark_Plus.jpg" alt="VSC Theme Dark+" width="60%" /></a>
+    </td>
+    </tr>
+    <tr>
+    <td align="center" border="0">
+    <p>Material Theme Darker</p>
+    <a title="Material Theme Darker" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/Material_Theme_Darker.jpg" alt="Material Theme Darker" width="60%" /></a>
+    </td>
+    <td align="center" border="0">
+    <p>VSC Theme Light</p>
+    <a title="VSC Theme Light" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/VSC_Light.jpg" alt="VSC Theme Light" width="60%" /></a>
+    </td>
+  </tr>
+</table>
+
+<br>
+<br>
+
 # Test and example
 
 > You can test it on this **%USERPROFILE%\\.vscode\extensions\intouch-language\other\test\test.vbi** by press **`shift + alt + F`**
@@ -71,8 +99,8 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 # Installation
 
 - Standatd Installation:
-  - Install it in ext.-manager (type Intouch) or from 
-  [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
+  - Install it in ext.-manager (type Intouch) or from
+    [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
 - Install from Github:
   - Copy or clone all in to: `%USERPROFILE%\.vscode\extensions\intouch-language\`
     - `cd ~/.vscode/extensions/`
@@ -107,9 +135,10 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 > Save your code as `.vbi` or `.vi` for automatic language recognition.
 
-- - -
+---
 
 > Better-Comment Plugin
+
 - [Use this Branch (beta) from github - it works on all Languages](https://github.com/aaron-bond/better-comments/tree/all-languages)
 
 <p align="center">
@@ -129,7 +158,7 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 - **Formatter**
   - Issues
-    - Bug 13.02.2022 ``For-next`` not in plan when there are an ``EXIT FOR`` statement
+    - Bug 13.02.2022 `For-next` not in plan when there are an `EXIT FOR` statement
     - Bug 13.02.2022 Nesting bug -> code in multiline comment will formatted to?!
   - Futures planned
     - Format on selection (now is formatting document!)
@@ -158,7 +187,7 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 - Correct some bugs in regex for syntax-highlighting
 - Theme -> Add more compatibility to other languages
-- Add more compatibility to other Themes (e. g. material-theme) 
+- Add more compatibility to other Themes (e. g. material-theme)
 
 ### V1.3.0
 
@@ -179,16 +208,16 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 ### V1.2.1
 
-- Bugfix trailing whitespace before ``-``
+- Bugfix trailing whitespace before `-`
 
 ### V1.2.0
 
-- Add folding between ``{region xxxx}`` and  ``{endregion xxxx}``
-- Add Nesting between ``{region xxxx}`` and  ``{endregion xxxx}``
+- Add folding between `{region xxxx}` and `{endregion xxxx}`
+- Add Nesting between `{region xxxx}` and `{endregion xxxx}`
 - Auto closing brackets in strings and comments.
 - Remove unused dependency with dependabot alert.
 - Add wordPattern and indentationRules into language configuration.
-- <fix bug - issue #13, formatter formats dashed variable ``foo-bar`` --> ``foo - bar``
+- <fix bug - issue #13, formatter formats dashed variable `foo-bar` --> `foo - bar`
 
 ### V1.1.1
 
