@@ -22,8 +22,13 @@ function formatNestings(text, config) {
     let regexRegionCEx = `^${config.RegionBlockCodeExclude}`;
     let regexRegionCE = `^${config.RegionBlockCodeEnd}`;
     try {
-        codeFragments = text.split(const_1.CRLF); //split code by Line
-        for (let i = 0; i < codeFragments.length - 1; i++) {
+        // BUGFIX 2025-09-14: Ursprünglich wurde mit text.split(CRLF) und dann bis length-1 iteriert.
+        // Dadurch ging die letzte Zeile verloren, falls die Datei NICHT mit CRLF endete.
+        // Lösung: volle Länge iterieren und beim Wiederzusammenbau das ursprüngliche Vorhandensein
+        // eines finalen CRLF berücksichtigen.
+        const hadFinalCRLF = text.endsWith(const_1.CRLF);
+        codeFragments = text.split(const_1.CRLF); // split code by line (behält ggf. leeres letztes Fragment wenn CRLF am Ende)
+        for (let i = 0; i < codeFragments.length; i++) {
             LineCount = i + 1; //only for Log and Error
             if (codeFragments[i] === "") {
                 //not in empty lines goes faster...
@@ -193,8 +198,24 @@ function formatNestings(text, config) {
             }
         }
         // combine all into new text and return it
-        for (let i = 0; i < codeFragments.length - 1; i++) {
-            buf += codeFragments[i] + const_1.CRLF;
+        for (let i = 0; i < codeFragments.length; i++) {
+            const isLast = i === codeFragments.length - 1;
+            if (!isLast) {
+                buf += codeFragments[i] + const_1.CRLF;
+            }
+            else {
+                // Letzte Zeile: Nur anhängen. Wenn ursprüngliche Datei mit CRLF endete UND das letzte Fragment leer ist
+                // (split erzeugt dann ein leeres Fragment), vermeiden wir doppeltes CRLF.
+                if (codeFragments[i] !== "") {
+                    buf += codeFragments[i];
+                    if (hadFinalCRLF) {
+                        buf += const_1.CRLF; // Erhalte genau ein CRLF am Ende falls vorher vorhanden.
+                    }
+                }
+                else if (hadFinalCRLF) {
+                    // Wenn die Datei mit CRLF endete, das leere Fragment repräsentiert bereits den Abschluss – nichts tun.
+                }
+            }
         }
     }
     catch (error) {

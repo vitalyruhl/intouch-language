@@ -77,3 +77,7 @@ coverage
 #       !/.bash_rc
 #       !/.bash_profile
 #       !/.curlrc
+errors/last-line-removed.vbi
+errors/last-line-removed2.vbi
+errors/SYS_LoggingSwitch-will not be formated-if-over-more-lines.vbi
+errors/will not be formated right.vbi

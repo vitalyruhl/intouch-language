@@ -9,45 +9,30 @@ exports.config = {};
 function formatTE(range) {
     exports.config = getConfig();
     let document = vscode_1.window.activeTextEditor.document;
-    return [
-        vscode.TextEdit.replace(range, format(range, document, exports.config)),
-    ];
+    const newText = format(range, document, exports.config);
+    return [vscode.TextEdit.replace(range, newText)];
 }
 exports.formatTE = formatTE;
 function format(range, document, config) {
-    let activeEditor = vscode_1.window.activeTextEditor;
-    //let document = window.activeTextEditor.document;
+    // PURE IMPLEMENTATION (Refactor 2025-09-14): Keine direkten Editor-Seiteneffekte mehr.
     let regex;
-    let isError = false;
-    let formatted = '';
-    formatted = document.getText(range); //get actual document text...
-    formatted = (0, formats_1.forFormat)(formatted, config); //Format keywords and operators
-    formatted = (0, formats_1.formatNestings)(formatted, config); //format Nestings
-    // todo: add light-code-checker, like ; / if-then-endif; /for-next; etc...
-    //--------------------------------------------------------------------------------//
-    // Remove EmptyLines...
-    let nEL = config.allowedNumberOfEmptyLines + 1.0;
+    let formatted = document.getText(range);
+    // 1. Keyword / Operator Formatting
+    formatted = (0, formats_1.forFormat)(formatted, config);
+    // 2. Nestings
+    formatted = (0, formats_1.formatNestings)(formatted, config);
+    // 3. Remove EmptyLines
+    const nEL = (config.allowedNumberOfEmptyLines || 1) + 1.0;
     if (config.RemoveEmptyLines) {
         if (config.EmptyLinesAlsoInComment) {
-            regex = new RegExp(`(?![^{]*})(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+            regex = new RegExp(`(?![^{]*})(^[\t]*$\r?\n){${nEL},}`, 'gm');
         }
         else {
-            regex = new RegExp(`(^[\\t]*$\\r?\\n){${nEL},}`, 'gm');
+            regex = new RegExp(`(^[\t]*$\r?\n){${nEL},}`, 'gm');
         }
         formatted = formatted.replace(regex, const_1.CRLF);
     }
-    //--------------------------------------------------------------------------------//
-    //--------------------------------------------------------------------------------//
-    // apply changes
-    if (formatted) {
-        activeEditor.edit((editor) => {
-            return editor.replace(range, formatted);
-        });
-    }
-    if (isError) { //only for ts, because a function must return value....
-        return '';
-    }
-    //--------------------------------------------------------------------------------//
+    return formatted;
 }
 //----------------------------------------------------------------
 //----------------------------------------------------------------
