@@ -242,6 +242,17 @@ function preFormat(text, config) {
                     }
                     continue;
                 }
+                // Ensure space before inline comment brace directly after THEN (THEN{ -> THEN {)
+                if (!inComment && (ch === 'T' || ch === 't') && normalized.slice(i, i + 4).toLowerCase() === 'then') {
+                    let j = i + 4;
+                    while (j < normalized.length && normalized[j] === ' ')
+                        j++;
+                    if (normalized[j] === '{') {
+                        out += 'THEN ';
+                        i = i + 3; // consumed THEN
+                        continue;
+                    }
+                }
                 // Rule: ensure single space after semicolon if next char (non newline) is not space
                 if (!inComment && ch === ';') {
                     const next = normalized[i + 1];
@@ -300,6 +311,7 @@ function formatNestings(text, config) {
     let regex = "";
     let nestingCounter = 0;
     let nestingCounterPrevious = 0;
+    // Simple nesting only; multiline IF experimental logic removed
     let multilineComment = false;
     let thisLineBack = false;
     let regexCB = `^${config.BlockCodeBegin}`;
@@ -400,10 +412,7 @@ function formatNestings(text, config) {
                     }
                     if (n.multiline !== '') {
                         regex = `((?![^{]*})(\\b${n.multiline})\\b)`;
-                        if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
-                            if (!keyFound)
-                                thisLineBack = true;
-                        }
+                        if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) { /* THEN presence does not alter nesting here */ }
                     }
                     if (n.middle !== '') {
                         regex = `((?![^{]*})(\\b${n.middle})\\b)`;
@@ -424,6 +433,7 @@ function formatNestings(text, config) {
                     }
                     keyFound = false;
                 }
+                // no multiline body tracking
             }
         }
         if (!isEmptyLine) {

@@ -181,6 +181,11 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 # What's new in Intouch-Language
 
+### V1.5.0
+
+- add som rules for better formatting and nesting
+
+
 ### V1.4.1-V1.4.3
 
 - Add math / intrinsic style functions for uppercasing in formatter 2025-09-25: sqr, sin, cos, tan, atn, exp, log, int, frac, round, rnd, sqrt

@@ -27,7 +27,9 @@ suite('formatter fixture pairs (*.test.vbi -> *.tobe.vbi)', () => {
     console.warn('No testfiles directory found at', baseDir);
     return;
   }
-  const entries = fs.readdirSync(baseDir).filter(f => f.endsWith('.test.vbi'));
+  const entries = fs.readdirSync(baseDir)
+    .filter(f => f.endsWith('.test.vbi'))
+    .filter(f => !f.startsWith('01.keywords.basic.')); // covered by keywords.uppercase.test.ts
   entries.forEach(testFile => {
     const expectedFile = testFile.replace('.test.vbi', '.tobe.vbi');
     const expectedPath = path.join(baseDir, expectedFile);
