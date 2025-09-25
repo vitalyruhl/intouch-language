@@ -184,28 +184,75 @@ export function preFormat(text: string, config: FormatterConfig): string { // fo
   normalized = (() => {
     let out = '';
     let inStr = false;
+    let inComment = false;
+    const isIdentStart = (c: string) => /[A-Za-z]/.test(c);
     for (let i = 0; i < normalized.length; i++) {
-      const ch = normalized[i];
-      if (ch === '"') {
-        inStr = !inStr;
-        out += ch;
-        continue;
-      }
+      let ch = normalized[i];
+      if (ch === '"') { inStr = !inStr; out += ch; continue; }
       if (!inStr) {
-        // Removed letter - letter subtraction normalization; dash inside identifiers is preserved as-is.
+        // Track simple single-line comment braces { ... }
+        if (ch === '{') { inComment = true; out += ch; continue; }
+        if (ch === '}' && inComment) { inComment = false; /* fall through to spacing rule below */ }
+
+        // IF keyword normalization (only when not in comment) patterns: if(  / if (
+        if (!inComment && (ch === 'i' || ch === 'I') && (normalized[i+1] === 'f' || normalized[i+1] === 'F')) {
+          // look ahead to optional spaces then '('
+          let j = i + 2;
+          while (j < normalized.length && normalized[j] === ' ') j++;
+          if (normalized[j] === '(') {
+            // Emit 'IF ('
+            out += 'IF (';
+            // skip original 'if' + spaces + '('
+            i = j; // i will increment in loop
+            // skip any spaces directly after '(' in source
+            let k = i + 1;
+            while (k < normalized.length && normalized[k] === ' ') k++;
+            i = k - 1; // loop increments to first char of condition
+            continue;
+          }
+        }
+        // After ')' followed by THEN (case-insensitive, maybe without space)
+        if (!inComment && ch === ')') {
+          // remove any spaces already emitted before ')'
+          while (out.length > 0 && out[out.length - 1] === ' ') out = out.slice(0, -1);
+          // Peek ahead for THEN
+          let j = i + 1; while (j < normalized.length && normalized[j] === ' ') j++;
+          const ahead = normalized.slice(j, j + 4).toLowerCase();
+            if (ahead === 'then') {
+            out += ') THEN';
+            i = j + 3; // skip over 'then'
+            continue;
+          } else {
+            // generic rule: ensure space after ')' if next is identifier
+            let next = normalized[i+1];
+            if (next && isIdentStart(next)) { out += ') '; continue; }
+          }
+        }
+        // Rule: ensure single space after semicolon if next char (non newline) is not space
+        if (ch === ';') {
+          const next = normalized[i+1];
+          if (next && next !== ' ' && next !== '\r' && next !== '\n') { out += '; '; continue; }
+        }
+        // Rule: ensure space after closing '}' of a comment if next non-space is identifier
+        if (ch === '}' ) {
+          let j = i + 1; while (j < normalized.length && normalized[j] === ' ') j++;
+          if (j < normalized.length && isIdentStart(normalized[j]) && normalized[i+1] !== ' ') { out += '} '; continue; }
+        }
         // Ensure space after pattern X -Y (but not inside dashed identifiers) => convert 'X -Y' to 'X - Y'
         if (/[A-Za-z0-9_]/.test(ch) && normalized[i+1] === ' ' && normalized[i+2] === '-' && /[A-Za-z_]/.test(normalized[i+3])) {
           // Check that this is not inside a multi-dash variable: look backwards to start of run and forwards to end
-          let back = out.length - 1;
-          while (back >= 0 && /[A-Za-z0-9$-]/.test(out[back])) back--;
-          let forward = i + 3;
-          while (forward < normalized.length && /[A-Za-z0-9$-]/.test(normalized[forward])) forward++;
+          let back = out.length - 1; while (back >= 0 && /[A-Za-z0-9$-]/.test(out[back])) back--;
+          let forward = i + 3; while (forward < normalized.length && /[A-Za-z0-9$-]/.test(normalized[forward])) forward++;
           const run = (out.slice(back + 1) + normalized.slice(i, forward));
-          if (!/^[A-Za-z][A-Za-z0-9$-]*-[A-Za-z0-9$-]*-[A-Za-z0-9$-]*$/.test(run)) {
-            out += ch + ' - ' + normalized[i+3];
-            i += 3;
-            continue;
-          }
+          if (!/^[A-Za-z][A-Za-z0-9$-]*-[A-Za-z0-9$-]*-[A-Za-z0-9$-]*$/.test(run)) { out += ch + ' - ' + normalized[i+3]; i += 3; continue; }
+        }
+        // Comma spacing in argument lists: remove preceding spaces, enforce single space after unless next is ) or EOL
+        if (ch === ',') {
+          while (out.length > 0 && out[out.length - 1] === ' ') out = out.slice(0, -1);
+          out += ',';
+          let next = normalized[i+1];
+          if (next && next !== ' ' && next !== ')' && next !== '\r' && next !== '\n') { out += ' '; }
+          continue;
         }
       }
       out += ch;

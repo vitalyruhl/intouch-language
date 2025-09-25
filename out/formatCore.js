@@ -188,6 +188,26 @@ function preFormat(text, config) {
                 continue;
             }
             if (!inStr) {
+                // Rule: ensure single space after semicolon if immediately followed by '{' (comment start)
+                if (ch === ';' && normalized[i + 1] === '{') {
+                    out += '; ';
+                    i += 0; // only consumed ';'
+                    continue;
+                }
+                // Rule: ensure space after closing '}' of a comment if next non-space is an identifier/keyword char
+                if (ch === '}') {
+                    let j = i + 1;
+                    while (j < normalized.length && normalized[j] === ' ')
+                        j++;
+                    if (j < normalized.length && /[A-Za-z]/.test(normalized[j])) {
+                        // if there was no space, add one
+                        if (normalized[i + 1] !== ' ') {
+                            out += '} ';
+                            i = i; // handled current '}'
+                            continue;
+                        }
+                    }
+                }
                 // Removed letter - letter subtraction normalization; dash inside identifiers is preserved as-is.
                 // Ensure space after pattern X -Y (but not inside dashed identifiers) => convert 'X -Y' to 'X - Y'
                 if (/[A-Za-z0-9_]/.test(ch) && normalized[i + 1] === ' ' && normalized[i + 2] === '-' && /[A-Za-z_]/.test(normalized[i + 3])) {

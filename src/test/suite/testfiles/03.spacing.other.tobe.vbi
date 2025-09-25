@@ -1,0 +1,60 @@
+{Format3: Spacing rules - other nesting}
+a = b; {comment}
+a = b; {comment} c = d;
+a = b; {comment}
+a = b; b = c; d = e;
+{comment} c = d;
+
+{Format3: do not format the comment itself}
+a = b; { comment }
+a = b; {    comment    } c = d;
+
+{Format3: commented code block - do not format the comment }
+{
+    if(a==b)then
+    a=1;
+    endif;
+    IF ( a >= b ) THEN
+    a = 1;
+    ENDIF;
+}
+
+{Format3: other spacing }
+StartApp ta + "\Scheduler.exe " + SQLServer + " " + Database_user + " " + Database_pwd;
+
+{test for spacing in string --> DONT FORMAT THIS!}
+Funkt = "-";
+Funkt = " -";
+Funkt = "- ";
+Funkt = " - ";
+Funkt = "+/-/<>/==/=/</>";
+
+{Format3: parentheses spacing with keywords}
+IF (a == b) THEN
+	a = 1;
+ENDIF;
+IF (a >= b) THEN
+	a = 1;
+ENDIF;
+IF (a <= b) THEN
+	a = 1;
+ENDIF;
+IF (a <> b) THEN
+	a = 1;
+ENDIF;
+IF (a > b) THEN
+	a = 1;
+ENDIF;
+IF (a < b) THEN
+	a = 1;
+ENDIF;
+
+{test spaces behind text}
+a = 1;
+a = 1;
+a = 1;
+a = 1;
+a = 1;
+
+{test space behind a parameter, but not in text}
+state = SQLAppendStatement(id, " WHERE CONVERT(NCHAR(10),EventStamp,104) LIKE '%" + date + "%' AND CONVERT(NCHAR(8),EventStamp,108) LIKE '%" + ts + "%'");

@@ -38,25 +38,25 @@ suite('formats.misc operator spacing', () => {
 
 suite('formats.misc double operator spacing', () => {
 
-  test('== / =', () => {  
+  test('== / =', () => {
     let testString = 'IF foo==bar THEN  baz=foo; ENDIF;'
     let toBeString = 'IF foo == bar THEN  baz = foo; ENDIF;'
   assert.equal(fo.preFormat(testString,config),toBeString)
   });
 
-  test('<=', () => { 
+  test('<=', () => {
     let testString = 'IF foo <=bar THEN  baz =foo; ENDIF;'
     let toBeString = 'IF foo <= bar THEN  baz = foo; ENDIF;'
   assert.equal(fo.preFormat(testString,config),toBeString)
   });
 
-  test('<>', () => { 
+  test('<>', () => {
     let testString = 'IF foo<> bar THEN  baz = foo; ENDIF;'
     let toBeString = 'IF foo <> bar THEN  baz = foo; ENDIF;'
   assert.equal(fo.preFormat(testString,config),toBeString)
   });
 
-  test('>=', () => { 
+  test('>=', () => {
     let testString = 'IF foo>= bar THEN  baz= foo; ENDIF;'
     let toBeString = 'IF foo >= bar THEN  baz = foo; ENDIF;'
   assert.equal(fo.preFormat(testString,config),toBeString)

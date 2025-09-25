@@ -1,0 +1,7 @@
+{Format6: Region nesting}
+
+{Region region test}
+	tmp = "\\share\";
+	CALL xGatawaySettings();
+	ITXStartAppInDirectory(SYS_ToolsPath + "string ( with ) whitespaces test.", SYS_ToolsPath);
+{endregion region test}
