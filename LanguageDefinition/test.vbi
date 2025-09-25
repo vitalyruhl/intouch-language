@@ -1,5 +1,5 @@
 
-DIM Funkt AS MESSAGE;
+DIM Func AS MESSAGE;
 Func = "FU V1.0.0 - "; 
 
 {

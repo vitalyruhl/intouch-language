@@ -1,22 +1,69 @@
-#main
-*.vsix
-**/logs
-*.exe
+### VSIX Ignore (bundled) ###
+# Keep only runtime bundle (dist), grammar, themes, snippets, language config, images used by marketplace, license, readme.
+
+# Exclude development sources & build output not needed after bundling
+src/
+out/
+backup/
+scripts/
+
+# Node modules removed because code is bundled
+node_modules/
+
+# Dev / workspace meta
+.git/
+.github/
+.vscode/
+.vscode-test/
+workspace.code-workspace
+launch.json
+renovate.json
+settings.json
+TODO.md
+tsconfig.json
+tslint.json
+package-lock.json
+
+# Tests & fixtures
+src/test/
+**/*.test.vbi
+**/*.tobe.vbi
+
+# Exclude all heavy/readme showcase images (served via GitHub raw links in README)
+images/**
+!images/logo.png
+
+# Exclude full LanguageDefinition directory (no language docs / assets in VSIX per request)
+LanguageDefinition/**
+
+# Misc archives / binaries
 *.7z
-*.zap*
 *.zip
+*.zap*
 *.iso
+*.exe
 
-#vscode
-.vscode-test/**
-.gitignore
-**/*.ts
-**/tsconfig.json
-**/tslint.json
-!file.ts
-!file.sh
+# Existing packaged files
+*.vsix
 
-#Folder
-temp
-other
+# Temp folders
+temp/
+other/
+
+# Ignore all source maps except allow dist maps (help debugging if user enables)
+**/*.map
+!dist/*.map
+
+# Keep dist bundle
+!dist/**
+
+# Allow essential files
+!README.md
+!LICENSE
+!package.json
+!language-configuration.json
+!syntaxes/**
+!themes/**
+!snippets/**
+!images/logo.png
 

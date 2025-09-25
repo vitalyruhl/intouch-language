@@ -13,6 +13,8 @@
     { "include": "#strings" },
     { "include": "#HermesKeywords" },
     { "include": "#variables" },
+    { "include": "#var_declaration" },
+    { "include": "#numbers_simple" },
     { "include": "#several" }
   ],
   "repository": {
@@ -146,6 +148,29 @@
           "match": "\\b[A-Za-z_][A-Za-z0-9_-]*\\b",
           "name": "variable.other.readwrite.vbi",
           "comment": "Normal variable names (identifiers that are not keywords or functions)"
+        }
+      ]
+    },
+
+    "var_declaration": {
+      "patterns": [
+        {
+          "comment": "Capture variable names after DIM for declaration highlighting (e.g. DIM Foo, Bar)",
+          "match": "(?i)\\bDIM\\b\\s+([A-Za-z_][A-Za-z0-9_-]*)(?:\\s*,\\s*([A-Za-z_][A-Za-z0-9_-]*))*",
+          "captures": {
+            "1": { "name": "variable.other.declaration.intouch" },
+            "2": { "name": "variable.other.declaration.intouch" }
+          }
+        }
+      ]
+    },
+
+    "numbers_simple": {
+      "patterns": [
+        {
+          "match": "\\b[0-9]+(\\.[0-9]+)?\\b",
+          "name": "constant.numeric.intouch",
+          "comment": "Simplified number pattern to ensure default themes color numbers (adds generic constant.numeric)."
         }
       ]
     },
@@ -457,7 +482,7 @@
     },
 
     "operator": {
-      "match": "\\s+(==|\\+=|<=|>=|=>|<>|<|>|\\+|-|=)\\s",
+      "match": "\\s+(==|<=|>=|<>|<|>|\\+|-|=)\\s",
       "name": "keyword.operator.comparison.vbi",
       "comment": "OPERATORS"
     },
