@@ -7,24 +7,24 @@ suite('test formats.ts - double operators spacing', () => {
   test('>= remains intact with spaces', () => {
     const input = 'IF ( a >= b ) THEN';
     const expected = 'IF ( a >= b ) THEN';
-    assert.equal(fo.forFormat(input + '\n', config).trim(), expected);
+  assert.equal(fo.preFormat(input + '\n', config).trim(), expected);
   });
 
   test('<= remains intact with spaces', () => {
     const input = 'IF ( a <= b ) THEN';
     const expected = 'IF ( a <= b ) THEN';
-    assert.equal(fo.forFormat(input + '\n', config).trim(), expected);
+  assert.equal(fo.preFormat(input + '\n', config).trim(), expected);
   });
 
   test('<> remains intact with spaces', () => {
     const input = 'IF ( a <> b ) THEN';
     const expected = 'IF ( a <> b ) THEN';
-    assert.equal(fo.forFormat(input + '\n', config).trim(), expected);
+  assert.equal(fo.preFormat(input + '\n', config).trim(), expected);
   });
 
   test('== remains intact with spaces', () => {
     const input = 'IF ( a == b ) THEN';
     const expected = 'IF ( a == b ) THEN';
-    assert.equal(fo.forFormat(input + '\n', config).trim(), expected);
+  assert.equal(fo.preFormat(input + '\n', config).trim(), expected);
   });
 });

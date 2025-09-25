@@ -21,7 +21,7 @@ function format(range, document, config) {
     let regex;
     let formatted = document.getText(range);
     // 1. Keyword / Operator Formatting
-    formatted = (0, formats_1.forFormat)(formatted, config);
+    formatted = (0, formats_1.preFormat)(formatted, config);
     // 2. Nestings
     formatted = (0, formats_1.formatNestings)(formatted, config);
     // 3. Remove EmptyLines

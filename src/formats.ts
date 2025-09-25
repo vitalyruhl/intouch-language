@@ -2,10 +2,10 @@
 // Single Source of Truth: modify formatting rules in formatCore.ts
 // This file provides stable export names for the rest of the extension.
 
-import { forFormat as coreForFormat, formatNestings as coreFormatNestings, pureFormatPipeline } from './formatCore';
+import { preFormat as corePreFormat, formatNestings as coreFormatNestings, pureFormatPipeline } from './formatCore';
 
-export function forFormat(text: string, config: any) {
-  return coreForFormat(text, config);
+export function preFormat(text: string, config: any) {
+  return corePreFormat(text, config);
 }
 
 export function formatNestings(text: string, config: any) {

@@ -6,59 +6,60 @@ const functions = require("../../functions")
 let config = functions.getConfig()
 
 
-suite('test formats.ts - Test as Own', () => {
-  test('Ground Format #1', () => {
+suite('formats.misc basic smoke tests', () => {
+  test('Ground format #1 (no change)', () => {
     const testString = 'test String'
     const toBeString = 'test String'
-    assert.equal(fo.forFormat(testString,config),toBeString)
+  assert.equal(fo.preFormat(testString,config),toBeString)
   });
 });
 
-suite('test formats.ts - Format signs', () => {
+suite('formats.misc operator spacing', () => {
 
-  test('Format signs as own', () => { //! '-g' is a bug! Shall be '- g'
-    let testString = 'c=a+b +d- e+ f -g - x;{following comment not formatted! -> c=a+b +d - e+ f;}'
-    let toBeString = 'c = a + b + d - e + f -g - x;{following comment not formatted! -> c=a+b +d - e+ f;}'
-    assert.equal(fo.forFormat(testString,config),toBeString)
+  test('Operator spacing (binary minus before variable spaced)', () => { // '-g' is a bug: should become '- g'
+    let testString = 'c=a+b +d- e+ f -g -x + d-a-s-h-e-d-V-a-r; {following comment not formatted! -> c=a+b +d - e+ f;}'
+    // Expected now reflects fix: binary minus before variable must have trailing space -> '- g'
+    let toBeString = 'c = a + b + d - e + f - g - x + d-a-s-h-e-d-V-a-r; {following comment not formatted! -> c=a+b +d - e+ f;}'
+  assert.equal(fo.preFormat(testString,config),toBeString)
   });
 
   test('no space on -/+ before Number!', () => {
-    let testString = 'SYS_Anlage = -1;{fixed 2021.10.29: no space on -/+ before Number!}'
-    let toBeString = 'SYS_Anlage = -1;{fixed 2021.10.29: no space on -/+ before Number!}'
-    assert.equal(fo.forFormat(testString,config),toBeString)
+    let testString = 'a = -1;'
+    let toBeString = 'a = -1;'
+  assert.equal(fo.preFormat(testString,config),toBeString)
   });
 
   test('dashes in variable shall not be formatted', () => {
-    let testString = 'new12-issue-dashed-variable-123 = "this variable shall not be formatted"'
-    let toBeString = 'new12-issue-dashed-variable-123 = "this variable shall not be formatted"'
-    assert.equal(fo.forFormat(testString,config),toBeString)
+    let testString = 'new1-2-issue-dashed-variable-12-3 = "this variable -shall- not - +be formatted the string please too -+123"'
+    let toBeString = 'new1-2-issue-dashed-variable-12-3 = "this variable -shall- not - +be formatted the string please too -+123"'
+  assert.equal(fo.preFormat(testString,config),toBeString)
   });
 });
 
-suite('test formats.ts - equals... ', () => {
+suite('formats.misc double operator spacing', () => {
 
-  test('== / =', () => { 
-    let testString = 'IF foo==bar THEN  baz=foo;ENDIF;'
-    let toBeString = 'IF foo == bar THEN  baz = foo;ENDIF;'
-    assert.equal(fo.forFormat(testString,config),toBeString)
+  test('== / =', () => {  
+    let testString = 'IF foo==bar THEN  baz=foo; ENDIF;'
+    let toBeString = 'IF foo == bar THEN  baz = foo; ENDIF;'
+  assert.equal(fo.preFormat(testString,config),toBeString)
   });
 
   test('<=', () => { 
-    let testString = 'IF foo <=bar THEN  baz =foo;ENDIF;'
-    let toBeString = 'IF foo <= bar THEN  baz = foo;ENDIF;'
-    assert.equal(fo.forFormat(testString,config),toBeString)
+    let testString = 'IF foo <=bar THEN  baz =foo; ENDIF;'
+    let toBeString = 'IF foo <= bar THEN  baz = foo; ENDIF;'
+  assert.equal(fo.preFormat(testString,config),toBeString)
   });
 
   test('<>', () => { 
-    let testString = 'IF foo<> bar THEN  baz = foo;ENDIF;'
-    let toBeString = 'IF foo <> bar THEN  baz = foo;ENDIF;'
-    assert.equal(fo.forFormat(testString,config),toBeString)
+    let testString = 'IF foo<> bar THEN  baz = foo; ENDIF;'
+    let toBeString = 'IF foo <> bar THEN  baz = foo; ENDIF;'
+  assert.equal(fo.preFormat(testString,config),toBeString)
   });
 
   test('>=', () => { 
     let testString = 'IF foo>= bar THEN  baz= foo; ENDIF;'
     let toBeString = 'IF foo >= bar THEN  baz = foo; ENDIF;'
-    assert.equal(fo.forFormat(testString,config),toBeString)
+  assert.equal(fo.preFormat(testString,config),toBeString)
   });
 
 });

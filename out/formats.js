@@ -3,12 +3,12 @@
 // Single Source of Truth: modify formatting rules in formatCore.ts
 // This file provides stable export names for the rest of the extension.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forFormat = forFormat;
+exports.preFormat = preFormat;
 exports.formatNestings = formatNestings;
 exports.fullFormatPipeline = fullFormatPipeline;
 const formatCore_1 = require("./formatCore");
-function forFormat(text, config) {
-    return (0, formatCore_1.forFormat)(text, config);
+function preFormat(text, config) {
+    return (0, formatCore_1.preFormat)(text, config);
 }
 function formatNestings(text, config) {
     return (0, formatCore_1.formatNestings)(text, config);

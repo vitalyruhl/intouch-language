@@ -1,7 +1,7 @@
 
 import * as vscode from 'vscode';
 import { workspace, window } from 'vscode';
-import { forFormat, formatNestings } from './formats';
+import { preFormat, formatNestings } from './formats';
 import { CRLF } from "./const";
 
 export let config: any = {};
@@ -20,7 +20,7 @@ function format(range: vscode.Range, document: vscode.TextDocument, config: any)
 	let formatted: string = document.getText(range);
 
 	// 1. Keyword / Operator Formatting
-	formatted = forFormat(formatted, config);
+	formatted = preFormat(formatted, config);
 	// 2. Nestings
 	formatted = formatNestings(formatted, config);
 

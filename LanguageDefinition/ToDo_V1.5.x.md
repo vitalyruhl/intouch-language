@@ -17,3 +17,4 @@ Goal: Stabilize current formatting rules, consolidate tests, no behavioral chang
 
 ## Tests
 - Dynamic formatting settings testrunner: Implement a runner that can adjust settings (e.g. EmptyLinesAlsoInComment, allowedNumberOfEmptyLines) per test case to cover all configuration variants.
+- idempotent formatting: Ensure that applying the formatter multiple times does not change the output after the first application (pure function behavior). but for all.test.vbi!
