@@ -20,7 +20,7 @@ a= b;{    comment    }c = d;
 }
 
 {Format3: other spacing }
-StartApp ta +"\Scheduler.exe " + SQLServer +" " + Database_user+ " " +Database_pwd ;
+StartApp ta +"\Scheduler.exe " + SQLServer +" test ;in text;" + Database_user+ " " +Database_pwd ;
 
 {test for spacing in string --> DONT FORMAT THIS!}
 Funkt= "-";

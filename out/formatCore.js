@@ -125,7 +125,6 @@ function preFormat(text, config) {
                             }
                             // NEW rule: minus between identifiers (letters/underscore) must always be spaced as binary
                             let isBinary = !(op === '-' && unaryMinus);
-                            // Removed previous forcing of spacing around letter - letter; dash may belong to dashed variable.
                             // Space before (binary only)
                             if (isBinary && buf.length > 0 && !/[ \t\r\n]/.test(buf[buf.length - 1])) {
                                 buf += ' ';
@@ -156,7 +155,7 @@ function preFormat(text, config) {
     buf = buf
         .replace(/\r\r\n/g, const_1.CRLF) // collapse CRCRLF -> CRLF
         .replace(/\r(?!\n)/g, ''); // remove lone CR not followed by LF
-    let lines = buf.replace(/\s+;/g, ';').split(const_1.CRLF).map(l => l.replace(/\s+$/g, ''));
+    let lines = buf.split(const_1.CRLF).map(l => l.replace(/\s+$/g, ''));
     // Preserve single blank lines: collapse only runs >1 here (final pipeline still may apply config rules).
     const newLines = [];
     let emptyRun = 0;
@@ -180,37 +179,89 @@ function preFormat(text, config) {
     normalized = (() => {
         let out = '';
         let inStr = false;
+        let inComment = false;
+        let inIfDepth = 0; // >0 while inside IF (...)
+        const isIdentStart = (c) => /[A-Za-z]/.test(c);
         for (let i = 0; i < normalized.length; i++) {
-            const ch = normalized[i];
+            let ch = normalized[i];
             if (ch === '"') {
                 inStr = !inStr;
                 out += ch;
                 continue;
             }
             if (!inStr) {
-                // Rule: ensure single space after semicolon if immediately followed by '{' (comment start)
-                if (ch === ';' && normalized[i + 1] === '{') {
-                    out += '; ';
-                    i += 0; // only consumed ';'
+                // Track simple single-line comment braces { ... }
+                if (ch === '{') {
+                    inComment = true;
+                    out += ch;
                     continue;
                 }
-                // Rule: ensure space after closing '}' of a comment if next non-space is an identifier/keyword char
+                if (ch === '}' && inComment) {
+                    inComment = false; /* fall through to spacing rule below */
+                }
+                // IF keyword normalization (only when not in comment) patterns: if(  / if (
+                if (!inComment && (ch === 'i' || ch === 'I') && (normalized[i + 1] === 'f' || normalized[i + 1] === 'F')) {
+                    // Normalize IF keyword followed by '(': style 'IF (a ... ) THEN'
+                    let j = i + 2; // after 'if'
+                    while (j < normalized.length && normalized[j] === ' ')
+                        j++;
+                    if (normalized[j] === '(') {
+                        out += 'IF (';
+                        // skip any spaces after '('
+                        let k = j + 1;
+                        while (k < normalized.length && normalized[k] === ' ')
+                            k++;
+                        inIfDepth = 1;
+                        i = k - 1; // continue from first non-space after '('
+                        continue;
+                    }
+                }
+                // After ')' followed by THEN (case-insensitive, maybe without space)
+                if (!inComment && ch === ')') {
+                    // If we're closing IF (...), remove any trailing spaces before ')'
+                    if (inIfDepth > 0) {
+                        while (out.length > 0 && out[out.length - 1] === ' ')
+                            out = out.slice(0, -1);
+                        inIfDepth = 0;
+                    }
+                    out += ')';
+                    // Handle THEN following
+                    let j = i + 1;
+                    while (j < normalized.length && normalized[j] === ' ')
+                        j++;
+                    const ahead = normalized.slice(j, j + 4).toLowerCase();
+                    if (ahead === 'then') {
+                        out += ' THEN';
+                        i = j + 3;
+                        continue;
+                    }
+                    // generic: ensure space after ')' if next is identifier
+                    let next = normalized[i + 1];
+                    if (next && isIdentStart(next)) {
+                        out += ' ';
+                    }
+                    continue;
+                }
+                // Rule: ensure single space after semicolon if next char (non newline) is not space
+                if (!inComment && ch === ';') {
+                    const next = normalized[i + 1];
+                    if (next && next !== ' ' && next !== '\r' && next !== '\n') {
+                        out += '; ';
+                        continue;
+                    }
+                }
+                // Rule: ensure space after closing '}' of a comment if next non-space is identifier
                 if (ch === '}') {
                     let j = i + 1;
                     while (j < normalized.length && normalized[j] === ' ')
                         j++;
-                    if (j < normalized.length && /[A-Za-z]/.test(normalized[j])) {
-                        // if there was no space, add one
-                        if (normalized[i + 1] !== ' ') {
-                            out += '} ';
-                            i = i; // handled current '}'
-                            continue;
-                        }
+                    if (j < normalized.length && isIdentStart(normalized[j]) && normalized[i + 1] !== ' ') {
+                        out += '} ';
+                        continue;
                     }
                 }
-                // Removed letter - letter subtraction normalization; dash inside identifiers is preserved as-is.
                 // Ensure space after pattern X -Y (but not inside dashed identifiers) => convert 'X -Y' to 'X - Y'
-                if (/[A-Za-z0-9_]/.test(ch) && normalized[i + 1] === ' ' && normalized[i + 2] === '-' && /[A-Za-z_]/.test(normalized[i + 3])) {
+                if (!inComment && /[A-Za-z0-9_]/.test(ch) && normalized[i + 1] === ' ' && normalized[i + 2] === '-' && /[A-Za-z_]/.test(normalized[i + 3])) {
                     // Check that this is not inside a multi-dash variable: look backwards to start of run and forwards to end
                     let back = out.length - 1;
                     while (back >= 0 && /[A-Za-z0-9$-]/.test(out[back]))
@@ -224,6 +275,17 @@ function preFormat(text, config) {
                         i += 3;
                         continue;
                     }
+                }
+                // Comma spacing in argument lists: remove preceding spaces, enforce single space after unless next is ) or EOL
+                if (!inComment && ch === ',') {
+                    while (out.length > 0 && out[out.length - 1] === ' ')
+                        out = out.slice(0, -1);
+                    out += ',';
+                    let next = normalized[i + 1];
+                    if (next && next !== ' ' && next !== ')' && next !== '\r' && next !== '\n') {
+                        out += ' ';
+                    }
+                    continue;
                 }
             }
             out += ch;
@@ -259,12 +321,16 @@ function formatNestings(text, config) {
             multilineComment = false;
         let str = codeFragments[i].match(const_1.REGEX.gm_GET_STRING);
         if (str) {
-            let str2 = str.map((item) => {
+            // Protect ALL string literals on the line by masking spaces/tabs/semicolons
+            let protectedLine = codeFragments[i];
+            for (const item of str) {
                 let strw = item.replace(/\s(?<!\t)/gim, "\0");
                 strw = strw.replace(/\t/gim, "u0001");
-                return codeFragments[i].replace(item, strw);
-            });
-            codeFragments[i] = str2[0].replace(const_1.REGEX.gm_MOR_2_WSP, " ");
+                // Protect semicolons inside string so later rules don't re-space them
+                strw = strw.replace(/;/g, 'u0002');
+                protectedLine = protectedLine.replace(item, strw);
+            }
+            codeFragments[i] = protectedLine.replace(const_1.REGEX.gm_MOR_2_WSP, " ");
             if (!multilineComment) {
                 for (let item in const_1.NO_SPACE_ITEMS) {
                     // before
@@ -279,7 +345,10 @@ function formatNestings(text, config) {
                 // remove space(s) before ';'
                 codeFragments[i] = codeFragments[i].replace(/\s+;/g, ';');
             }
-            codeFragments[i] = codeFragments[i].replace(/\0/gim, ' ').replace(/u0001/gim, '\t');
+            codeFragments[i] = codeFragments[i]
+                .replace(/\0/gim, ' ')
+                .replace(/u0001/gim, '\t')
+                .replace(/u0002/gim, ';');
         }
         if (!isEmptyLine && !multilineComment) {
             let exclude = false;
