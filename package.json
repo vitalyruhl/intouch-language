@@ -175,7 +175,7 @@
 		}
 	},
 	"devDependencies": {
-		"esbuild": "^0.24.0",
+		"esbuild": "^0.25.10",
 		"@types/glob": "^9.0.0",
 		"@types/mocha": "^10.0.10",
 		"@types/node": "^24.5.2",
