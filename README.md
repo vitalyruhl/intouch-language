@@ -181,11 +181,12 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 # What's new in Intouch-Language
 
-### V1.4.1
+### V1.4.1-V1.4.3
 
 - Add math / intrinsic style functions for uppercasing in formatter 2025-09-25: sqr, sin, cos, tan, atn, exp, log, int, frac, round, rnd, sqrt
 - bugfix in formatter for '>=' operator
 - bugfix in deletion of last line in file
+- update dependencies
 
 
 ### V1.4.0
@@ -205,7 +206,7 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 ### V1.2.3
 
-- Bome bugfixes
+- Bomp bugfixes
 
 ### V1.2.2
 
