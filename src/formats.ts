@@ -38,10 +38,13 @@ export function formatNestings(text: string, config: any): string {
 
     for (let i = 0; i < codeFragments.length; i++) {
       LineCount = i + 1; //only for Log and Error
+      let isEmptyLine = false;
 
+      // strip trailing whitespace early (but keep intentionally blank lines)
+      codeFragments[i] = codeFragments[i].replace(/\s+$/g, "");
       if (codeFragments[i] === "") {
-        //not in empty lines goes faster...
-        continue;
+        // Preserve empty line (do not indent, do not alter nesting counters)
+        isEmptyLine = true;
       }
 
       //check for multiline comment
@@ -100,11 +103,11 @@ export function formatNestings(text: string, config: any): string {
           if (config.FormatAlsoInComment) {
             codeFragments[i] = codeFragments[i].replace(/;(?!\s)/g, `; `);
           } else {
-            codeFragments[i] = codeFragments[i].replace(
-              /(?![^{]*});(?!\s)/g,
-              `; `
-            );
+            codeFragments[i] = codeFragments[i].replace(/(?![^{]*});(?!\s)/g, `; `);
           }
+
+          // remove space(s) directly before semicolon (but not inside strings already extracted above)
+          codeFragments[i] = codeFragments[i].replace(/\s+;/g, ";");
         }
         //! END New formatting's
         //!-----------------------------------------------------------------------------------
@@ -115,7 +118,7 @@ export function formatNestings(text: string, config: any): string {
           .replace(/u0001/gim, "\t"); //replace ~ back in whitespaces
       }
 
-      if (!multilineComment) {
+      if (!isEmptyLine && !multilineComment) {
         let exclude: boolean = false;
         codeFragments[i] = codeFragments[i].replace(REGEX.gm_GET_NESTING, ""); //remove all Nestings
 
@@ -220,16 +223,18 @@ export function formatNestings(text: string, config: any): string {
         }
       }
 
-      if (nestingCounterPrevious !== nestingCounter) {
-        codeFragments[i] =
-          getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
-        nestingCounterPrevious = nestingCounter;
-        thisLineBack = false; //reset this Flag
-      } else {
-        codeFragments[i] =
-          getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
-        thisLineBack = false; //reset this Flag
-      }
+      if (!isEmptyLine) {
+        if (nestingCounterPrevious !== nestingCounter) {
+          codeFragments[i] =
+            getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
+          nestingCounterPrevious = nestingCounter;
+          thisLineBack = false; //reset this Flag
+        } else {
+          codeFragments[i] =
+            getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
+          thisLineBack = false; //reset this Flag
+        }
+      } // empty line stays "" without indentation tabs
     }
 
     // combine all into new text and return it
@@ -452,9 +457,14 @@ export function forFormat(text: string, config: any): string {
       }
     } //not modified
   } //for
-  //console.log(buf);
+  // Normalize: remove spaces before semicolons and trim trailing whitespace per line
+  let normalized = buf
+    .replace(/\s+;/g, ";")
+    .split(CRLF)
+    .map(line => line.replace(/\s+$/g, ""))
+    .join(CRLF);
 
-  return buf;
+  return normalized;
 } //function
 
 function CheckCRLForWhitespace(s: string): boolean {

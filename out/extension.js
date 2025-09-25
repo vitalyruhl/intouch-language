@@ -1,6 +1,7 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deactivate = exports.activate = void 0;
+exports.activate = activate;
+exports.deactivate = deactivate;
 const vscode = require("vscode");
 const functions_1 = require("./functions");
 function activate(context) {
@@ -26,8 +27,6 @@ function activate(context) {
         }
     });
 }
-exports.activate = activate;
 //It will be invoked on deactivation
 function deactivate() { }
-exports.deactivate = deactivate;
 //# sourceMappingURL=extension.js.map

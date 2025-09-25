@@ -2,11 +2,11 @@
 	"name": "intouch-language",
 	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021-2022 vitalyruhl",
 	"description": "Intouch-Language syntax highlighting, formatter and code snippets for VSCode",
-	"version": "1.4.0",
+	"version": "1.4.1",
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
-		"vscode": "^1.73.1"
+		"vscode": "^1.104.0"
 	},
 	"repository": {
 		"type": "git",
@@ -153,19 +153,21 @@
 	"scripts": {
 		"start": "nodemon --watch src src/index.js",
 		"build:theme": "node src/index.js",
-		"vscode:prepublish": "npm run compile",
-		"postinstall": "npm run compile && node src/index.js",
-		"compile": "tsc -p ./ && node src/index.js",
+		"vscode:prepublish": "npm run compile && npm run build:theme",
+		"postinstall": "npm run compile",
+		"compile": "tsc -p ./",
 		"test": "npm run compile && node ./out/test/runTest.js",
+		"update:fixtures": "npm run compile && node ./scripts/update-fixtures.js",
 		"watch": "tsc -watch -p ./",
 		"lint": "eslint . --ext .ts,.tsx",
-		"publish-patch": "npm run compile && vsce package && vsce publish patch",
-		"publish-minor": "npm run compile && vsce package && vsce publish minor",
-		"publish-major": "npm run compile && vsce package && vsce publish major",
-		"publish": "npm run compile && vsce package && vsce publish",
-		"refresh": "rm ./out -rf && rm ./package-lock.json -f && rm ./node_modules -rf && npm i && npm run compile",
-		"clear:all": "rm ./out -rf && rm ./package-lock.json -f && rm ./node_modules -rf",
-		"clear:out": "rm ./out -rf"
+		"publish-patch": "npm run compile && npm run build:theme && vsce package && vsce publish patch",
+		"publish-minor": "npm run compile && npm run build:theme && vsce package && vsce publish minor",
+		"publish-major": "npm run compile && npm run build:theme && vsce package && vsce publish major",
+		"publish": "npm run compile && npm run build:theme && vsce package && vsce publish",
+		"clean:all": "rimraf ./out ./node_modules ./package-lock.json",
+		"clear:all": "npm run clean:all",
+		"clear:out": "rimraf ./out",
+		"refresh": "npm run clean:all && npm install && npm run compile && npm run build:theme"
 	},
 	"capabilities": {
 		"virtualWorkspaces": true,
@@ -175,26 +177,26 @@
 		}
 	},
 	"devDependencies": {
-		"@types/glob": "^8.0.0",
-		"@types/mocha": "^10.0.0",
-		"@types/node": "^18.11.9",
-		"@types/vscode": "^1.73.1",
-		"@typescript-eslint/eslint-plugin": "^5.44.0",
-		"@typescript-eslint/parser": "^5.44.0",
-		"@vscode/test-electron": "^2.2.0",
-		"eslint": "^8.28.0",
-		"glob": "^8.0.3",
-		"mocha": "^10.1.0",
+		"@types/glob": "^9.0.0",
+		"@types/mocha": "^10.0.10",
+		"@types/node": "^24.5.2",
+		"@types/vscode": "^1.104.0",
+		"@typescript-eslint/eslint-plugin": "^8.44.1",
+		"@typescript-eslint/parser": "^8.44.1",
+		"@vscode/test-electron": "^2.5.2",
+		"color": "^5.0.2",
+		"cross-env": "^10.0.0",
+		"eslint": "^9.36.0",
+		"glob": "^11.0.3",
+		"mocha": "^11.7.2",
+		"nodemon": "^3.1.10",
+		"rimraf": "^6.0.1",
 		"source-map-support": "^0.5.21",
-		"typescript": "^4.9.3",
-		"color": "^4.2.3",
-		"nodemon": "^2.0.20",
-		"@primer/primitives": "^2.0.1"
+		"typescript": "^5.9.2"
 	},
 	"__metadata": {
 		"id": "834eb420-2978-4100-b7de-2430fc88e429",
 		"publisherDisplayName": "Vitaly Ruhl",
 		"publisherId": "448eaf8e-6bd4-4b72-b6cd-9af578a789d2"
-	},
-	"dependencies": {}
+	}
 }

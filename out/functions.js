@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cloneArray = exports.log = exports.info = exports.getConfig = exports.formatTE = exports.config = void 0;
+exports.info = exports.config = void 0;
+exports.formatTE = formatTE;
+exports.getConfig = getConfig;
+exports.log = log;
+exports.cloneArray = cloneArray;
 const vscode = require("vscode");
 const vscode_1 = require("vscode");
 const formats_1 = require("./formats");
@@ -12,7 +16,6 @@ function formatTE(range) {
     const newText = format(range, document, exports.config);
     return [vscode.TextEdit.replace(range, newText)];
 }
-exports.formatTE = formatTE;
 function format(range, document, config) {
     // PURE IMPLEMENTATION (Refactor 2025-09-14): Keine direkten Editor-Seiteneffekte mehr.
     let regex;
@@ -63,7 +66,6 @@ function getConfig() {
     console.log('getConfig():', exports.config);
     return exports.config;
 }
-exports.getConfig = getConfig;
 /**
  * @param cat Type String --> define Category [info,warn,error]
  * @param o   Rest Parameter, Type Any --> Data to Log
@@ -149,9 +151,7 @@ function log(cat, ...o) {
         return;
     }
 }
-exports.log = log;
 function cloneArray(arr) {
     return [...arr];
 }
-exports.cloneArray = cloneArray;
 //# sourceMappingURL=functions.js.map

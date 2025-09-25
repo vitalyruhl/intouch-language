@@ -11,9 +11,7 @@
   <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/logo.png" alt="Intouch-Language Logo" width="10%" /></a>
 </p>
 
-[![Version](https://vsmarketplacebadge.apphb.com/version/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
-[![Installs](https://vsmarketplacebadge.apphb.com/installs-short/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
-[![Rating](https://vsmarketplacebadge.apphb.com/rating/Vitaly-ruhl.intouch-language.svg)](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
+<!-- Badges mit SVG entfernt für Marketplace Richtlinien. Optional PNG-Varianten hinzufügen. -->
 
 <br>
 <br>
@@ -25,7 +23,7 @@
 
 <p align="center" bgcolor:=#3f3f3f>
   <br />
-  <a title="Intouch" href="https://factorysoftware.de/"><img src="https://factorysoftware.de/resources/uploads/2020/02/wonderware-germany-austria-footer.png" alt="Intouch" /></a>   
+  <a title="Intouch" href="https://factorysoftware.de/"><img src="https://factorysoftware.de/resources/uploads/2020/02/wonderware-germany-austria-footer.png" alt="Intouch" /></a>
 </p>
 
 <br>
@@ -183,6 +181,13 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 # What's new in Intouch-Language
 
+### V1.4.1
+
+- Add math / intrinsic style functions for uppercasing in formatter 2025-09-25: sqr, sin, cos, tan, atn, exp, log, int, frac, round, rnd, sqrt
+- bugfix in formatter for '>=' operator
+- bugfix in deletion of last line in file
+
+
 ### V1.4.0
 
 - Correct some bugs in regex for syntax-highlighting
@@ -268,6 +273,6 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
 
 ## Copyright
 
-`2021-2022 (c)Vitaly Ruhl`
+`2021-2025 (c)Vitaly Ruhl`
 
 License: GNU General Public License v3.0

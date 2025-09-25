@@ -138,4 +138,3 @@ NEXT;
 RestartWindowViewer( );
 SYS_TSClient1_Name = TseGetClientNodeName( );
 SYS_CurrentWinUser = InfoDosEnv("USERNAME"); 
-

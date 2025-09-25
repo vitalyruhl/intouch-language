@@ -11,14 +11,20 @@ export const BACKSLASH = "\\";
 export const FORMATS: string[] = [TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH];
 export const SINGLE_OPERATORS: string[] = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
 // export const SINGLE_OPERATORS: string[] = ['=', '+', '<', '>', '*', '/', '%', '!', '~', '|'];//23.01.2022 remove - as single Operator, because it can be used in variables
-export const DOUBLE_OPERATORS: string[] = ['==', '<>', '<=', '=>'];
+// BUGFIX 2025-09-25: '=>" war fälschlich statt '>=' definiert und führte dazu,
+// dass das Formatieren '>  =' erzeugte (Trennung von '>' und '='). Korrigiert zu '>='.
+export const DOUBLE_OPERATORS: string[] = ['==', '<>', '<=', '>='];
 export const NO_SPACE_ITEMS: string[] = ['(', ')', '[', ']', ';'];
 export const TRENNER: string[] = [';', ' '];
 
 
-export const KEYWORDS: string[] = ["NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", "next", "DIM", "THEN",
-    "EXIT", "EACH", "STEP", "IN", "RETURN", "CALL", "MOD", "AND", "NOT", "IS",
-    "OR", "XOR", "Abs", "TO", "SHL", "SHR", "discrete", "integer", "real", "message"];
+export const KEYWORDS: string[] = [
+  "NULL", "EOF", "AS", "IF", "ENDIF", "ELSE", "WHILE", "FOR", "next", "DIM", "THEN",
+  "EXIT", "EACH", "STEP", "IN", "RETURN", "CALL", "MOD", "AND", "NOT", "IS",
+  "OR", "XOR", "Abs", "TO", "SHL", "SHR", "discrete", "integer", "real", "message",
+  // Added math / intrinsic style functions for uppercasing in formatter 2025-09-25
+  "sqr", "sin", "cos", "tan", "atn", "exp", "log", "int", "frac", "round", "rnd", "sqrt"
+];
 
 /* Misk keywords from .json
   MOD|AND|NOT|IS|OR|XOR|Abs|TO|SHL|SHR

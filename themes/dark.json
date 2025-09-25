@@ -16,13 +16,19 @@
     "button.foreground": "#dcffe4",
     "button.hoverBackground": "#22863a",
     "checkbox.background": "#444d56",
-    "checkbox.border": "#1b1f23",
+    "checkbox.border": [
+      "#1b1f23"
+    ],
     "dropdown.background": "#2f363d",
-    "dropdown.border": "#1b1f23",
+    "dropdown.border": [
+      "#1b1f23"
+    ],
     "dropdown.foreground": "#959da5",
     "dropdown.listBackground": "#24292e",
     "input.background": "#2f363d",
-    "input.border": "#1b1f23",
+    "input.border": [
+      "#1b1f23"
+    ],
     "input.foreground": "#959da5",
     "input.placeholderForeground": "#959da5",
     "badge.foreground": "#c8e1ff",
@@ -32,21 +38,31 @@
     "titleBar.activeBackground": "#24292e",
     "titleBar.inactiveForeground": "#959da5",
     "titleBar.inactiveBackground": "#1f2428",
-    "titleBar.border": "#1b1f23",
+    "titleBar.border": [
+      "#1b1f23"
+    ],
     "activityBar.foreground": "#959da5",
     "activityBar.inactiveForeground": "#6a737d",
     "activityBar.background": "#24292e",
-    "activityBarBadge.foreground": "#fff",
+    "activityBarBadge.foreground": [
+      "#ffffff"
+    ],
     "activityBarBadge.background": "#0366d6",
     "activityBar.activeBorder": "#f9826c",
-    "activityBar.border": "#1b1f23",
+    "activityBar.border": [
+      "#1b1f23"
+    ],
     "sideBar.foreground": "#d1d5da",
     "sideBar.background": "#1f2428",
-    "sideBar.border": "#1b1f23",
+    "sideBar.border": [
+      "#1b1f23"
+    ],
     "sideBarTitle.foreground": "#959da5",
     "sideBarSectionHeader.foreground": "#959da5",
     "sideBarSectionHeader.background": "#1f2428",
-    "sideBarSectionHeader.border": "#1b1f23",
+    "sideBarSectionHeader.border": [
+      "#1b1f23"
+    ],
     "list.hoverForeground": "#959da5",
     "list.inactiveSelectionForeground": "#959da5",
     "list.activeSelectionForeground": "#959da5",
@@ -60,7 +76,9 @@
     "notificationCenterHeader.background": "#24292e",
     "notifications.foreground": "#959da5",
     "notifications.background": "#2f363d",
-    "notifications.border": "#1b1f23",
+    "notifications.border": [
+      "#1b1f23"
+    ],
     "notificationsErrorIcon.foreground": "#ea4a5a",
     "notificationsWarningIcon.foreground": "#ffab70",
     "notificationsInfoIcon.foreground": "#79b8ff",
@@ -70,22 +88,34 @@
     "quickInput.foreground": "#959da5",
     "statusBar.foreground": "#d1d5da",
     "statusBar.background": "#24292e",
-    "statusBar.border": "#1b1f23",
+    "statusBar.border": [
+      "#1b1f23"
+    ],
     "statusBar.noFolderBackground": "#24292e",
-    "statusBar.debuggingBackground": "#931c06",
-    "statusBar.debuggingForeground": "#fff",
+    "statusBar.debuggingBackground": "#f9826c",
+    "statusBar.debuggingForeground": [
+      "#ffffff"
+    ],
     "statusBarItem.prominentBackground": "#282e34",
     "editorGroupHeader.tabsBackground": "#1f2428",
-    "editorGroupHeader.tabsBorder": "#1b1f23",
-    "editorGroup.border": "#1b1f23",
+    "editorGroupHeader.tabsBorder": [
+      "#1b1f23"
+    ],
+    "editorGroup.border": [
+      "#1b1f23"
+    ],
     "tab.activeForeground": "#959da5",
     "tab.inactiveForeground": "#959da5",
     "tab.inactiveBackground": "#1f2428",
     "tab.activeBackground": "#24292e",
     "tab.hoverBackground": "#24292e",
     "tab.unfocusedHoverBackground": "#24292e",
-    "tab.border": "#1b1f23",
-    "tab.unfocusedActiveBorderTop": "#1b1f23",
+    "tab.border": [
+      "#1b1f23"
+    ],
+    "tab.unfocusedActiveBorderTop": [
+      "#1b1f23"
+    ],
     "tab.activeBorder": "#24292e",
     "tab.unfocusedActiveBorder": "#24292e",
     "tab.activeBorderTop": "#f9826c",
@@ -125,9 +155,13 @@
     "scrollbarSlider.background": "#6a737d33",
     "scrollbarSlider.hoverBackground": "#6a737d44",
     "scrollbarSlider.activeBackground": "#6a737d88",
-    "editorOverviewRuler.border": "#1b1f23",
+    "editorOverviewRuler.border": [
+      "#1b1f23"
+    ],
     "panel.background": "#1f2428",
-    "panel.border": "#1b1f23",
+    "panel.border": [
+      "#1b1f23"
+    ],
     "panelTitle.activeBorder": "#f9826c",
     "panelTitle.activeForeground": "#959da5",
     "panelTitle.inactiveForeground": "#959da5",

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.forFormat = exports.formatNestings = void 0;
+exports.formatNestings = formatNestings;
+exports.forFormat = forFormat;
 const const_1 = require("./const");
 const const_2 = require("./const");
 const functions_1 = require("./functions");
@@ -30,9 +31,12 @@ function formatNestings(text, config) {
         codeFragments = text.split(const_1.CRLF); // split code by line (behält ggf. leeres letztes Fragment wenn CRLF am Ende)
         for (let i = 0; i < codeFragments.length; i++) {
             LineCount = i + 1; //only for Log and Error
+            let isEmptyLine = false;
+            // strip trailing whitespace early (but keep intentionally blank lines)
+            codeFragments[i] = codeFragments[i].replace(/\s+$/g, "");
             if (codeFragments[i] === "") {
-                //not in empty lines goes faster...
-                continue;
+                // Preserve empty line (do not indent, do not alter nesting counters)
+                isEmptyLine = true;
             }
             //check for multiline comment
             //REGEX_gm_GET_NESTING
@@ -81,6 +85,8 @@ function formatNestings(text, config) {
                     else {
                         codeFragments[i] = codeFragments[i].replace(/(?![^{]*});(?!\s)/g, `; `);
                     }
+                    // remove space(s) directly before semicolon (but not inside strings already extracted above)
+                    codeFragments[i] = codeFragments[i].replace(/\s+;/g, ";");
                 }
                 //! END New formatting's
                 //!-----------------------------------------------------------------------------------
@@ -89,7 +95,7 @@ function formatNestings(text, config) {
                     .replace(/\0/gim, " ")
                     .replace(/u0001/gim, "\t"); //replace ~ back in whitespaces
             }
-            if (!multilineComment) {
+            if (!isEmptyLine && !multilineComment) {
                 let exclude = false;
                 codeFragments[i] = codeFragments[i].replace(const_3.REGEX.gm_GET_NESTING, ""); //remove all Nestings
                 // if (i == 45) {
@@ -185,17 +191,19 @@ function formatNestings(text, config) {
                     }
                 }
             }
-            if (nestingCounterPrevious !== nestingCounter) {
-                codeFragments[i] =
-                    getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
-                nestingCounterPrevious = nestingCounter;
-                thisLineBack = false; //reset this Flag
-            }
-            else {
-                codeFragments[i] =
-                    getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
-                thisLineBack = false; //reset this Flag
-            }
+            if (!isEmptyLine) {
+                if (nestingCounterPrevious !== nestingCounter) {
+                    codeFragments[i] =
+                        getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
+                    nestingCounterPrevious = nestingCounter;
+                    thisLineBack = false; //reset this Flag
+                }
+                else {
+                    codeFragments[i] =
+                        getNesting(nestingCounterPrevious, thisLineBack) + codeFragments[i];
+                    thisLineBack = false; //reset this Flag
+                }
+            } // empty line stays "" without indentation tabs
         }
         // combine all into new text and return it
         for (let i = 0; i < codeFragments.length; i++) {
@@ -224,7 +232,6 @@ function formatNestings(text, config) {
     }
     return buf;
 }
-exports.formatNestings = formatNestings;
 //edit.delete(line.rangeIncludingLineBreak);
 function getNesting(n, thisLineBack) {
     let temp = "";
@@ -392,10 +399,14 @@ function forFormat(text, config) {
             }
         } //not modified
     } //for
-    //console.log(buf);
-    return buf;
+    // Normalize: remove spaces before semicolons and trim trailing whitespace per line
+    let normalized = buf
+        .replace(/\s+;/g, ";")
+        .split(const_1.CRLF)
+        .map(line => line.replace(/\s+$/g, ""))
+        .join(const_1.CRLF);
+    return normalized;
 } //function
-exports.forFormat = forFormat;
 function CheckCRLForWhitespace(s) {
     //https://stackoverflow.com/questions/69709447/problem-to-create-a-regex-expression-in-js-to-select-keywords-in-text-but-excl/69734464?noredirect=1#comment123265818_69734464
     return const_2.FORMATS.concat(const_2.SINGLE_OPERATORS, const_2.DOUBLE_OPERATORS, const_2.TRENNER).some((item) => s === item);

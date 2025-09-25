@@ -12,10 +12,11 @@
     { "include": "#dotfields" },
     { "include": "#strings" },
     { "include": "#HermesKeywords" },
+    { "include": "#variables" },
     { "include": "#several" }
   ],
   "repository": {
-    "MISC-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {},
+    "Ground-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {},
 
     "keywords": {
       "patterns": [
@@ -37,17 +38,17 @@
         {
           "match": "(?i:\\s*\\b(Ack|AddPermission|almAckAll|almAckDisplay|almAckGroup|almAckPriority|almAckRecent|almAckSelect|almAckSelectedGroup|almAckSelectedPriority|almAckSelectedTag|almAckTag|almDefQuery|almMoveWindow|almQuery|almSelectAll|almSelectGroup|almSelectionCount|almSelectItem|almSelectPriority|almSelectTag|almSetQueryByName|almShowStats|almSuppressAll|almSuppressDisplay|almSuppressGroup|almSuppressPriority|almSuppressRetain|almSuppressSelected|almSuppressSelectedGroup|almSuppressSelectedPriority|almSuppressSelectedTag|almSuppressTag|almUnselectAll|almUnsuppressAll|AnnotateLayout|APUFindAlarmGroupInstance|APUFindFileInstance|APUFindPrinterInstance|APUGetAlarmGroupText|APUGetConfigurationFilePath|APUGetInstanceCount|APUGetPrinterJobCount|APUGetPrinterName|APUGetPrinterStatus|APUGetQueryAlarmState|APUGetQueryFromPriority|APUGetQueryProcessingState|APUGetQueryToPriority|APUIsInstanceUsed|APUSetAlarmGroupText|APUSetQueryAlarmState|APUSetQueryFromPriority|APUSetQueryToPriority|APUSetTimeoutValues|APUStartInstance|APUStartQuery|APUStopInstance|APUStopQuery|APUTranslateErrorCode)\\b\\s*)",
           "name": "keyword.function",
-          "comment": "IT-functions Misc Teil 1"
+          "comment": "IT-functions Ground Teil 1"
         },
         {
           "match": "(?i:\\s*\\b(AttemptInvisibleLogon|ChangePassword|ChangeWindowColor|CreateFilenameFromDate|DateTimeGMT|DialogStringEntry|DialogValueEntry|EnableDisableKeys|FilePrint|FileSelect|GetAccountStatus|GetDiscOffMsg|GetDiscOnMsg|GetNodeName|GetPropertyD|GetPropertyI|GetPropertyM|GetWindowName|Hide|HideSelf|HTGetLastError|HTGetPenName|HTGetTimeAtScooter|HTGetTimeStringAtScooter|HTGetValue|HTGetValueAtScooter|HTGetValueAtZone|HTScrollLeft|HTScrollRight|HTSelectTag|HTSetPenName|HTUpdateToCurrentTime|HTZoomIn|HTZoomOut|InfoAppStatus|InfoAppTitleExpand|InfoWinEnv|InTouchVersion|InvisibleVerifyCredentials|IODisableFailover|IOForceFailover|IOGetAccessNameStatus|IOGetActiveSourceName|IOGetApplication|IOGetNode|IOGetTopic|IOReinitAccessName|IOReinitialize|IOSetAccessName|IOSetItem|IOSetRemoteReferences|IOStartUninitConversations|IsAnyAsyncFunctionBusy|IsAssignedRole|ITXAppActivate|ITXCheckDate|ITXConvertDate|ITXConvertDateString|ITXConvertDateTime|ITXConvertDateTimeString)\\b\\s*)",
           "name": "keyword.function",
-          "comment": "IT-functions Misc Teil 2"
+          "comment": "IT-functions Ground Teil 2"
         },
         {
           "match": "(?i:\\s*\\b(ITXCreateDate|ITXCreateDateTime|ITXCreateDateTimeUTC|ITXShowHelpByNumber|ITXShowHelpByString|LaunchTagViewer|LogMessage|Logoff|LogonCurrentUser|MessageBox|MoveWindow|NumberRecipes|OpenWindowsList|PlaySound|PostLogonDialog|PrintHT|PrintScreen|PrintWindow|ptGetTrendType|ptLoadTrendCfg|ptPanCurrentPen|ptPanTime|ptPauseTrend|ptRefreshTrend|ptSaveTrendCfg|ptSetCurrentPen|ptSetPen|ptSetPenEx|ptSetTimeAxis|ptSetTimeAxisToCurrent|ptSetTrend|ptSetTrendType|ptZoomCurrentPen|ptZoomTime|PwdUserAdd|PwdUserDelete|PwdUserEdit|PwdUserGetIndex|PwdUserRead|QueryGroupMembership|ReloadWindowViewer|RestartWindowViewer|SendKeys|SendMail|SendSMTPMail|SendSMTPMailwAttachment|SetPropertyD|SetPropertyI|SetPropertyM|SetTagEU|SetWindowPrinter|Show|ShowAt|ShowHome|ShowTopLeftAt|StringCompareEncrypted|SwitchDisplayLanguage|SysBeep|SystemIsNT|TagExists|TseGetClientId|TseGetClientNodeName|TseQueryRunningOnClient|TseQueryRunningOnConsole|UTCDateTime|wcAddItem|wcClear|wcDeleteItem|wcDeleteSelection|wcErrorMessage|wcFindItem|wcGetItem|wcGetItemData|wcInsertItem|wcLoadList|wcLoadText|wcSaveList|wcSaveText|wcSetItemData|WindowState|WWAlwaysOnTop|WWBeep32|WWCntx32|WWContext|WWControl|WWControlPanel|WWDosCommand|WWExecute|WWIsDayLightSaving|WWMoveWindow|WWMultiMonitorNode|WWPoke|WWPrimaryMonitorHeight|WWPrimaryMonitorWidth|WWRequest|WWStartApp|WWVirtualMonitorHeight|WWVirtualMonitorWidth)\\b\\s*)",
           "name": "keyword.function",
-          "comment": "IT-functions Misc Teil 3"
+          "comment": "IT-functions Ground Teil 3"
         },
         {
           "match": "(?i:\\s*\\b(Abs|ArcCos|ArcSin|ArcTan|Clip_cursor|ConvertTemp|Cos|Exp|GeoArea|GeoEqualSideArea|GeoVolume|GetCursorPosition|Hide_cursor|Int|Log|LogN|MetFromStdFluid|MetFromStdLinear|MetFromStdWeight|Pi|Restore_clip|Round|SetCursorPosition|Sgn|Show_cursor|Sin|Sqrt|StdFromMetFluid|StdFromMetLinear|StdFromMetWeight|Tan|Trunc)\\b\\s*)",
@@ -135,6 +136,16 @@
           "match": "(?i:\\s*\\b(xSTATION9BiosName|xSTATION8BiosName|xSTATION7BiosName|xSTATION6BiosName|xSTATION5BiosName|xSTATION4BiosName|xSTATION3BiosName|xSTATION2BiosName|xSTATION1BiosName)\\b\\s*)",
           "name": "support.function",
           "comment": "Hermes Own functions 2"
+        }
+      ]
+    },
+
+    "variables": {
+      "patterns": [
+        {
+          "match": "\\b[A-Za-z_][A-Za-z0-9_-]*\\b",
+          "name": "variable.other.readwrite.vbi",
+          "comment": "Normal variable names (identifiers that are not keywords or functions)"
         }
       ]
     },

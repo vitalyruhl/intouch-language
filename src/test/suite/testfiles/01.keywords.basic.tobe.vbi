@@ -1,0 +1,52 @@
+{Format1: Basic keyword uppercasing}
+MOD
+AND
+NOT
+IS
+OR
+XOR
+TO
+SHL
+SHR
+SQR
+SIN
+COS
+TAN
+ATN
+EXP
+LOG
+INT
+FRAC
+ROUND
+RND
+SQRT
+AS
+IF
+ENDIF
+ELSE
+WHILE
+	FOR
+	NEXT
+	DIM
+THEN
+	EXIT
+	EACH
+	STEP
+	IN
+	RETURN
+	CALL
+	{dont change folowing:}
+	ifVar
+	endifVar
+	elseVar
+	whileVar
+	forVar
+	nextVar
+	dimVar
+	thenVar
+	exitVar
+	eachVar
+	stepVar
+	inVar
+	returnVar
+	callVar

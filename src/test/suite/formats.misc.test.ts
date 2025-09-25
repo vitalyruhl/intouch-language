@@ -55,9 +55,9 @@ suite('test formats.ts - equals... ', () => {
     assert.equal(fo.forFormat(testString,config),toBeString)
   });
 
-  test('=>', () => { 
-    let testString = 'IF foo=> bar THEN  baz= foo; ENDIF;'
-    let toBeString = 'IF foo => bar THEN  baz = foo; ENDIF;'
+  test('>=', () => { 
+    let testString = 'IF foo>= bar THEN  baz= foo; ENDIF;'
+    let toBeString = 'IF foo >= bar THEN  baz = foo; ENDIF;'
     assert.equal(fo.forFormat(testString,config),toBeString)
   });
 

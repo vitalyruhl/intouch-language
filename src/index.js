@@ -7,7 +7,8 @@ const darkTheme = getTheme({
 });
 
 fs.mkdir("./themes", { recursive: true })
-  .then(() => Promise.all([
-    fs.writeFile("./themes/dark.json", JSON.stringify(darkTheme, null, 2)),
-  ]))
-  .catch(() => process.exit(1))
+  .then(() => fs.writeFile("./themes/dark.json", JSON.stringify(darkTheme, null, 2)))
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+  });

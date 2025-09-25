@@ -1,0 +1,14 @@
+{Format2: Operator spacing}
+a = 1 +2-3;
+b = 4;
+c = d -5;
+{Format2: check negative numbers}
+c = d - 5 - -6;
+d = -7 + 8;
+e = -9 - -10;
+f = -11 * -12 / -13;
+g = -14 + -15 - -16 * -17 / -18;
+{Format2: do not change dashed variable names}
+new12-issue-dashed-variable-123 = "this variable shall not be formatted"
+{Format2: do not change if you find dashes in text}
+new12-issue-dashed-variable-123 = "this variable shall not be formatted and -5 - 6 etc here as text - also here -7-8-9 +2 -12 "

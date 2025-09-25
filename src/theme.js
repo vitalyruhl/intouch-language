@@ -1,11 +1,16 @@
 const { getVariant } = require("./process");
 const { getColors } = require("./primer");
 
+/**
+ * @param {{style:string,name:string}} params
+ */
 function getTheme({ style, name }) {
   // Usage: `auto('pink')`
+  /** @param {string} hex */
   const auto = (hex) => getVariant(hex, style);
 
   // Usage: `pick({ light: "lightblue", dark: "darkblue" })`
+  /** @param {Record<string,any>} options */
   const pick = (options) => options[style];
 
   const primer = getColors(style);
