@@ -366,8 +366,7 @@ function formatNestings(text, config) {
             let exclude = false;
             codeFragments[i] = codeFragments[i].replace(const_1.REGEX.gm_GET_NESTING, "");
             if (codeFragments[i].search(new RegExp(regexCB, 'gi')) !== -1) {
-                nestingCounter++;
-                thisLineBack = true;
+                nestingCounter++; /* opening region line indents immediately */
             }
             else if (codeFragments[i].search(new RegExp(regexCEx, 'gi')) !== -1) {
                 thisLineBack = true;
@@ -381,8 +380,7 @@ function formatNestings(text, config) {
                 }
             }
             else if (codeFragments[i].search(new RegExp(regexRegionCB, 'gi')) !== -1) {
-                nestingCounter++;
-                thisLineBack = true;
+                nestingCounter++; /* region begin indents immediately */
             }
             else if (codeFragments[i].search(new RegExp(regexRegionCEx, 'gi')) !== -1) {
                 thisLineBack = true;
@@ -402,14 +400,14 @@ function formatNestings(text, config) {
                         exclude = true;
                 });
                 let keyFound = false;
+                let multilineIfActive = false;
                 for (let n of nestingdef_1.NESTINGS) {
                     if (!exclude) {
                         regex = `((?![^{]*})(\\b${n.keyword})\\b)`;
                         if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
                             // Opening keyword increases depth for following lines
                             nestingCounter++;
-                            keyFound = true;
-                            thisLineBack = true; // keep this line at previous indentation
+                            keyFound = true; // immediate indent (thisLineBack not set)
                         }
                     }
                     if (n.multiline !== '') {
@@ -435,7 +433,25 @@ function formatNestings(text, config) {
                     }
                     keyFound = false;
                 }
-                // no multiline body tracking
+                // Multiline IF continuation detection: if line ends with AND/OR/NOT and no THEN yet, push temporary continuation depth
+                // Pattern: inside an IF expression spanning multiple lines until THEN encountered.
+                if (/\bIF\b/i.test(codeFragments[i]) && !/\bTHEN\b/i.test(codeFragments[i])) {
+                    // If line ends with AND/OR/NOT or contains AND/OR without THEN, treat next line as deeper continuation
+                    if (/(AND|OR|NOT)\s*$/i.test(codeFragments[i])) {
+                        // Add a virtual nesting for continuation (handled by incrementing nestingCounterPrevious only for next line)
+                        // Simplest approach: mark a flag by injecting a sentinel tab now (this line already indented), future line gets same depth logic
+                        // Instead adjust nestingCounter but remember to decrement once THEN closes expression.
+                        // We'll mark via a special token appended (not altering formatting) - minimal implementation: set a hidden property.
+                        // For now: increment nestingCounter and set thisLineBack so current line not over-indented; THEN line will reduce.
+                        nestingCounter++;
+                        thisLineBack = true; // keep current line at original IF indent
+                    }
+                }
+                else if (/\bTHEN\b/i.test(codeFragments[i]) && thisLineBack && nestingCounter > 0) {
+                    // Close continuation virtual indent
+                    nestingCounter--; // remove the continuation bump
+                    // keep thisLineBack for THEN line so it aligns with IF opening line
+                }
             }
         }
         if (!isEmptyLine) {
@@ -479,6 +495,8 @@ function getNesting(n, thisLineBack, config) {
     return temp;
 }
 function CheckCRLForWhitespace(s) {
+    if (s === undefined || s === '' || s === '\n' || s === '\r')
+        return true; // line/file start boundaries
     return const_1.FORMATS.concat(const_1.SINGLE_OPERATORS, const_1.DOUBLE_OPERATORS, const_1.TRENNER).some(item => s === item);
 }
 function pureFormatPipeline(text, config) {
