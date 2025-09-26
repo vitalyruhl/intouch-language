@@ -10,17 +10,21 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        node-version: [14.x, 15.x]
+        # Node 14 & 15 are EOL and Node 14 is not available on macOS arm64 (caused the error).
+        # Test against current active LTS (18) and latest LTS (20). Add 22.x later if needed.
+        node-version: [18.x, 20.x]
     runs-on: ${{ matrix.os }} 
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
-    - name: Install Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/checkout@v4
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm i
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm install
     - run: xvfb-run -a npm test
       if: runner.os == 'Linux'
     - run: npm test
