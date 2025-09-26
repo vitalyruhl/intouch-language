@@ -23,10 +23,10 @@ export function preFormat(text: string, config: FormatterConfig): string { // fo
   let txt = text.split("");
   let buf: string = "";
   let modified: number = 0;
-  let inComment = false;
-  let inString = false;
   let LineCount = 1;
   let ColumnCount = 0;
+  let inComment = false;
+  let inString = false;
 
   for (let i = 0; i <= txt.length - 1; i++) {
     ColumnCount++;
@@ -267,6 +267,12 @@ export function preFormat(text: string, config: FormatterConfig): string { // fo
     }
     return out.replace(/= {2,}>/g, '= >');
   })();
+  // Final sanitation: remove any spaces directly before semicolons outside strings/comments (strings already preserved above)
+  // Remove spaces before semicolons only outside of string literals
+  normalized = normalized.split(/(\"[^\"]*\")/g).map(seg => {
+    if (seg.startsWith('"') && seg.endsWith('"')) return seg; // keep string literal untouched
+    return seg.replace(/(\S)\s+;/g, '$1;');
+  }).join('');
   return normalized;
 }
 
@@ -393,8 +399,9 @@ export function formatNestings(text: string, config: FormatterConfig): string {
         const initialLine = /\bIF\b/i.test(codeFragments[i]) && !/\bTHEN\b/i.test(codeFragments[i]);
         if (!initialLine) visualDepth = multiIfBaseDepth + 2;
       } else if (thisLineBack && /\bTHEN\b/i.test(codeFragments[i])) {
-        // THEN closing expression line: show continuation depth (base+2)
-        visualDepth = Math.max(0, multiIfBaseDepth + 2 || nestingCounterPrevious); // fallback if state lost
+        // THEN closing expression line: show continuation depth (base+2) and do NOT drop back
+        visualDepth = (multiIfBaseDepth + 2);
+        thisLineBack = false; // keep indentation level, prevent getNesting from skipping one level
       }
       const prefix = getNesting(visualDepth, thisLineBack, config);
       codeFragments[i] = prefix + codeFragments[i];
@@ -410,7 +417,42 @@ export function formatNestings(text: string, config: FormatterConfig): string {
       if (codeFragments[i] !== '') { buf += codeFragments[i]; if (hadFinalCRLF) buf += CRLF; }
     }
   }
-  return buf;
+  // Collapse multiple inner spaces (not leading indentation) outside of strings and outside single-line brace comments
+  const collapsed = buf.split(CRLF).map(line => {
+    if (line.trim() === '') return line;
+    // Mask single-line brace comments { ... } to preserve interior spacing
+    const comments = line.match(/\{[^{}\r\n]*\}/g) || [];
+    const commentTokens: string[] = [];
+    let masked = line;
+    comments.forEach((c, idx) => {
+      const token = `@@C${idx}@@`;
+      commentTokens.push(c);
+      masked = masked.replace(c, token);
+    });
+    // Split by string literals (simple non-escaped quote handling)
+    const segments = masked.split(/("[^"\\]*(?:\\.[^"\\]*)*"?)/g).filter(s => s !== '');
+    let rebuilt = '';
+    segments.forEach(seg => {
+      if (seg.startsWith('"') && seg.endsWith('"')) {
+        rebuilt += seg; // keep string literal
+      } else {
+        const m = seg.match(/^(\s*)(.*)$/);
+        if (m) {
+          const ind = m[1];
+          const rest = m[2].replace(/ {2,}/g, ' ');
+          rebuilt += ind + rest;
+        } else {
+          rebuilt += seg.replace(/ {2,}/g, ' ');
+        }
+      }
+    });
+    // Restore comments
+    commentTokens.forEach((c, idx) => {
+      rebuilt = rebuilt.replace(`@@C${idx}@@`, c);
+    });
+    return rebuilt;
+  }).join(CRLF);
+  return collapsed;
 }
 
 function getNesting(n: number, thisLineBack: boolean, config: FormatterConfig): string {
