@@ -48,7 +48,7 @@ ENDIF;
 {------------------------------------------------------------------------------}
 
 {------------------------------------------------------------------------------}
-{if-then multiline - test2 bug on SYS_LS}
+{if-then multiline-Expression}
 IF StringInString(SYS_LoggingNodes,PCN,1,0) == 0 AND
 PCN <> SYS_LoggingServer AND
 PCN <> SYS_LoggingBackup AND
@@ -68,7 +68,7 @@ FOR i =1 TO StringLen(inS) STEP 2
 
 SZ = StringMid(inS,i,1);
 
-IF SZ == sDelimiter THEN        {comment after then}
+IF SZ == sDelimiter THEN        {comment after then}  
 Splitt = Splitt + 1;
 
 IF Splitt == iIndex THEN{comment close after then}
@@ -76,11 +76,11 @@ IF Splitt == iIndex THEN{comment close after then}
 IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "True Splitt(" + text(Splitt,"#")+ ")/i:(" + text(i,"#")+ "):[" + Temp_Return + "]"); ENDIF;
 EXIT FOR;{remember do not change nesting on exit for}
 ELSE
-IF Sys_Debug_info > 0 THEN LogMessage(Funkt + " Splitt(" + text(i,"#")+ "):[" + Temp_Return + "]"); ENDIF;
+IF Sys_Debug_info > 0 THEN    LogMessage(Funkt + " Splitt(" + text(i,"#")+ "):[" + Temp_Return + "]"); ENDIF;
 Temp_Return = "";
 ENDIF;
 ELSE
-Temp_Return = Temp_Return + SZ;
+Temp_Return =   Temp_Return +   SZ ; 
 ENDIF;
 NEXT;
 

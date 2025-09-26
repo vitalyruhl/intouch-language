@@ -279,6 +279,9 @@ export function formatNestings(text: string, config: FormatterConfig): string {
   // Simple nesting only; multiline IF experimental logic removed
   let multilineComment = false;
   let thisLineBack = false;
+  // Multiline IF expression handling state
+  let multiIfActive = false;
+  let multiIfBaseDepth = 0;
   let regexCB = `^${config.BlockCodeBegin}`;
   let regexCEx = `^${config.BlockCodeExclude}`;
   let regexCE = `^${config.BlockCodeEnd}`;
@@ -325,14 +328,21 @@ export function formatNestings(text: string, config: FormatterConfig): string {
         .replace(/u0002/gim, ';');
     }
     if (!isEmptyLine && !multilineComment) {
+      const rawLine = codeFragments[i];
+      const hasIF = /\bIF\b/i.test(rawLine);
+      const hasTHEN = /\bTHEN\b/i.test(rawLine);
+      const hasENDIF = /\bENDIF\b/i.test(rawLine);
+      const inlineIf = hasIF && hasTHEN && hasENDIF; // single-line
+      const continuationTrigger = hasIF && !hasTHEN && /(AND|OR|NOT)\s*$/i.test(rawLine.trim());
+
       let exclude = false;
       codeFragments[i] = codeFragments[i].replace(REGEX.gm_GET_NESTING, "");
-      if (codeFragments[i].search(new RegExp(regexCB, 'gi')) !== -1) { nestingCounter++; /* opening region line indents immediately */ }
+      if (codeFragments[i].search(new RegExp(regexCB, 'gi')) !== -1) { nestingCounter++; }
       else if (codeFragments[i].search(new RegExp(regexCEx, 'gi')) !== -1) { thisLineBack = true; }
       else if (codeFragments[i].search(new RegExp(regexCE, 'gi')) !== -1) {
         nestingCounter--; thisLineBack = true; if (nestingCounter < 0) { nestingCounter = 0; thisLineBack = false; }
       }
-      else if (codeFragments[i].search(new RegExp(regexRegionCB, 'gi')) !== -1) { nestingCounter++; /* region begin indents immediately */ }
+      else if (codeFragments[i].search(new RegExp(regexRegionCB, 'gi')) !== -1) { nestingCounter++; }
       else if (codeFragments[i].search(new RegExp(regexRegionCEx, 'gi')) !== -1) { thisLineBack = true; }
       else if (codeFragments[i].search(new RegExp(regexRegionCE, 'gi')) !== -1) {
         nestingCounter--; thisLineBack = true; if (nestingCounter < 0) { nestingCounter = 0; thisLineBack = false; }
@@ -341,56 +351,59 @@ export function formatNestings(text: string, config: FormatterConfig): string {
           regex = `((?![^{]*})(${item}))`;
           if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) exclude = true;
         });
-    let keyFound = false;
-        let multilineIfActive = false;
-        for (let n of NESTINGS) {
-          if (!exclude) {
-            regex = `((?![^{]*})(\\b${n.keyword})\\b)`;
-            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
-              // Opening keyword increases depth for following lines
-              nestingCounter++;
-              keyFound = true; // immediate indent (thisLineBack not set)
+        if (!multiIfActive) {
+          if (inlineIf) {
+            // no nesting change
+          } else if (continuationTrigger) {
+            multiIfActive = true;
+            multiIfBaseDepth = nestingCounterPrevious; // visual base
+          } else {
+            for (let n of NESTINGS) {
+              if (!exclude) {
+                regex = `((?![^{]*})(\\b${n.keyword})\\b)`;
+                if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) { nestingCounter++; }
+              }
+              if (n.multiline !== '') {
+                regex = `((?![^{]*})(\\b${n.multiline})\\b)`;
+                if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) { }
+              }
+              if (n.middle !== '') {
+                regex = `((?![^{]*})(\\b${n.middle})\\b)`;
+                if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) { thisLineBack = true; break; }
+              }
+              regex = `((?![^{]*})(\\b${n.end})\\b)`;
+              if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) { nestingCounter--; if (nestingCounter < 0) nestingCounter = 0; thisLineBack = true; break; }
             }
           }
-          if (n.multiline !== '') {
-            regex = `((?![^{]*})(\\b${n.multiline})\\b)`;
-            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) { /* THEN presence does not alter nesting here */ }
+        } else {
+          // multiIfActive
+          if (hasTHEN) {
+            nestingCounter++; // start IF body after this line
+            thisLineBack = true; // keep THEN at expression level
+            multiIfActive = false;
           }
-          if (n.middle !== '') {
-            regex = `((?![^{]*})(\\b${n.middle})\\b)`;
-            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) { thisLineBack = true; break; }
-          }
-          regex = `((?![^{]*})(\\b${n.end})\\b)`;
-            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) { nestingCounter--; if (nestingCounter < 0) { nestingCounter = 0; thisLineBack = false; } thisLineBack = true; break; }
-          keyFound = false;
-        }
-        // Multiline IF continuation detection: if line ends with AND/OR/NOT and no THEN yet, push temporary continuation depth
-        // Pattern: inside an IF expression spanning multiple lines until THEN encountered.
-        if (/\bIF\b/i.test(codeFragments[i]) && !/\bTHEN\b/i.test(codeFragments[i])) {
-          // If line ends with AND/OR/NOT or contains AND/OR without THEN, treat next line as deeper continuation
-          if (/(AND|OR|NOT)\s*$/i.test(codeFragments[i])) {
-            // Add a virtual nesting for continuation (handled by incrementing nestingCounterPrevious only for next line)
-            // Simplest approach: mark a flag by injecting a sentinel tab now (this line already indented), future line gets same depth logic
-            // Instead adjust nestingCounter but remember to decrement once THEN closes expression.
-            // We'll mark via a special token appended (not altering formatting) - minimal implementation: set a hidden property.
-            // For now: increment nestingCounter and set thisLineBack so current line not over-indented; THEN line will reduce.
-            nestingCounter++;
-            thisLineBack = true; // keep current line at original IF indent
-          }
-        } else if (/\bTHEN\b/i.test(codeFragments[i]) && thisLineBack && nestingCounter > 0) {
-          // Close continuation virtual indent
-          nestingCounter--; // remove the continuation bump
-          // keep thisLineBack for THEN line so it aligns with IF opening line
         }
       }
     }
     if (!isEmptyLine) {
-      const prefix = getNesting(nestingCounterPrevious, thisLineBack, config);
+      // Determine visual depth
+      let visualDepth = nestingCounterPrevious;
+      if (multiIfActive) {
+        // lines after initial IF (continuation lines) show baseDepth+2 now (user request)
+        const initialLine = /\bIF\b/i.test(codeFragments[i]) && !/\bTHEN\b/i.test(codeFragments[i]);
+        if (!initialLine) visualDepth = multiIfBaseDepth + 2;
+      } else if (thisLineBack && /\bTHEN\b/i.test(codeFragments[i])) {
+        // THEN closing expression line: show continuation depth (base+2)
+        visualDepth = Math.max(0, multiIfBaseDepth + 2 || nestingCounterPrevious); // fallback if state lost
+      }
+      const prefix = getNesting(visualDepth, thisLineBack, config);
       codeFragments[i] = prefix + codeFragments[i];
       if (nestingCounterPrevious !== nestingCounter) nestingCounterPrevious = nestingCounter;
       thisLineBack = false;
     }
   }
+  // Final trailing whitespace cleanup
+  codeFragments = codeFragments.map(l => l.replace(/[ \t]+$/g, ''));
   for (let i = 0; i < codeFragments.length; i++) {
     const isLast = i === codeFragments.length - 1;
     if (!isLast) buf += codeFragments[i] + CRLF; else {
