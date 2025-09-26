@@ -11,8 +11,8 @@ export const BACKSLASH = "\\";
 export const FORMATS: string[] = [TAB, CR, LF, CRLF, DQUOTE, SQUOTE, BACKSLASH];
 export const SINGLE_OPERATORS: string[] = ['=', '+', '-', '<', '>', '*', '/', '%', '!', '~', '|'];
 // export const SINGLE_OPERATORS: string[] = ['=', '+', '<', '>', '*', '/', '%', '!', '~', '|'];//23.01.2022 remove - as single Operator, because it can be used in variables
-// BUGFIX 2025-09-25: '=>" war fälschlich statt '>=' definiert und führte dazu,
-// dass das Formatieren '>  =' erzeugte (Trennung von '>' und '='). Korrigiert zu '>='.
+// BUGFIX 2025-09-25: '=>" was mistakenly defined instead of '>=' which caused
+// the formatter to produce '>  =' (separating '>' and '='). Corrected to '>='.
 export const DOUBLE_OPERATORS: string[] = ['==', '<>', '<=', '>='];
 export const NO_SPACE_ITEMS: string[] = ['(', ')', '[', ']', ';'];
 export const TRENNER: string[] = [';', ' '];

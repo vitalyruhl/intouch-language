@@ -11,7 +11,7 @@
   <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/logo.png" alt="Intouch-Language Logo" width="10%" /></a>
 </p>
 
-<!-- Badges mit SVG entfernt für Marketplace Richtlinien. Optional PNG-Varianten hinzufügen. -->
+<!-- Badges with SVG removed for Marketplace guidelines. Optional: add PNG variants if needed. -->
 
 <br>
 <br>
@@ -59,7 +59,7 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 <br>
 <br>
 
-## Example diffrent themes
+## Example different themes
 
 <table align="center" width="100%" border="0">
   <tr>
@@ -96,7 +96,7 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 # Installation
 
-- Standatd Installation:
+- Standard Installation:
   - Install it in ext.-manager (type Intouch) or from
     [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
 - Install from Github:
@@ -105,7 +105,7 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
     - `git clone https://github.com/vitalyruhl/intouch-language.git`
   - Open shell there and type `npm i`
   - Run: `npm run compile`, or `npm run watch` if you want to make changes in src folder.
-  - You must restart the VS-Code after installation, to apply new settings
+  - You must restart VS Code after installation to apply new settings.
 
 <p align="center">
   <br />
@@ -154,25 +154,37 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 # Todo
 
+## Known Issues / Notes
+
+The following items are either recently resolved or planned but not yet implemented:
+
+- RESOLVED (v1.5.0): Formatter dropping the final `ENDIF` (or last line without trailing newline) – fixed and covered by tests.
+- PLANNED: Range (selection) formatting. Current command formats the entire document.
+- PLANNED: Diagnostics (unclosed IF/FOR, unexpected ENDIF/NEXT) – tracked in modernization plan.
+- PLANNED: Tokenizer-based nesting & keyword uppercasing refactor for improved robustness.
+- NOTE: Multiline IF continuation indentation intentionally uses base + 2 spaces before THEN; THEN line stays aligned with expression by design.
+- NOTE: Spacing inside string literals and single-line brace comments is preserved intentionally; only outer code regions are normalized.
+
+
 - **Formatter**
   - Issues
     - Bug 13.02.2022 `For-next` not in plan when there are an `EXIT FOR` statement
     - Bug 13.02.2022 Nesting bug -> code in multiline comment will formatted to?!
-  - Futures planned
-    - Format on selection (now is formatting document!)
+  - Planned features
+    - Format selected range (currently formats entire document)
 
 <br>
 
 - **Syntax-highlighting**
   - No issues
-  - Futures planned
-    - Add code checker for some errors in code
+  - Planned features
+    - Add static code diagnostics for common errors
 
 <br>
 
 - **Snippets**
   - No issues
-  - No futures planned
+  - No planned features
 
 <br>
 <br>
@@ -215,7 +227,7 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 ### V1.2.3
 
-- Bomp bugfixes
+- Bump bugfixes
 
 ### V1.2.2
 
@@ -241,9 +253,9 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 ### V1.1.0
 
 - Add Code-Blocks for Nesting and Folding in code without keywords Start:`{>`, End:`{<`
-- Add **Snipped** cb# : add new Code-Block
-- Add **Snipped** for# : add for-next-block
-- Add **Snipped** func# : add new empty Function
+- Add **Snippet** cb# : add new Code-Block
+- Add **Snippet** for# : add for-next-block
+- Add **Snippet** func# : add new empty Function
 - Correct some spelling mistakes
 - Remove debugging settings
 

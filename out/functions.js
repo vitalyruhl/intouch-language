@@ -17,7 +17,7 @@ function formatTE(range) {
     return [vscode.TextEdit.replace(range, newText)];
 }
 function format(range, document, config) {
-    // PURE IMPLEMENTATION (Refactor 2025-09-14): Keine direkten Editor-Seiteneffekte mehr.
+    // PURE IMPLEMENTATION (Refactor 2025-09-14): No direct editor side-effects anymore.
     let regex;
     let formatted = document.getText(range);
     // 1. Keyword / Operator Formatting

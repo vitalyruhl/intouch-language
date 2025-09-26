@@ -15,7 +15,7 @@ export function formatTE(range: vscode.Range): vscode.TextEdit[] {
 }
 
 function format(range: vscode.Range, document: vscode.TextDocument, config: any): string {
-	// PURE IMPLEMENTATION (Refactor 2025-09-14): Keine direkten Editor-Seiteneffekte mehr.
+	// PURE IMPLEMENTATION (Refactor 2025-09-14): No direct editor side-effects anymore.
 	let regex: RegExp;
 	let formatted: string = document.getText(range);
 
