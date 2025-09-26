@@ -87,13 +87,6 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 <br>
 <br>
 
-# Test and example
-
-> You can test it on this **%USERPROFILE%\\.vscode\extensions\intouch-language\other\test\test.vbi** by press **`shift + alt + F`**
-
-<br>
-<br>
-
 # Installation
 
 - Standard Installation:
@@ -158,7 +151,6 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 The following items are either recently resolved or planned but not yet implemented:
 
-- RESOLVED (v1.5.0): Formatter dropping the final `ENDIF` (or last line without trailing newline) – fixed and covered by tests.
 - PLANNED: Range (selection) formatting. Current command formats the entire document.
 - PLANNED: Diagnostics (unclosed IF/FOR, unexpected ENDIF/NEXT) – tracked in modernization plan.
 - PLANNED: Tokenizer-based nesting & keyword uppercasing refactor for improved robustness.
@@ -168,8 +160,7 @@ The following items are either recently resolved or planned but not yet implemen
 
 - **Formatter**
   - Issues
-    - Bug 13.02.2022 `For-next` not in plan when there are an `EXIT FOR` statement
-    - Bug 13.02.2022 Nesting bug -> code in multiline comment will formatted to?!
+    - no issues
   - Planned features
     - Format selected range (currently formats entire document)
 
@@ -198,13 +189,13 @@ The following items are either recently resolved or planned but not yet implemen
 - Added deeper multiline IF continuation indentation (base + 2) keeping THEN line aligned with expression
 - Removed spaces before semicolons outside of strings (strings remain untouched)
 - Preserved all spacing inside string literals and single-line brace comments
-- Added highlighting support for instance prefixes of the form `PREFIX:Variable` (e.g. `STATION1:S09BNOnline`) – prefix and variable now use different scopes for theming
+- Added highlighting support for instance prefixes of the form `PREFIX:Variable`, prefix and variable now use different scopes for theming
 - General whitespace normalization (trailing whitespace removal, internal multi-space collapse outside strings/comments)
 
 
 ### V1.4.1-V1.4.3
 
-- Add math / intrinsic style functions for uppercasing in formatter 2025-09-25: sqr, sin, cos, tan, atn, exp, log, int, frac, round, rnd, sqrt
+- Add math / intrinsic style functions for uppercasing in formatter: sqr, sin, cos, tan, atn, exp, log, int, frac, round, rnd, sqrt
 - bugfix in formatter for '>=' operator
 - bugfix in deletion of last line in file
 - update dependencies
@@ -221,20 +212,10 @@ The following items are either recently resolved or planned but not yet implemen
 - Add own dark theme based on [GitHub (Dark Classic) VS Code theme](https://github.com/BerriJ/github-vscode-theme-dark-classic) from BerriJ
 - Some bugfixes in regex for Keywords
 
-### V1.2.4
+### V1.2.1 - V1.2.4
 
 - Update dependencies
-
-### V1.2.3
-
-- Bump bugfixes
-
-### V1.2.2
-
 - Bugfix on snippets
-
-### V1.2.1
-
 - Bugfix trailing whitespace before `-`
 
 ### V1.2.0
@@ -246,11 +227,7 @@ The following items are either recently resolved or planned but not yet implemen
 - Add wordPattern and indentationRules into language configuration.
 - <fix bug - issue #13, formatter formats dashed variable `foo-bar` --> `foo - bar`
 
-### V1.1.1
-
-- Version issue with format problem on <>, =<, =>, == was published with greater version
-
-### V1.1.0
+### V1.1.0 - V1.1.1
 
 - Add Code-Blocks for Nesting and Folding in code without keywords Start:`{>`, End:`{<`
 - Add **Snippet** cb# : add new Code-Block
