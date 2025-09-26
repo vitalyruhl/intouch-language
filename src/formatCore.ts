@@ -12,7 +12,8 @@ export interface FormatterConfig {
   RegionBlockCodeBegin?: string;
   RegionBlockCodeEnd?: string;
   RegionBlockCodeExclude?: string;
-  FormatAlsoInComment?: boolean;
+  ReplaceTabToSpaces?: boolean;
+  IndentSize?: number;
 }
 
 export function preFormat(text: string, config: FormatterConfig): string { // formerly forFormat (renamed to proper English)
@@ -341,10 +342,15 @@ export function formatNestings(text: string, config: FormatterConfig): string {
           if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) exclude = true;
         });
     let keyFound = false;
-    for (let n of NESTINGS) {
+        for (let n of NESTINGS) {
           if (!exclude) {
             regex = `((?![^{]*})(\\b${n.keyword})\\b)`;
-            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) { nestingCounter++; keyFound = true; }
+            if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+              // Opening keyword increases depth for following lines
+              nestingCounter++;
+              keyFound = true;
+              thisLineBack = true; // keep this line at previous indentation
+            }
           }
           if (n.multiline !== '') {
             regex = `((?![^{]*})(\\b${n.multiline})\\b)`;
@@ -362,7 +368,7 @@ export function formatNestings(text: string, config: FormatterConfig): string {
       }
     }
     if (!isEmptyLine) {
-      const prefix = getNesting(nestingCounterPrevious, thisLineBack);
+      const prefix = getNesting(nestingCounterPrevious, thisLineBack, config);
       codeFragments[i] = prefix + codeFragments[i];
       if (nestingCounterPrevious !== nestingCounter) nestingCounterPrevious = nestingCounter;
       thisLineBack = false;
@@ -377,11 +383,15 @@ export function formatNestings(text: string, config: FormatterConfig): string {
   return buf;
 }
 
-function getNesting(n: number, thisLineBack: boolean): string {
+function getNesting(n: number, thisLineBack: boolean, config: FormatterConfig): string {
   let temp = "";
   if (n !== 0) {
+    // Determine indent unit based on configuration
+    const useSpaces = (config.ReplaceTabToSpaces !== false); // default true
+    const indentSize = (typeof config.IndentSize === 'number' && config.IndentSize >= 1 && config.IndentSize <= 10) ? config.IndentSize : 4;
+    const indentUnit = useSpaces ? ' '.repeat(indentSize) : '\t';
     for (let i = 0; i < n; i++) {
-      if (thisLineBack) { thisLineBack = false; } else { temp += TAB; }
+      if (thisLineBack) { thisLineBack = false; } else { temp += indentUnit; }
     }
   }
   return temp;
@@ -403,6 +413,13 @@ export function pureFormatPipeline(text: string, config: FormatterConfig) {
       regex = new RegExp(`(^[\t]*$\r?\n){${nEL},}`, 'gm');
     }
     formatted = formatted.replace(regex, CRLF);
+  }
+  // Indentation normalization: replace leading tabs with spaces if configured
+  const useSpaces = (config.ReplaceTabToSpaces !== false); // default true
+  const indentSize = (typeof config.IndentSize === 'number' && config.IndentSize >= 1 && config.IndentSize <= 10) ? config.IndentSize : 4;
+  if (useSpaces) {
+    const tabRegex = /^\t+/gm;
+    formatted = formatted.replace(tabRegex, (m) => ' '.repeat(m.length * indentSize));
   }
   return formatted;
 }

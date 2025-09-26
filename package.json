@@ -105,11 +105,6 @@
 					"default": false,
 					"markdownDescription": "Delete empty lines in comments also."
 				},
-				"VBI.formatter.FormatAlsoInComment": {
-					"type": "boolean",
-					"default": false,
-					"markdownDescription": "Allow format in comments."
-				},
 				"VBI.formatter.BC.BlockCodeBegin": {
 					"type": "string",
 					"default": "{>",
@@ -143,6 +138,17 @@
 					"type": "string",
 					"default": "{#",
 					"markdownDescription": "Turn this comment line back (exclude from Nesting)."
+				},
+				"VBI.formatter.Misc.ReplaceTabToSpaces": {
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "Replace tabs with spaces."
+				},"VBI.formatter.Misc.IndentSize": {
+					"type": "number",
+					"default": 4,
+					"minimum": 1,
+					"maximum": 10,
+					"markdownDescription": "Number of spaces to use for each indentation level (1-10)."
 				}
 			}
 		}

@@ -17,6 +17,9 @@ a= b;{    comment    }c = d;
     IF ( a >= b ) THEN
     a = 1;
     ENDIF;
+
+
+    test for removing extra empty lines in comment blocks (this line should be moved up)
 }
 
 {Format3: other spacing }

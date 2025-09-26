@@ -19,7 +19,7 @@ suite('test formats.ts - EOF Handling', () => {
 
   test('Keep final ENDIF with trailing CRLF (control case)', () => {
     const input = 'IF a == b THEN\n  c = a;\nENDIF\r\n';
-  const mid = fo.preFormat(input, config);
+    const mid = fo.preFormat(input, config);
     const output = fo.formatNestings(mid, config);
     assert.ok(/ENDIF\r?\n?$/.test(output), 'ERROR: Last line is not preserved with CRLF: "' + output + '"');
   });

@@ -406,8 +406,10 @@ function formatNestings(text, config) {
                     if (!exclude) {
                         regex = `((?![^{]*})(\\b${n.keyword})\\b)`;
                         if (codeFragments[i].search(new RegExp(regex, 'i')) !== -1) {
+                            // Opening keyword increases depth for following lines
                             nestingCounter++;
                             keyFound = true;
+                            thisLineBack = true; // keep this line at previous indentation
                         }
                     }
                     if (n.multiline !== '') {
@@ -437,7 +439,7 @@ function formatNestings(text, config) {
             }
         }
         if (!isEmptyLine) {
-            const prefix = getNesting(nestingCounterPrevious, thisLineBack);
+            const prefix = getNesting(nestingCounterPrevious, thisLineBack, config);
             codeFragments[i] = prefix + codeFragments[i];
             if (nestingCounterPrevious !== nestingCounter)
                 nestingCounterPrevious = nestingCounter;
@@ -458,15 +460,19 @@ function formatNestings(text, config) {
     }
     return buf;
 }
-function getNesting(n, thisLineBack) {
+function getNesting(n, thisLineBack, config) {
     let temp = "";
     if (n !== 0) {
+        // Determine indent unit based on configuration
+        const useSpaces = (config.ReplaceTabToSpaces !== false); // default true
+        const indentSize = (typeof config.IndentSize === 'number' && config.IndentSize >= 1 && config.IndentSize <= 10) ? config.IndentSize : 4;
+        const indentUnit = useSpaces ? ' '.repeat(indentSize) : '\t';
         for (let i = 0; i < n; i++) {
             if (thisLineBack) {
                 thisLineBack = false;
             }
             else {
-                temp += const_1.TAB;
+                temp += indentUnit;
             }
         }
     }
@@ -488,6 +494,13 @@ function pureFormatPipeline(text, config) {
             regex = new RegExp(`(^[\t]*$\r?\n){${nEL},}`, 'gm');
         }
         formatted = formatted.replace(regex, const_1.CRLF);
+    }
+    // Indentation normalization: replace leading tabs with spaces if configured
+    const useSpaces = (config.ReplaceTabToSpaces !== false); // default true
+    const indentSize = (typeof config.IndentSize === 'number' && config.IndentSize >= 1 && config.IndentSize <= 10) ? config.IndentSize : 4;
+    if (useSpaces) {
+        const tabRegex = /^\t+/gm;
+        formatted = formatted.replace(tabRegex, (m) => ' '.repeat(m.length * indentSize));
     }
     return formatted;
 }

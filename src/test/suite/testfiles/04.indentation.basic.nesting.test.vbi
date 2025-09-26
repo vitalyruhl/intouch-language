@@ -1,5 +1,5 @@
 {Format4: Basic indentation}
-{IF statement}
+{mixed IF statement}
 IF (a == 1 )THEN
 b = 2;
 IF b == 2 THEN c = 3; ENDIF;
@@ -21,54 +21,54 @@ NEXT;
 
 {------------------------------------------------------------------------------}
 {if-then Nesting-Test}
-IF sys_pcname <> sys_STATION01BiosName THEN
-	IF sys_pcname <> sys_STATION02BiosName THEN
-IF sys_pcname <> sys_STATION03BiosName THEN
-IF sys_pcname <> sys_STATION04BiosName THEN
-    IF sys_pcname <> sys_STATION05BiosName THEN
-        IF sys_pcname <> sys_STATION06BiosName THEN
-            IF sys_pcname <= sys_STATION07BiosName THEN
-    IF sys_pcname >= sys_STATION08BiosName THEN
-    IF sys_pcname >= sys_STATION09BiosName THEN
+IF PCN <> S01BN THEN
+IF PCN <> S02BN THEN
+IF PCN <> S03BN THEN
+IF PCN <> S04BN THEN
+IF PCN <> S05BN THEN
+IF PCN <> S06BN THEN
+IF PCN <= S07BN THEN
+IF PCN >= S08BN THEN
+IF PCN >= S09BN THEN
 IF sys_STATION01Online THEN
-sys_STATION09BiosName = sys_pcname;
-STATION1:sys_STATION09Online = 1;
+S09BN = PCN;
+STATION1:S09BNOnline = 1;
 ELSE
-sys_STATION01BiosName = sys_pcname;
-            ENDIF;
-        ENDIF;
-    ENDIF;
-            ENDIF;
-        ENDIF;
-    ENDIF;
-			ENDIF;
-		ENDIF;
-	ENDIF;
+S01BN = PCN;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
+ENDIF;
 ENDIF;
 {------------------------------------------------------------------------------}
 
 {------------------------------------------------------------------------------}
-{if-then multiline - test2 bug on SYS_LoggingSwitch}
-IF StringInString(SYS_LoggingNodes,SYS_PCName,1,0) == 0 AND
-SYS_PCName <> SYS_LoggingServer AND
-SYS_PCName <> SYS_LoggingBackup AND
+{if-then multiline - test2 bug on SYS_LS}
+IF StringInString(SYS_LoggingNodes,PCN,1,0) == 0 AND
+PCN <> SYS_LoggingServer AND
+PCN <> SYS_LoggingBackup AND
 SYS_LoggingBackup <> "-" AND
-SYS_NADKnoten == 1 AND
-SYS_LoggingSwitch == 0 THEN
+SN == 1 AND
+SYS_LS == 0 THEN
 SYS_ApplicationDirectory = INIReadString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory");
 INIWriteString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory",StringReplace(SYS_ProjektPath,"D:","\\" + SYS_LoggingBackup + "\D",0,1,0)); 
-SYS_LoggingSwitch = 1;
+SYS_LS = 1;
 RestartWindowViewer();
 ENDIF;
 {------------------------------------------------------------------------------}
 
 {------------------------------------------------------------------------------}
 {nesting-test for 2}
-FOR i =1 TO StringLen(sInputString) STEP 2
+FOR i =1 TO StringLen(inS) STEP 2
 
-SZ = StringMid(sInputString,i,1);
+SZ = StringMid(inS,i,1);
 
-IF SZ == sDelimiter THEN {comment after then}
+IF SZ == sDelimiter THEN        {comment after then}
 Splitt = Splitt + 1;
 
 IF Splitt == iIndex THEN{comment close after then}

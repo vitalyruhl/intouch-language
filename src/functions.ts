@@ -69,7 +69,14 @@ export function getConfig() {
 
 
 	//misc
-	config.FormatAlsoInComment = workspace.getConfiguration().get('VBI.formatter.FormatAlsoInComment');
+	config.ReplaceTabToSpaces = workspace.getConfiguration().get('VBI.formatter.Misc.ReplaceTabToSpaces');
+	config.IndentSize = workspace.getConfiguration().get('VBI.formatter.Misc.IndentSize');
+	if (typeof config.IndentSize !== 'number' || config.IndentSize < 1 || config.IndentSize > 10) {
+		config.IndentSize = 4;
+	}
+	if (typeof config.ReplaceTabToSpaces !== 'boolean') {
+		config.ReplaceTabToSpaces = true; // fallback to default from package.json
+	}
 	//config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
 
 	//log this

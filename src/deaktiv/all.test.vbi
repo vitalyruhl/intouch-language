@@ -18,13 +18,13 @@ Changelog:
 
 {Aufrufbutton:
     IF MA_UpdateInProgress == 0 THEN
-        IF
-        (SYS_STATION08Online == 0 OR (SYS_STATION08Online == 1 AND STATION8:WU_WochenschaltuhrOffen == 0)) AND
-        (SYS_STATION09Online == 0 OR (SYS_STATION09Online == 1 AND STATION9:WU_WochenschaltuhrOffen == 0)) THEN
-            WU_Nummer = 1;
-        ELSE
- 			Show "WU_Warnung"; 
-        ENDIF;
+	IF
+	(SYS_STATION08Online == 0 OR (SYS_STATION08Online == 1 AND STATION8:WU_WochenschaltuhrOffen == 0)) AND
+	(SYS_STATION09Online == 0 OR (SYS_STATION09Online == 1 AND STATION9:WU_WochenschaltuhrOffen == 0)) THEN
+		WU_Nummer = 1;
+	ELSE
+		Show "WU_Warnung"; 
+	ENDIF;
     ENDIF;
 }
 {<-------------------------------------------}
@@ -179,8 +179,8 @@ if sys_Debug_info > 0 then LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung    
 
 {>------------------------------------------------------------------------------}
 {Formating-Test comment:
-	if that if is Big after Formatting, then the code is wrong...
-	if sys_Debug_info > 0 then LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); endif;
+if that if is Big after Formatting, then the code is wrong...
+if sys_Debug_info > 0 then LogMessage(Funkt +"Erste-MA:["   + Text(iErsteMA,"#")  "]"); endif;
 	if sys_Debug_info > 0 then LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung           + "]"); endif;
 {<------------------------------------------------------------------------------}
 

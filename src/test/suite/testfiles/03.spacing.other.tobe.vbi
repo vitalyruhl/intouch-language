@@ -17,6 +17,8 @@ a = b; {    comment    } c = d;
     IF ( a >= b ) THEN
     a = 1;
     ENDIF;
+
+    test for removing extra empty lines in comment blocks (this line should be moved up)
 }
 
 {Format3: other spacing }
@@ -28,25 +30,24 @@ Funkt = " -";
 Funkt = "- ";
 Funkt = " - ";
 Funkt = "+/-/<>/==/=/</>";
-
 {Format3: parentheses spacing with keywords}
 IF (a == b) THEN
-	a = 1;
+    a = 1;
 ENDIF;
 IF (a >= b) THEN
-	a = 1;
+    a = 1;
 ENDIF;
 IF (a <= b) THEN
-	a = 1;
+    a = 1;
 ENDIF;
 IF (a <> b) THEN
-	a = 1;
+    a = 1;
 ENDIF;
 IF (a > b) THEN
-	a = 1;
+    a = 1;
 ENDIF;
 IF (a < b) THEN
-	a = 1;
+    a = 1;
 ENDIF;
 
 {test spaces behind text}
