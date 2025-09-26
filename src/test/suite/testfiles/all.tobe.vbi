@@ -1,0 +1,84 @@
+{Formatting-Test under real conditions with code from Intouch projects}
+
+{
+Changelog:
+	V0.0.1		25.10.2021 		ViRu 	define Tests
+	V0.0.2		27.10.2021 		ViRu 	add some Tests and modify comments
+	V1.0.0		28.10.2021 		ViRu 	add Test for next furures
+	V1.1.0		02.11.2021 		ViRu 	Add Comment-Blocks for Nesting and Folding in code without keywords
+	V1.1.1		22.01.2022 		ViRu 	Add add test for new issue on dashed variable, test for #region folding
+	V1.5.0		26.09.2025 		ViRu 	refactored for new version 1.5.0, remove obsolete tests
+}
+
+{-------------------------------------------}
+{>Bug 13.02.2022 Nesting bug -> code in multiline comment will formated to?!}
+
+    {Aufrufbutton:
+        IF cc == 0 THEN
+    	IF
+    	(a == 0 OR (SYS_STATION08Online == 1 AND STATION8:a == 0)) AND
+    	(b == 0 OR (SYS_STATION09Online == 1 AND STATION9:b == 0)) THEN
+    		aa = 1;
+    	ELSE
+     Show "picture";
+    	ENDIF;
+        ENDIF;
+    }
+{<-------------------------------------------}
+
+{-------------------------------------------}
+{>Bug 13.02.2022 next not in plan when there are an 'EXIT FOR' satement}
+    FOR INDEX = 1 TO cpuen
+        ANLAGE = StringTrim(SYS_S7CPU_name, 3);
+        wcAddItem("abc", ANLAGE);
+
+        LogMessage("DEBUG: " + StringLeft(SYS_TopicTemp, 4)+ " / " + SYS_S7CPU);
+        IF StringLeft(SYS_TopicTemp, 4) == SYS_S7CPU THEN
+            aa = SYS_S7CPU_bbname;
+        ENDIF;
+
+        IF ii == aa THEN EXIT FOR; ENDIF;
+        hsql = SQLNext(connID);
+    NEXT;
+{<-------------------------------------------}
+
+{-------------------------------------------}
+{>Futures / Bugs / Issues}
+    CALL xGatawaySettings(); {fixed 2021.10.29: No space before and between and after brackets call 'xGatawaySettings ( );'==> 'xGatawaySettings()'}
+    ITXStartAppInDirectory(SYS_ToolsPath + "string ( with ) whitespaces test.", SYS_ToolsPath); {fixed 2021.10.29: Remove single spaces}
+{<-------------------------------------------}
+
+{-------------------------------------------}
+{Variable definition:}
+{>todo: Nesting on Comment-Block (Block of code below shall be nested and can be foldet)}
+    {Comment-Block Folding-String can be changed in Setting between 2 an 10 Character}
+    DIM m AS MESSAGE;
+    DIM i AS INTEGER;
+    DIM d AS DISCRETE;
+    DIM r AS REAL;
+    StartApp SYS_ToolsPath + "\Scheduler.exe " + SQLServer + " " + Database_user + " " + Database_pwd;
+{<-------------------------------------------}
+
+{>-------------------------------------------<}
+    {test for spacing in string --> DONT FORMAT THIS!}
+    Funkt = "-";
+    Funkt = " -";
+    Funkt = "- ";
+    Funkt = " - ";
+    Funkt = "+/-/<>/==/=/</>";
+{<------------------------------------------------------------------------------>}
+
+{>------------------------------------------------------------------------------}
+    {Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
+    IF sys_Debug_info > 0 THEN LogMessage(eof Funkt + "if one of the keywords is big, and             spacing or 		tab is removed, then its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
+    IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
+{# Test codeblock backline}
+    IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
+    IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
+{<------------------------------------------------------------------------------}
+
+{------------------------------------------------------------------------------}
+{Line-Spacing-Test -> Global standart setting is 1 empty line}
+
+{End epty-line-test}
+{-------------------------------------------}
