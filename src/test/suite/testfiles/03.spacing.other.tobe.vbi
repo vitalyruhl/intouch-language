@@ -29,7 +29,7 @@ Funkt = "-";
 Funkt = " -";
 Funkt = "- ";
 Funkt = " - ";
-Funkt = "+/-/<>/==/=/</>";
+Funkt = "+/-/<>/==/=/</>;:";
 {Format3: parentheses spacing with keywords}
 IF (a == b) THEN
     a = 1;

@@ -14,4 +14,4 @@ g = -14 + -15 - -16 * -17 / -18;
 ab = c + d + e-f - gh - ij - kl * mn / op;
 
 {Format2: do not change if you find dashes in text}
-new1-2-issue-dashed-variable-12-3 = "this variable shall not be formatted and -5 - 6 etc here as text - also here -7-8-9 +2 -12 "
+new1-2-issue-dashed-variable-12-3 = "this variable shall not be formatted and -5 - 6 etc here as text - also here -7-8-9 +2 -12 ";

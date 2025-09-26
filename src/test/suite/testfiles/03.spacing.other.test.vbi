@@ -30,7 +30,7 @@ Funkt= "-";
 Funkt =" -";
 Funkt = "- ";
 Funkt= " - ";
-Funkt ="+/-/<>/==/=/</>";
+Funkt ="+/-/<>/==/=/</>;:";  
 {Format3: parentheses spacing with keywords}
 if(a==b)then
 a=1;
