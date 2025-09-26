@@ -183,7 +183,11 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 ### V1.5.0
 
-- add som rules for better formatting and nesting
+- Added deeper multiline IF continuation indentation (base + 2) keeping THEN line aligned with expression
+- Removed spaces before semicolons outside of strings (strings remain untouched)
+- Preserved all spacing inside string literals and single-line brace comments
+- Added highlighting support for instance prefixes of the form `PREFIX:Variable` (e.g. `STATION1:S09BNOnline`) – prefix and variable now use different scopes for theming
+- General whitespace normalization (trailing whitespace removal, internal multi-space collapse outside strings/comments)
 
 
 ### V1.4.1-V1.4.3

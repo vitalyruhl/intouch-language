@@ -304,12 +304,27 @@ function preFormat(text, config) {
         return out.replace(/= {2,}>/g, '= >');
     })();
     // Final sanitation: remove any spaces directly before semicolons outside strings/comments (strings already preserved above)
-    // Remove spaces before semicolons only outside of string literals
-    normalized = normalized.split(/(\"[^\"]*\")/g).map(seg => {
-        if (seg.startsWith('"') && seg.endsWith('"'))
-            return seg; // keep string literal untouched
-        return seg.replace(/(\S)\s+;/g, '$1;');
-    }).join('');
+    // Remove spaces before semicolons only outside of string literals AND outside brace comments
+    normalized = normalized.split(const_1.CRLF).map(line => {
+        // Entire line is a single-line brace comment -> leave unchanged
+        if (/^\s*\{[^{}]*\}\s*$/.test(line))
+            return line;
+        // Split code part and trailing brace comment (if any)
+        const braceIndex = line.indexOf('{');
+        let codePart = line;
+        let commentPart = '';
+        if (braceIndex !== -1) {
+            codePart = line.slice(0, braceIndex);
+            commentPart = line.slice(braceIndex); // keep as-is
+        }
+        // Within codePart, protect strings, then remove spaces before semicolons
+        const rebuilt = codePart.split(/("[^"\\]*(?:\\.[^"\\]*)*"?)/g).map(seg => {
+            if (seg.startsWith('"') && seg.endsWith('"'))
+                return seg; // string literal
+            return seg.replace(/(\S)\s+;/g, '$1;');
+        }).join('');
+        return rebuilt + commentPart;
+    }).join(const_1.CRLF);
     return normalized;
 }
 function formatNestings(text, config) {

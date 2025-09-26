@@ -168,6 +168,7 @@
 		"publish-minor": "npm run compile && npm run build:theme && npm run bundle && vsce package && vsce publish minor",
 		"publish-major": "npm run compile && npm run build:theme && npm run bundle && vsce package && vsce publish major",
 		"publish": "npm run compile && npm run build:theme && npm run bundle && vsce package && vsce publish",
+		"makePackage": "npm run compile && npm run build:theme && npm run bundle && vsce package",
 		"clean:all": "rimraf ./out ./dist ./node_modules ./package-lock.json",
 		"clear:all": "npm run clean:all",
 		"clear:out": "rimraf ./out ./dist",

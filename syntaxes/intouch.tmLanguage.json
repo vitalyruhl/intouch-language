@@ -145,6 +145,15 @@
     "variables": {
       "patterns": [
         {
+          "comment": "Instance prefix pattern: PREFIX:Variable (e.g. STATION1:S09BNOnline)",
+          "match": "\\b([A-Za-z_][A-Za-z0-9_-]*)(:)([A-Za-z_][A-Za-z0-9_-]*)\\b",
+            "captures": {
+              "1": { "name": "variable.other.instance.prefix.vbi" },
+              "2": { "name": "punctuation.separator.namespace.vbi" },
+              "3": { "name": "variable.other.readwrite.vbi" }
+            }
+        },
+        {
           "match": "\\b[A-Za-z_][A-Za-z0-9_-]*\\b",
           "name": "variable.other.readwrite.vbi",
           "comment": "Normal variable names (identifiers that are not keywords or functions)"

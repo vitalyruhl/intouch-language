@@ -15,3 +15,7 @@ ab = c + d + e-f - gh - ij - kl * mn / op;
 
 {Format2: do not change if you find dashes in text}
 new1-2-issue-dashed-variable-12-3 = "this variable shall not be formatted and -5 - 6 etc here as text - also here -7-8-9 +2 -12 ";
+
+{Format2: check spacing of ;, etc in text and comments}
+abc = "this is a test; with ; in text; and , and . and : and ;";
+{comment with ; , . : and ; and text ;}
