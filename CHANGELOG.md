@@ -25,7 +25,7 @@
 
 ### V1.2.3
 
-- Bome bugfixes
+- Bump bugfixes
 
 ### V1.2.2
 
@@ -54,10 +54,10 @@
 
 - 02.11.2021 VitalyRuhl
 - Add Code-Blocks for Nesting and Folding in code without keywords
-- Add **Snipped** cb# : add new Code-Block
-- Add **Snipped** func# : add new empty Function
-- correct some spelling mistakes
-- remove debugging settings
+- Add **Snippet** cb# : add new Code-Block
+- Add **Snippet** func# : add new empty Function
+- Correct some spelling mistakes
+- Remove debugging settings
 
 ### V1.0.0
 

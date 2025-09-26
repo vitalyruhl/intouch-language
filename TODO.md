@@ -1,22 +1,27 @@
-# Modernisierung & Wartungsplan Intouch-Language Extension (Stand: 2025-09-14)
+# Modernization & Maintenance Plan Intouch-Language Extension (Status: 2025-09-14)
 
-Ziel: Extension aktualisieren, Formatter-Bug ("endif" verschwindet am Dateiende) beheben, Codequalität & Stabilität erhöhen, aktuelle VS Code / Node Toolchain nutzen.
+Goal: Update the extension, fix formatter bug (final "endif" disappears at end of file), improve code quality & stability, and use current VS Code / Node toolchain.
 
 ---
-## 1. Akuter Bug: Letztes `endif` (oder andere letzte Zeile) verschwindet ✅ (Erledigt)
-**Symptom:** Beim Formatieren verschwindet manchmal ein finales `endif` (insbesondere wenn die Datei nicht mit CRLF / Leerzeile endet).
 
-**Analyse-Hinweise:**
-- `formatNestings()` splittet mit `text.split(CRLF)` und iteriert: `for (let i = 0; i < codeFragments.length - 1; i++) { ... }` — die LETZTE Fragment-Zeile wird bewusst ausgelassen (wegen `- 1`).
-- Am Ende wird erneut nur bis `length - 1` zusammengefügt: dadurch kann die tatsächliche letzte Codezeile verloren gehen, wenn kein abschließendes CRLF existiert.
-- Falls die Datei ohne abschließenden Zeilenumbruch gespeichert ist, wird die letzte Zeile faktisch nicht wieder in `buf` aufgenommen.
+## 1. Acute Bug: Last `endif` (or any last line) disappears ✅ (Done)
 
-**Fix-Vorschlag (minimal):**
-1. Beim Split prüfen, ob der ursprüngliche Text mit CRLF endet. Falls nicht, Split ohne Verlust behandeln und gesamte Länge iterieren.
-2. Schleifen-Bedingung ändern: `for (let i = 0; i < codeFragments.length; i++)` und beim Zusammenbau ebenfalls komplette Länge berücksichtigen.
-3. Optional: Am Ende konsistent genau EINE abschließende Zeile hinzufügen (`ensureFinalNewline`).
+**Symptom:** When formatting, a final `endif` sometimes disappears (especially if the file does not end with CRLF / blank line).
 
-**Beispiel (Before / After Pseudocode):**
+**Analysis Notes:**
+
+- `formatNestings()` splits with `text.split(CRLF)` and iterates: `for (let i = 0; i < codeFragments.length - 1; i++) { ... }` — the LAST fragment line is intentionally skipped (due to `- 1`).
+- At the end only up to `length - 1` is concatenated again: the actual last code line can be lost if there is no trailing CRLF.
+- If the file is saved without a trailing newline the last line is effectively not re-added to `buf`.
+
+**Minimal Fix Proposal:**
+
+1. On split check whether the original text ends with CRLF. If not, process full length without loss.
+2. Change loop condition to `for (let i = 0; i < codeFragments.length; i++)` and also include full length when reconstructing.
+3. Optional: At the end add exactly ONE final newline consistently (`ensureFinalNewline`).
+
+**Example (Before / After Pseudocode):**
+
 ```ts
 // before
 codeFragments = text.split(CRLF);
@@ -30,7 +35,7 @@ codeFragments = text.split(CRLF);
 for (let i = 0; i < codeFragments.length; i++) { /* ... */ }
 ...
 for (let i = 0; i < codeFragments.length; i++) {
-  // letzte Zeile nur anhängen wenn (i < last) oder hadFinalNewline
+  // append last line only if (i < last) or hadFinalNewline
   if (i < codeFragments.length - 1 || hadFinalNewline) {
      buf += codeFragments[i] + CRLF;
   } else {
@@ -39,37 +44,43 @@ for (let i = 0; i < codeFragments.length; i++) {
 }
 ```
 
-**Ergänzend:** Unit-Test hinzugefügt (`formats.eof.test.ts`): Datei ohne End-CRLF mit finalem `ENDIF` → Test jetzt grün nach Fix.
+**Additionally:** Added unit test (`formats.eof.test.ts`): file without trailing CRLF containing final `ENDIF` → test passes after fix.
 
-**Implementiert am:** 2025-09-14
+**Implemented on:** 2025-09-14
 
-**Änderungen:**
-- Schleifenbedingungen in `formatNestings` auf volle Länge angepasst.
-- Rekonstruktion unter Berücksichtigung ursprünglichem finalen CRLF.
-- Neuer Test deckt beide Fälle (mit/ohne CRLF) ab.
+**Changes:**
 
-**Empfohlene Commit-Message:**
-```
+- Loop conditions in `formatNestings` adjusted to full length.
+- Reconstruction respects original trailing CRLF.
+- New test covers both cases (with/without CRLF).
+
+**Recommended Commit Message:**
+
+```text
 fix(formatter): preserve last line (ENDIF) when file has no trailing CRLF
 ```
 
 ---
-## 2. Saubere Trennung: TextEdit Rückgabe vs. Direktes Edit ✅ (Erledigt)
-Aktuell: `formatTE()` gibt zwar `TextEdit[]` zurück, aber `format()` ruft zusätzlich `activeEditor.edit(...)` auf ⇒ doppelter / seiteneffektbehafteter Pfad.
+## 2. Clean Separation: TextEdit return vs. Direct Edit ✅ (Done)
 
-**Soll (umgesetzt):** Reines Pure-Function-Verhalten für Formatter. Nur `provideDocumentFormattingEdits` gibt `TextEdit[]` zurück. Kein direkter Editorzugriff in Format-Funktionen.
+Current: `formatTE()` returns `TextEdit[]`, but `format()` additionally called `activeEditor.edit(...)` ⇒ duplicate / side-effect path.
 
-**Änderungen:**
-- `format()` liefert jetzt string zurück (keine `activeEditor.edit` Seiteneffekte mehr).
-- `formatTE()` erzeugt einzig die `TextEdit` aus dem Rückgabewert.
-- Neuer Test `formats.idempotent.test.ts` bestätigt Idempotenz.
+**Desired (implemented):** Pure function behavior for formatter. Only `provideDocumentFormattingEdits` returns `TextEdit[]`. No direct editor access inside formatting functions.
 
-**Empfohlene Commit-Message:**
-```
+**Changes:**
+
+- `format()` now returns the string (no more `activeEditor.edit` side effects).
+- `formatTE()` creates the `TextEdit` from the return value only.
+- New test `formats.idempotent.test.ts` confirms idempotency.
+
+**Recommended Commit Message:**
+
+```text
 refactor(formatter): make formatting pure and add idempotency test
 ```
 
-**Beispiel Before:**
+**Example Before:**
+
 ```ts
 if (formatted) {
   activeEditor.edit(e => e.replace(range, formatted));
@@ -82,33 +93,43 @@ return formatted; // Caller baut daraus TextEdit
 ```
 
 ---
-## 3. Konsistente Line-Endings & Robustheit
-Problemquellen: Explizite Nutzung von `CRLF`. Unter Linux/Mac kann Formatierung inkonsistent sein.
 
-**Verbesserung:**
-- Erkennen des Dokument-Line-Endings via `document.eol` (VSCode API) und dynamisch nutzen.
-- Intern mit `\n` arbeiten, beim Rekonstruieren wieder Ziel-EOL anwenden.
-- Setting anbieten: `VBI.formatter.lineEnding` (auto | LF | CRLF).
+## 3. Consistent Line Endings & Robustness
 
----
-## 4. Nesting-Logik vereinfachen / testen
-Aktuell viele Regex & Zustandsflags (`thisLineBack`, `nestingCounterPrevious`). Fehleranfällig.
+Problem Sources: Explicit use of `CRLF`. On Linux/Mac formatting may become inconsistent.
 
-**Ziele:**
-- Extrahieren in eigene Klasse / Modul (`nestingEngine.ts`).
-- Datengetriebener Stack statt globaler Counter (ermöglicht spätere Fehlererkennung: nicht geschlossenes `IF`).
-- Unit-Tests für: einfache IF, verschachtelt, Regionen, gemischte Blocks, Kommentare, Edge Cases (unterbrochene Keywords in Strings, `EXIT FOR`).
+**Improvement:**
+
+- Detect document line ending via `document.eol` (VSCode API) and use dynamically.
+- Work internally with `\n`, reapply target EOL on reconstruction.
+- Offer setting: `VBI.formatter.lineEnding` (auto | LF | CRLF).
 
 ---
-## 5. Keyword-Uppercasing / Tokenizer vereinfachen
-Aktuelle Schleife char-by-char + `modified` Flag → schwer wartbar.
 
-**Modernisierung:**
-- Tokenizer-Schritt: Split in Tokens (StringLiteral, Comment, Identifier, Operator, Whitespace).
-- Nur Identifier prüfen → Uppercase wenn in Set.
-- Entfernt viele Spezialfälle (`modified`, manuelles Zurückschreiben von Leerzeichen).
+## 4. Simplify / Test Nesting Logic
 
-**Beispiel Sketch:**
+Currently many regex & state flags (`thisLineBack`, `nestingCounterPrevious`). Error prone.
+
+**Goals:**
+
+- Extract into its own module (`nestingEngine.ts`).
+- Data-driven stack instead of global counter (enables later error detection: unclosed `IF`).
+- Unit tests for: simple IF, nested, regions, mixed blocks, comments, edge cases (keywords inside strings, `EXIT FOR`).
+
+---
+
+## 5. Simplify Keyword Uppercasing / Tokenizer
+
+Current loop is char-by-char with `modified` flag → hard to maintain.
+
+**Modernization:**
+
+- Introduce tokenizer step: split into tokens (StringLiteral, Comment, Identifier, Operator, Whitespace).
+- Only inspect identifiers → uppercase if in set.
+- Removes many special cases (`modified`, manual whitespace re-emission).
+
+**Example Sketch:**
+
 ```ts
 for (const token of tokenize(text)) {
   if (token.type === 'identifier' && KEYWORDS_SET.has(token.value.toUpperCase())) {
@@ -120,15 +141,19 @@ for (const token of tokenize(text)) {
 ```
 
 ---
-## 6. Konfiguration vereinheitlichen / Typsicherheit
-`config: any` + wiederholte `workspace.getConfiguration()` Aufrufe.
 
-**Verbesserung:**
-- Interface `FormatterConfig` definieren.
-- Einmalige Lazy-Ladung + Veränderung abonnieren: `workspace.onDidChangeConfiguration`.
-- Validierung zentral.
+## 6. Unify Configuration / Type Safety
 
-**Beispiel:**
+`config: any` + repeated `workspace.getConfiguration()` calls.
+
+**Improvement:**
+
+- Define `FormatterConfig` interface.
+- Single lazy load + subscribe to changes: `workspace.onDidChangeConfiguration`.
+- Central validation.
+
+**Example:**
+
 ```ts
 interface FormatterConfig { allowedEmptyLines: number; removeEmpty: boolean; ... }
 function loadConfig(): FormatterConfig { /* ... */ }
@@ -137,52 +162,65 @@ workspace.onDidChangeConfiguration(e => { if (e.affectsConfiguration('VBI.format
 ```
 
 ---
-## 7. Tests erweitern
-Aktuell: Einige Tests vorhanden, aber kein Test für End-of-file / fehlenden Zeilenumbruch / verlorene Tokens.
 
-**Neue Testfälle:**
-1. `EOF`: Datei endet direkt nach `ENDIF` ohne CRLF.
-2. Mixed line endings (simulate) → keine Duplikate.
-3. Kommentarblöcke mit `{region` / `{endregion`.
-4. `EXIT FOR` innerhalb verschachtelter FOR-Schleifen.
-5. Strings mit Operatoren (`"a==b"`) → Operatoren innen unverändert.
+## 7. Expand Tests
+
+Current: Some tests exist, but no test for end-of-file / missing newline / lost tokens.
+
+**New Test Cases:**
+
+1. `EOF`: file ends directly after `ENDIF` without CRLF.
+2. Mixed line endings (simulate) → no duplicates.
+3. Comment blocks with `{region` / `{endregion`.
+4. `EXIT FOR` inside nested FOR loops.
+5. Strings containing operators (`"a==b"`) → operators inside remain unchanged.
 
 ---
-## 8. Linting & Tooling aktualisieren
-- TSLint ist deprecated → Empfehlung nur ESLint (bereits im Script, aber kein `.eslintrc.*`).
-- Node / Typescript Versionen: aktuell TS 4.9 – Update auf >=5.5 sinnvoll (abhängig von VS Code Engine).
-- Add: `.editorconfig`, `.eslintrc.json`, `prettier` optional für Konsistenz.
+
+## 8. Update Linting & Tooling
+- TSLint is deprecated → recommend only ESLint (already in scripts, but no `.eslintrc.*`).
+- Node / TypeScript versions: currently TS 4.9 – updating to >=5.5 useful (depends on VS Code engine).
+- Add: `.editorconfig`, `.eslintrc.json`, optional `prettier` for consistency.
 
 **Tasks:**
-1. `.eslintrc.json` hinzufügen (extends `eslint:recommended`, `@typescript-eslint/recommended`).
-2. Script `lint:fix` ergänzen.
-3. Entferne `ms-vscode.vscode-typescript-tslint-plugin` Empfehlung.
+
+1. Add `.eslintrc.json` (extends `eslint:recommended`, `@typescript-eslint/recommended`).
+2. Add script `lint:fix`.
+3. Remove `ms-vscode.vscode-typescript-tslint-plugin` recommendation.
 
 ---
+
 ## 9. VS Code Engine & @types/vscode Update
-Aktuell: `"engines.vscode": "^1.73.1"` (Nov 2022). 2025 aktuelle LTS > 1.90.
+
+Current: `"engines.vscode": "^1.73.1"` (Nov 2022). 2025 current LTS > 1.90.
 
 **Plan:**
-- Test gegen aktuelle API: Update `@types/vscode` + Engine (z.B. `^1.92.0`).
-- CHANGELOG Eintrag & Major/Minor bump (Breaking durch Mindestversion).
+- Test against current API: update `@types/vscode` + engine (e.g. `^1.92.0`).
+- CHANGELOG entry & major/minor bump (breaking due to minimum version).
 
 ---
+
 ## 10. Packaging & Security
-- Prüfen auf `vsce ls --yarn` / `npm audit` (Abhängigkeiten). 
-- Signierte Veröffentlichung (falls gewünscht) mit `vsce package --githubBranch main` (oder master beibehalten aber README angleichen).
-- README: Lizenz sollte exakter sein (GNU → Angabe Version: GPL-3.0-only oder -or-later).
+- Check `vsce ls --yarn` / `npm audit` (dependencies).
+- Signed publishing (if desired) via `vsce package --githubBranch main` (or keep master but adjust README).
+- README: License should be more precise (GNU → specify version: GPL-3.0-only or -or-later).
 
 ---
-## 11. Performance / Speicher
-Formatter liest komplettes Dokument als String.
 
-**Verbesserung:** Für sehr lange Dateien optional streaming / Zeilenweise. (LOW Prio) – aktuelles Volumen vermutlich unkritisch.
+## 11. Performance / Memory
+
+Formatter reads full document as string.
+
+**Improvement:** For very large files optionally stream / line-based (LOW priority) – current sizes likely fine.
 
 ---
-## 12. API & Aktivierung
-Aktuell nur `onLanguage:intouch`. Optional: Befehl auch ohne offene Datei? → `onCommand:vbi-format` ergänzen.
 
-**Beispiel:**
+## 12. API & Activation
+
+Currently only `onLanguage:intouch`. Optional: command even without open file? → add `onCommand:vbi-format`.
+
+**Example:**
+
 ```json
 "activationEvents": [
   "onLanguage:intouch",
@@ -191,20 +229,24 @@ Aktuell nur `onLanguage:intouch`. Optional: Befehl auch ohne offene Datei? → `
 ```
 
 ---
-## 13. Dokumentation
-- README: Ergänzen Abschnitt "Known Issues" (EOF Formatter Bug -> behoben ab Version X).
-- Hinweise für Contribution + Testausführung.
-- `TODO.md` verlinken oder nach Abarbeitung in Issues migrieren.
+
+## 13. Documentation
+- README: Add section "Known Issues" (EOF formatter bug -> fixed from version X).
+- Contribution & test execution instructions.
+- Link `TODO.md` or migrate into issues after completion.
 
 ---
-## 14. Continuous Integration (CI)
-Fehlt komplett.
 
-**Empfehlung:** GitHub Actions Workflow `.github/workflows/ci.yml`:
+## 14. Continuous Integration (CI)
+
+Completely missing.
+
+**Recommendation:** GitHub Actions Workflow `.github/workflows/ci.yml`:
 - Matrix: Node 18 / 20.
-- Schritte: Install, Lint, Build, Test.
+- Steps: Install, Lint, Build, Test.
 
 **Sketch:**
+
 ```yml
 name: CI
 on: [push, pull_request]
@@ -223,34 +265,43 @@ jobs:
 ```
 
 ---
-## 15. Telemetry / Logging
-Derzeit: Eigenes Output-Channel Logging. Optional: Strukturiertes Debug Flag; keine PII – OK.
 
-**Optional:** Ein globaler Logger Wrapper mit Level-Enum und Guard.
+## 15. Telemetry / Logging
+
+Currently: Custom output channel logging. Optional: structured debug flag; no PII – OK.
+
+**Optional:** A global logger wrapper with level enum and guard.
 
 ---
-## 16. Future Feature: Selektives Formatieren
-Momentan ganze Datei. Wunsch laut README: Auswahl.
 
-**Implementierung:** In `registerDocumentRangeFormattingEditProvider` zusätzlich registrieren: 
+## 16. Future Feature: Range Formatting
+
+Currently whole document. Desire (per README): selection.
+
+**Implementation:** Additionally register in `registerDocumentRangeFormattingEditProvider`:
 ```ts
 vscode.languages.registerDocumentRangeFormattingEditProvider({ language: 'intouch' }, { provideDocumentRangeFormattingEdits(doc, range) { ... } });
 ```
-Verwendung der existierenden Pure-Format Funktion auf Range-Text.
+Use the existing pure-format function on the range text.
 
 ---
-## 17. Robustere Nesting-Erkennung (Case-Insensitive + Wortgrenzen)
-Sicherstellen, dass Keywords in Variablennamen (z.B. `endifFlag`) nicht greifen.
 
-**Regex Anpassung:** `\bIF\b`, `\bENDIF\b` etc. und vorher Tokenizer.
+## 17. More Robust Nesting Detection (Case-Insensitive + Word Boundaries)
+
+Ensure keywords in variable names (e.g. `endifFlag`) are not matched.
+
+**Regex Adjustment:** `\bIF\b`, `\bENDIF\b` etc. and tokenizer first.
 
 ---
-## 18. Fehlermeldungen / Diagnostics
-Optionaler Mehrwert: `vscode.DiagnosticCollection` nutzen für:
-- Nicht geschlossenes IF / FOR.
-- Unerwartetes `ENDIF` / `NEXT`.
+
+## 18. Diagnostics / Error Reporting
+
+Optional added value: use `vscode.DiagnosticCollection` for:
+- Unclosed IF / FOR.
+- Unexpected `ENDIF` / `NEXT`.
 
 **Sketch:**
+
 ```ts
 const diagnostics: vscode.Diagnostic[] = [];
 if (stack.length > 0) diagnostics.push(new vscode.Diagnostic(new Range(...), 'Unclosed IF', DiagnosticSeverity.Warning));
@@ -258,45 +309,54 @@ collection.set(document.uri, diagnostics);
 ```
 
 ---
-## 19. Automatischer Changelog Standardisieren
-Adoption von `Keep a Changelog` + `npm version` Hooks.
+
+## 19. Standardize Automatic Changelog
+
+Adopt `Keep a Changelog` + `npm version` hooks.
 
 ---
+
 ## 20. Developer Experience
-- `npm run dev` → startet `watch` + `Extension Host` via `vsce` oder `vscode-test`.
-- Hinzufügen von `scripts`: `"lint:fix"`, `"test:watch"`.
+- `npm run dev` → starts `watch` + `Extension Host` via `vsce` or `vscode-test`.
+- Add scripts: `"lint:fix"`, `"test:watch"`.
 
 ---
-## 21. Lizenzpräzisierung
-`"license": "GNU"` ist nicht eindeutig. Vorschlag: `"license": "GPL-3.0-or-later"` und `LICENSE` prüfen / anpassen.
+
+## 21. License Clarification
+`"license": "GNU"` is ambiguous. Suggest: `"license": "GPL-3.0-or-later"` and adjust `LICENSE` if needed.
 
 ---
-## 22. Minimales Refactor Prioritätenliste
-Reihenfolge zur Abarbeitung:
+
+## 22. Minimal Refactor Priority List
+
+Order of execution:
 1. Bugfix EOF (Section 1) + Pure Formatter (2).
-2. Tests (7) für Regression.
-3. Config Typsicherheit (6) + Keyword Tokenizer (5).
-4. Nesting Refactor (4 + 17).
-5. Line-Endings (3).
-6. Lint/Tooling Update (8) + Engine (9) + CI (14).
-7. Selektives Formatieren (16) + Diagnostics (18).
-8. Doku & Changelog (13 + 19 + 21).
+2. Tests (7) for regression.
+3. Config type safety (6) + keyword tokenizer (5).
+4. Nesting refactor (4 + 17).
+5. Line endings (3).
+6. Lint/tooling update (8) + engine (9) + CI (14).
+7. Range formatting (16) + diagnostics (18).
+8. Docs & changelog (13 + 19 + 21).
 
 ---
-## 23. Issue Mapping Vorschlag
-| Sektion | Label | Beschreibung |
-|--------|-------|--------------|
-| 1 | bug | EOF `endif` Verlust |
-| 2 | refactor | Pure Formatter Schnittstelle |
-| 4/5 | enhancement | Tokenizer & Nesting Engine |
-| 7 | test | Neue Testfälle |
-| 8/9/14 | ci/tooling | Modernisierung Toolchain |
-| 16 | feature | Range Formatting |
+
+## 23. Issue Mapping Proposal
+
+| Section | Label | Description |
+|--------|-------|-------------|
+| 1 | bug | EOF `endif` loss |
+| 2 | refactor | Pure formatter interface |
+| 4/5 | enhancement | Tokenizer & nesting engine |
+| 7 | test | New test cases |
+| 8/9/14 | ci/tooling | Toolchain modernization |
+| 16 | feature | Range formatting |
 | 18 | feature | Diagnostics |
-| 21 | license | Lizenzpräzisierung |
+| 21 | license | License clarification |
 
 ---
-## 24. Quick Win Commits (Empfohlen)
+
+## 24. Quick Win Commits (Recommended)
 1. `fix(formatter): preserve last line (endif)`
 2. `refactor(format): remove side-effect edits`
 3. `test(formatter): add eof no-newline case`
@@ -304,7 +364,8 @@ Reihenfolge zur Abarbeitung:
 5. `feat(formatter): range formatting provider`
 
 ---
-## 25. Beispiel ESLint Config (Vorschlag)
+
+## 25. Example ESLint Config (Suggestion)
 ```json
 {
   "root": true,
@@ -324,50 +385,53 @@ Reihenfolge zur Abarbeitung:
 ```
 
 ---
-## 26. Beispiel Test für EOF Bug
+
+## 26. Example Test for EOF Bug
 ```ts
 it('keeps final endif without trailing newline', () => {
-  const input = 'IF a == b THEN\n  c = a;\nENDIF'; // kein CRLF am Ende
+  const input = 'IF a == b THEN\n  c = a;\nENDIF'; // no CRLF at end
   const formatted = formatNestings(forFormat(input, cfg), cfg);
   expect(formatted.endsWith('ENDIF')).to.be.true;
 });
 ```
 
 ---
-## 27. Migrations-Checkliste (Kurzform)
-- [ ] EOF Bug behoben
-- [ ] Pure Formatter
-- [ ] Neue Tests + CI
-- [ ] ESLint integriert
-- [ ] Engine Version aktualisiert
-- [ ] Tokenizer / Nesting Refactor
-- [ ] Range Formatting
+
+## 27. Migration Checklist (Short Form)
+- [ ] EOF bug fixed
+- [ ] Pure formatter
+- [ ] New tests + CI
+- [ ] ESLint integrated
+- [ ] Engine version updated
+- [ ] Tokenizer / nesting refactor
+- [ ] Range formatting
 - [ ] Diagnostics optional
-- [ ] README / Changelog / Lizenz aktualisiert
+- [ ] README / changelog / license updated
 
 ---
-## 28. Risiken / Edge Cases
-- Dateien mit Misch-EOL (`\r\n` + `\n`) → Normalisieren.
-- Sehr große Dateien → Performance messen nach Refactor.
-- Kommentare mit `{` / `}` in Strings → Tokenizer schützt.
-- Variablen, die wie Keywords aussehen (`endifFlag`) → Wortgrenzen sicherstellen.
+
+## 28. Risks / Edge Cases
+- Files with mixed EOL (`\r\n` + `\n`) → normalize.
+- Very large files → measure performance after refactor.
+- Comments with `{` / `}` inside strings → tokenizer protects.
+- Variables resembling keywords (`endifFlag`) → ensure word boundaries.
 
 ---
-## 29. Optional Langfristig
-- Language Server (LSP) statt reinem Extension-Host Code: ermöglicht Hover, Go-to Definition (Basis Heuristiken).
-- Format On Type Support (`onTypeFormatting` für `;` / Zeilenumbruch).
+
+## 29. Optional Long Term
+- Language Server (LSP) instead of pure extension-host code: enables hover, go-to definition (basic heuristics).
+- Format On Type support (`onTypeFormatting` for `;` / newline).
 
 ---
-## 30. Zusammenfassung
-Wichtigster Sofortschritt: Schleifen-Bedingungen in `formatNestings` korrigieren, Pure-Function-Ansatz einführen und Tests für End-of-File Edge Cases. Danach strukturierte Modernisierung (Tooling + Architektur) und optionale Features.
+
+## 30. Summary
+Most important immediate step: correct loop conditions in `formatNestings`, implement pure-function approach and tests for end-of-file edge cases. Afterwards perform structured modernization (tooling + architecture) and optional features.
 
 ---
-*(Erstellt automatisch am 2025-09-14)*
+*(Generated automatically on 2025-09-14)*
 
-
-
-## 31. Ergänzungen
-- im ordner errors liegen einige dateien die fehlerhafte formatierungen enthalten, diese sollten geprüft und fehler korrigiert werden.
-- in if statement werden manchmal <=, >= ==, auseinander gerissen, dies sollte auch geprüft und korrigiert werden.
-- Variablen werden nicht als solche erkannt.
+## 31. Additions
+- In the folder `errors` there are some files containing incorrect formatting; they should be reviewed and issues corrected.
+- In IF statements sometimes <=, >=, == get split apart; this should also be reviewed and fixed.
+- Variables are not recognized as such.
 

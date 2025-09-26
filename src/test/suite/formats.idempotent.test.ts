@@ -1,19 +1,29 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
+import * as path from 'path';
 const fo = require('../../formats');
 const functions = require('../../functions');
-let config = functions.getConfig();
+const config = functions.getConfig();
 
 /*
-  Test stellt sicher, dass zweimaliges Anwenden derselben Formatierungs-Pipeline
-  (forFormat -> formatNestings -> RemoveEmptyLines) keine zusätzlichen Änderungen erzeugt.
-  Idempotenz ist wichtig für Pure-Formatter-Semantik.
+  Idempotency Test:
+  Applies full formatting pipeline twice on a real-world fixture (all.test.vbi).
+  Any difference between first and second pass indicates an unstable rule
+  (typically misplaced indentation logic or stateful mutation across passes).
 */
 
-suite('test formats.ts - Idempotency', () => {
-  test('Double formatting produces identical result', () => {
-    const input = 'IF a==b THEN  c=a;ENDIF';
-    const once = fo.formatNestings(fo.forFormat(input, config), config);
-    const twice = fo.formatNestings(fo.forFormat(once, config), config);
-    assert.equal(twice, once, 'Formatter ist nicht idempotent – zweiter Durchlauf verändert den Text.');
+function formatFull(text: string): string {
+  const pre = fo.preFormat(text, config);
+  return fo.formatNestings(pre, config);
+}
+
+suite('test formats.ts - Idempotency (fixture)', () => {
+  test('Full-file idempotency on all.test.vbi', () => {
+    // __dirname points to out/test/suite at runtime; go up three levels to project root.
+    const fixturePath = path.join(__dirname, '..', '..', '..', 'src', 'test', 'suite', 'testfiles', 'all.test.vbi');
+    const raw = fs.readFileSync(fixturePath, 'utf8');
+    const once = formatFull(raw);
+    const twice = formatFull(once);
+    assert.strictEqual(twice, once, 'Formatter is not idempotent – second pass changes the file.');
   });
 });

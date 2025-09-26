@@ -1,0 +1,3 @@
+{Format7: instance prefix highlighting}
+STATION1:S09BNOnline = 1;
+IF STATION2:S09BNOnline == 0 THEN STATION2:S09BNOnline = 1; ENDIF;

@@ -2,7 +2,7 @@
 	"name": "intouch-language",
 	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021-2025 vitalyruhl",
 	"description": "Intouch-Language syntax highlighting, formatter and code snippets for VSCode",
-	"version": "1.4.3",
+	"version": "1.5.0",
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
@@ -105,11 +105,6 @@
 					"default": false,
 					"markdownDescription": "Delete empty lines in comments also."
 				},
-				"VBI.formatter.FormatAlsoInComment": {
-					"type": "boolean",
-					"default": false,
-					"markdownDescription": "Allow format in comments."
-				},
 				"VBI.formatter.BC.BlockCodeBegin": {
 					"type": "string",
 					"default": "{>",
@@ -143,6 +138,17 @@
 					"type": "string",
 					"default": "{#",
 					"markdownDescription": "Turn this comment line back (exclude from Nesting)."
+				},
+				"VBI.formatter.Misc.ReplaceTabToSpaces": {
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "Replace tabs with spaces."
+				},"VBI.formatter.Misc.IndentSize": {
+					"type": "number",
+					"default": 4,
+					"minimum": 1,
+					"maximum": 10,
+					"markdownDescription": "Number of spaces to use for each indentation level (1-10)."
 				}
 			}
 		}
@@ -162,6 +168,7 @@
 		"publish-minor": "npm run compile && npm run build:theme && npm run bundle && vsce package && vsce publish minor",
 		"publish-major": "npm run compile && npm run build:theme && npm run bundle && vsce package && vsce publish major",
 		"publish": "npm run compile && npm run build:theme && npm run bundle && vsce package && vsce publish",
+		"makePackage": "npm run compile && npm run build:theme && npm run bundle && vsce package",
 		"clean:all": "rimraf ./out ./dist ./node_modules ./package-lock.json",
 		"clear:all": "npm run clean:all",
 		"clear:out": "rimraf ./out ./dist",

@@ -10,6 +10,25 @@ Changelog:
     V1.5.0		26.09.2025		ViRu		refactored for new version 1.5.0, remove obsolete tests
 }    
 
+
+{-------------------------------------------}
+{>Bug 13.02.2022 next not in plan when there are an 'EXIT FOR' satement}
+FOR INDEX = 1 TO cpuen
+ANLAGE = StringTrim(SYS_S7CPU_name,3);
+wcAddItem("abc",ANLAGE); 
+
+LogMessage("DEBUG: " + StringLeft(SYS_TopicTemp,4)+ " / " + SYS_S7CPU); 
+IF StringLeft(SYS_TopicTemp,4) == SYS_S7CPU THEN
+    aa = SYS_S7CPU_bbname;
+ENDIF;
+
+IF ii == aa THEN EXIT FOR; ENDIF;      
+hsql = SQLNext(connID);
+NEXT;
+{<-------------------------------------------}
+
+
+
 {-------------------------------------------}
 {>Futures / Bugs / Issues}
 call xGatawaySettings ( );{fixed 2021.10.29: No space before and between and after brackets call 'xGatawaySettings ( );'==> 'xGatawaySettings()'}  

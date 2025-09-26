@@ -1,7 +1,7 @@
 
 import * as vscode from 'vscode';
 import { workspace, window } from 'vscode';
-import { forFormat, formatNestings } from './formats';
+import { preFormat, formatNestings } from './formats';
 import { CRLF } from "./const";
 
 export let config: any = {};
@@ -15,12 +15,12 @@ export function formatTE(range: vscode.Range): vscode.TextEdit[] {
 }
 
 function format(range: vscode.Range, document: vscode.TextDocument, config: any): string {
-	// PURE IMPLEMENTATION (Refactor 2025-09-14): Keine direkten Editor-Seiteneffekte mehr.
+	// PURE IMPLEMENTATION (Refactor 2025-09-14): No direct editor side-effects anymore.
 	let regex: RegExp;
 	let formatted: string = document.getText(range);
 
 	// 1. Keyword / Operator Formatting
-	formatted = forFormat(formatted, config);
+	formatted = preFormat(formatted, config);
 	// 2. Nestings
 	formatted = formatNestings(formatted, config);
 
@@ -69,7 +69,14 @@ export function getConfig() {
 
 
 	//misc
-	config.FormatAlsoInComment = workspace.getConfiguration().get('VBI.formatter.FormatAlsoInComment');
+	config.ReplaceTabToSpaces = workspace.getConfiguration().get('VBI.formatter.Misc.ReplaceTabToSpaces');
+	config.IndentSize = workspace.getConfiguration().get('VBI.formatter.Misc.IndentSize');
+	if (typeof config.IndentSize !== 'number' || config.IndentSize < 1 || config.IndentSize > 10) {
+		config.IndentSize = 4;
+	}
+	if (typeof config.ReplaceTabToSpaces !== 'boolean') {
+		config.ReplaceTabToSpaces = true; // fallback to default from package.json
+	}
 	//config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
 
 	//log this

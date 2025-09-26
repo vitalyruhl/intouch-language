@@ -17,11 +17,11 @@ function formatTE(range) {
     return [vscode.TextEdit.replace(range, newText)];
 }
 function format(range, document, config) {
-    // PURE IMPLEMENTATION (Refactor 2025-09-14): Keine direkten Editor-Seiteneffekte mehr.
+    // PURE IMPLEMENTATION (Refactor 2025-09-14): No direct editor side-effects anymore.
     let regex;
     let formatted = document.getText(range);
     // 1. Keyword / Operator Formatting
-    formatted = (0, formats_1.forFormat)(formatted, config);
+    formatted = (0, formats_1.preFormat)(formatted, config);
     // 2. Nestings
     formatted = (0, formats_1.formatNestings)(formatted, config);
     // 3. Remove EmptyLines
@@ -60,7 +60,14 @@ function getConfig() {
     exports.config.RegionBlockCodeEnd = vscode_1.workspace.getConfiguration().get('VBI.formatter.Region.BlockCodeEnd');
     exports.config.RegionBlockCodeExclude = vscode_1.workspace.getConfiguration().get('VBI.formatter.Region.BlockCodeExclude');
     //misc
-    exports.config.FormatAlsoInComment = vscode_1.workspace.getConfiguration().get('VBI.formatter.FormatAlsoInComment');
+    exports.config.ReplaceTabToSpaces = vscode_1.workspace.getConfiguration().get('VBI.formatter.Misc.ReplaceTabToSpaces');
+    exports.config.IndentSize = vscode_1.workspace.getConfiguration().get('VBI.formatter.Misc.IndentSize');
+    if (typeof exports.config.IndentSize !== 'number' || exports.config.IndentSize < 1 || exports.config.IndentSize > 10) {
+        exports.config.IndentSize = 4;
+    }
+    if (typeof exports.config.ReplaceTabToSpaces !== 'boolean') {
+        exports.config.ReplaceTabToSpaces = true; // fallback to default from package.json
+    }
     //config.AllowInlineIFClause = workspace.getConfiguration().get('VBI.formatter.AllowInlineIFClause');
     //log this
     console.log('getConfig():', exports.config);

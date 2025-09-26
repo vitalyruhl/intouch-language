@@ -1,14 +1,21 @@
 {Format2: Operator spacing}
-a = 1 +2-3;
+a = 1 + 2 - 3;
 b = 4;
-c = d -5;
+c = d - 5;
+
 {Format2: check negative numbers}
 c = d - 5 - -6;
 d = -7 + 8;
 e = -9 - -10;
 f = -11 * -12 / -13;
-g = -14 + -15 - -16 * -17 / -18;
-{Format2: do not change dashed variable names}
-new12-issue-dashed-variable-123 = "this variable shall not be formatted"
+g = -14 + -15 - -16 * -17 / -18;
+
+{Format2: check spacing, do change on variable}
+ab = c + d + e-f - gh - ij - kl * mn / op;
+
 {Format2: do not change if you find dashes in text}
-new12-issue-dashed-variable-123 = "this variable shall not be formatted and -5 - 6 etc here as text - also here -7-8-9 +2 -12 "
+new1-2-issue-dashed-variable-12-3 = "this variable shall not be formatted and -5 - 6 etc here as text - also here -7-8-9 +2 -12 ";
+
+{Format2: check spacing of ;, etc in text and comments}
+abc = "this is a test; with ; in text; and , and . and : and ;";
+{comment with ; , . : and ; and text ;}

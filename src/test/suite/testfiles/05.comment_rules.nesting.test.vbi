@@ -1,7 +1,8 @@
 {Format5: Comment rules nesting}
 
-{Greater than will nested +}
-{>Bug 13.02.2022 next not in plan when there are an 'EXIT FOR' satement}
+{-------------------------------------------}
+{Format5-1: Greater than will nested +1}
+{> folowing lines shall be nested}
 FOR INDEX = 1 TO cpuen
 ANLAGE = StringTrim(SYS_S7CPU_name,3);
 wcAddItem("WUAuswahl",ANLAGE);
@@ -17,28 +18,71 @@ NEXT;
 {les then will moov nestig back}
 {<-------------------------------------------}
 
-{-------------------------------------------}
-{>Futures / Bugs / Issues}
-tmp="\\share\";
-call xGatawaySettings ( );{fixed 2021.10.29: No space before and between and after brackets call 'xGatawaySettings ( );'==> 'xGatawaySettings()'}
-ITXStartAppInDirectory ( SYS_ToolsPath + "string ( with ) whitespaces test.", SYS_ToolsPath ) ;{fixed 2021.10.29: Remove single spaces `ITXStartAppInDirectory ( SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath ) ;` ==> `ITXStartAppInDirectory(SYS_ToolsPath + "\AA_CurrentAlarms2DB.exe", SYS_ToolsPath);`}
+{Format5-2: >this lines shall not be nested!>}
+SYS_Anlage = -1;
+
+{>-------------------------------------------}
+{Format5-3: Nesting a comment-Block, but not formatig it - its a comment! - deaktivated, because its a bug}
 {<-------------------------------------------}
 
-{this lines shall not be nested!}
-SYS_Anlage = -1;{fixed 2021.10.29: no space on -/+ before Number!}
-c=a+b +d- e+ f -g - x;
+{-------------------------------------------}
+{Format5-4: Adwanced nesting with comments}
+{> will be nested +1}
+a = b; {comment}
+{# This line will be not nested, because its a special comment #}
+a = b;
 
-{>------------------------------------------------------------------------------}
-{Formating-Test comment2: Nesting a comment-Block, but not formatig it - its a comment!
-if that if is Big after Formatting, then the code is wrong...
-if sys_Debug_info > 0 then LogMessage(Funkt +"Erste-MA:[" + Text(iErsteMA,"#") "]"); endif;
-if sys_Debug_info > 0 then LogMessage(Funkt+ "Bezeichnung:["+ sFUBezeichnung + "]"); endif;}
-{<------------------------------------------------------------------------------}
+b = c; {comment}
+{< go back to normal nesting}
+b = c;
+{-------------------------------------------}
+
 
 {-------------------------------------------}
-{>> What do we make if there 2 nested comments?}
+{Format5-5: Adwanced double nesting with comments}
+{> 1- will be nested +1}
+a = b; {comment}
+{> 2- will be nested +1}
+a = b;
+{# This line will be not nested, because its a special comment #}
+a = b;
+{< go back = -1}
+b = c; {comment}
+{< go back to normal nesting}
+b = c;
+{-------------------------------------------}
+
+
+{-------------------------------------------}
+{Format5-6: check what happens if there are 2 nested comments in one line}
+{>> What do we make if there 2 nested comments - nothing, because one nesting in one line is enough}
 a = "\\share\";
 {<-------------------------------------------}
 b = "\\share\";
+{-------------------------------------------}
+
+{-------------------------------------------}
+{Format5-7: check what happens if there is a back-nesting rule in a not nested line}
 {<-------------------------------------------}
 c = "\\share\";
+{-------------------------------------------}
+
+{-------------------------------------------}
+{Format5-8: check region Rule}
+{region this is a region nesting rule}
+c = "\\share\";
+{-------------------------------------------}
+{Format5-8-2: Adwanced double nesting in region}
+{> 1- will be nested +1}
+a = b; {comment}
+{> 2- will be nested +1}
+a = b;
+{# This line will be not nested, because its a special comment #}
+a = b;
+{< go back = -1}
+b = c; {comment}
+{< go back to normal nesting}
+b = c;
+{-------------------------------------------}
+{endregion}
+{-------------------------------------------}

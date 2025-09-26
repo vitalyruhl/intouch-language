@@ -1,77 +1,87 @@
 {Format4: Basic indentation}
-{IF statement}
-IF a == 1 THEN
-	b = 2
-IF b == 2 THEN c = 3; ENDIF;
-ENDIF;
+{mixed IF statement}
+IF (a == 1) THEN
+    b = 2;
+    IF b == 2 THEN c = 3; ENDIF;
+ENDIF;
+
 {FOR statement}
-FOR INDEX = 1 TO cpuen
-	ANLAGE = StringTrim(SYS_S7CPU_name,3);
-	wcAddItem("WUAuswahl", ANLAGE); 
-	LogMessage("DEBUG: " + StringLeft(SYS_TopicTemp,4)+ " / " + SYS_S7CPU_anlagenteil); 
-	IF StringLeft(SYS_TopicTemp,4) == SYS_S7CPU_anlagenteil THEN
-		WU_AuswahlTemp = SYS_S7CPU_name;
-	ENDIF;
-IF INDEX == cpuen THEN EXIT FOR; ENDIF;
-HER_SQLStatus = SQLNext(HER_ConfigConnectionID);
-NEXT;
+FOR i = 1 TO j
+    a = StringTrim(b, 3);
+    wcAddItem("text", a);
+
+    LogMessage("DEBUG: " + StringLeft(abc, 4)+ "\. /abc\def; oha:;" + aa);
+    IF StringLeft(SYS_TopicTemp, 4) == SYS_S7CPU_anlagenteil THEN
+        WU_AuswahlTemp = SYS_S7CPU_name;
+    ENDIF;
+
+    IF i == a THEN EXIT FOR; ENDIF; {attention: "exit for" shall not be change the nesting!}
+    gg = SQLNext(ConnectionID);
+NEXT;
+
 {------------------------------------------------------------------------------}
 {if-then Nesting-Test}
-IF sys_pcname <> sys_STATION01BiosName THEN
-	IF sys_pcname <> sys_STATION02BiosName THEN
-		IF sys_pcname <> sys_STATION03BiosName THEN
-			IF sys_pcname <> sys_STATION04BiosName THEN
-				IF sys_pcname <> sys_STATION05BiosName THEN
-					IF sys_pcname <> sys_STATION06BiosName THEN
-						IF sys_pcname <= sys_STATION07BiosName THEN
-							IF sys_pcname >= sys_STATION08BiosName THEN
-								IF sys_pcname =  > sys_STATION09BiosName THEN
-									IF sys_STATION01Online THEN
-										sys_STATION09BiosName = sys_pcname;
-										STATION1:sys_STATION09Online = 1;
-									ELSE
-										sys_STATION01BiosName = sys_pcname;
-									ENDIF;
-								ENDIF;
-							ENDIF;
-						ENDIF;
-					ENDIF;
-				ENDIF;
-			ENDIF;
-		ENDIF;
-	ENDIF;
+IF PCN <> S01BN THEN
+    IF PCN <> S02BN THEN
+        IF PCN <> S03BN THEN
+            IF PCN <> S04BN THEN
+                IF PCN <> S05BN THEN
+                    IF PCN <> S06BN THEN
+                        IF PCN <= S07BN THEN
+                            IF PCN >= S08BN THEN
+                                IF PCN >= S09BN THEN
+                                    IF sys_STATION01Online THEN
+                                        S09BN = PCN;
+                                        STATION1:S09BNOnline = 1;
+                                    ELSE
+                                        S01BN = PCN;
+                                    ENDIF;
+                                ENDIF;
+                            ENDIF;
+                        ENDIF;
+                    ENDIF;
+                ENDIF;
+            ENDIF;
+        ENDIF;
+    ENDIF;
 ENDIF;
-{------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
-{if-then multiline - test2 bug on SYS_LoggingSwitch}
-IF StringInString(SYS_LoggingNodes,SYS_PCName,1,0) == 0 AND
-	SYS_PCName <> SYS_LoggingServer AND
-	SYS_PCName <> SYS_LoggingBackup AND
-	SYS_LoggingBackup <> "-" AND
-	SYS_NADKnoten == 1 AND
-SYS_LoggingSwitch == 0 THEN
-	SYS_ApplicationDirectory = INIReadString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory"); 
-	{INIWriteString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory",StringReplace(SYS_ProjektPath,"D:","\\" + SYS_LoggingBackup + "\D$",0,1,0));}
-	INIWriteString(SYS_OSPath + "WIN.INI","InTouch","ApplicationDirectory",StringReplace(SYS_ProjektPath,"D:","\\" + SYS_LoggingBackup + "\D",0,1,0)); {09.11.2020 wegen Freigabe$ nicht erlaubt}
-	SYS_LoggingSwitch = 1;
-	RestartWindowViewer();
+
+{------------------------------------------------------------------------------}
+{if-then multiline-Expression}
+IF StringInString(SYS_LoggingNodes, PCN, 1, 0) == 0 AND
+        PCN <> SYS_LoggingServer AND
+        PCN <> SYS_LoggingBackup AND
+        SYS_LoggingBackup <> "-" AND
+        SN == 1 AND
+        SYS_LS == 0 THEN
+    SYS_ApplicationDirectory = INIReadString(SYS_OSPath + "WIN.INI", "InTouch", "ApplicationDirectory");
+    INIWriteString(SYS_OSPath + "WIN.INI", "InTouch", "ApplicationDirectory", StringReplace(SYS_ProjektPath, "D:", "\\" + SYS_LoggingBackup + "\D", 0, 1, 0));
+    SYS_LS = 1;
+    RestartWindowViewer();
 ENDIF;
-{------------------------------------------------------------------------------}
+{------------------------------------------------------------------------------}
+
 {------------------------------------------------------------------------------}
 {nesting-test for 2}
-FOR i = 1 TO StringLen(sInputString) STEP 2{Warum ist index bei Intouch-Strings mit 1 beginnend und nicht 0?}
-	SZ = StringMid(sInputString,i,1);
-	IF SZ == sDelimiter THEN {Trennzeichen gefunden}
-		Splitt = Splitt + 1;
-		IF Splitt == iIndex THEN{das richtige Element gefunden}
-		IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "True Splitt(" + text(Splitt,"#")+ ")/i:(" + text(i,"#")+ "):[" + Temp_Return + "]"); ENDIF; 
-			EXIT FOR;
-		ELSE
-		IF Sys_Debug_info > 0 THEN LogMessage(Funkt + " Splitt(" + text(i,"#")+ "):[" + Temp_Return + "]"); ENDIF; 
-			Temp_Return = ""; 
-		ENDIF;
-	ELSE
-		Temp_Return = Temp_Return + SZ;{Zum Schluss wird der Rest ausgegeben!!!}
-	ENDIF;
-NEXT;
+FOR i = 1 TO StringLen(inS) STEP 2
+
+    SZ = StringMid(inS, i, 1);
+
+    IF SZ == sDelimiter THEN {comment after then}
+        Splitt = Splitt + 1;
+
+        IF Splitt == iIndex THEN {comment close after then}
+            {test much brackets in the next line}
+            IF Sys_Debug_info > 0 THEN LogMessage(Funkt + "True Splitt(" + text(Splitt, "#")+ ")/i:(" + text(i, "#")+ "):[" + Temp_Return + "]"); ENDIF;
+            EXIT FOR; {remember do not change nesting on exit for}
+        ELSE
+            IF Sys_Debug_info > 0 THEN LogMessage(Funkt + " Splitt(" + text(i, "#")+ "):[" + Temp_Return + "]"); ENDIF;
+            Temp_Return = "";
+        ENDIF;
+    ELSE
+        Temp_Return = Temp_Return + SZ;
+    ENDIF;
+NEXT;
+
 {------------------------------------------------------------------------------}

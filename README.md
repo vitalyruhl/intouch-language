@@ -11,7 +11,7 @@
   <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/logo.png" alt="Intouch-Language Logo" width="10%" /></a>
 </p>
 
-<!-- Badges mit SVG entfernt für Marketplace Richtlinien. Optional PNG-Varianten hinzufügen. -->
+<!-- Badges with SVG removed for Marketplace guidelines. Optional: add PNG variants if needed. -->
 
 <br>
 <br>
@@ -59,7 +59,7 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 <br>
 <br>
 
-## Example diffrent themes
+## Example different themes
 
 <table align="center" width="100%" border="0">
   <tr>
@@ -87,16 +87,9 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 <br>
 <br>
 
-# Test and example
-
-> You can test it on this **%USERPROFILE%\\.vscode\extensions\intouch-language\other\test\test.vbi** by press **`shift + alt + F`**
-
-<br>
-<br>
-
 # Installation
 
-- Standatd Installation:
+- Standard Installation:
   - Install it in ext.-manager (type Intouch) or from
     [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
 - Install from Github:
@@ -105,7 +98,7 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
     - `git clone https://github.com/vitalyruhl/intouch-language.git`
   - Open shell there and type `npm i`
   - Run: `npm run compile`, or `npm run watch` if you want to make changes in src folder.
-  - You must restart the VS-Code after installation, to apply new settings
+  - You must restart VS Code after installation to apply new settings.
 
 <p align="center">
   <br />
@@ -154,25 +147,35 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 # Todo
 
+## Known Issues / Notes
+
+The following items are either recently resolved or planned but not yet implemented:
+
+- PLANNED: Range (selection) formatting. Current command formats the entire document.
+- PLANNED: Diagnostics (unclosed IF/FOR, unexpected ENDIF/NEXT) – tracked in modernization plan.
+- PLANNED: Tokenizer-based nesting & keyword uppercasing refactor for improved robustness.
+- NOTE: Multiline IF continuation indentation intentionally uses base + 2 spaces before THEN; THEN line stays aligned with expression by design.
+- NOTE: Spacing inside string literals and single-line brace comments is preserved intentionally; only outer code regions are normalized.
+
+
 - **Formatter**
   - Issues
-    - Bug 13.02.2022 `For-next` not in plan when there are an `EXIT FOR` statement
-    - Bug 13.02.2022 Nesting bug -> code in multiline comment will formatted to?!
-  - Futures planned
-    - Format on selection (now is formatting document!)
+    - no issues
+  - Planned features
+    - Format selected range (currently formats entire document)
 
 <br>
 
 - **Syntax-highlighting**
   - No issues
-  - Futures planned
-    - Add code checker for some errors in code
+  - Planned features
+    - Add static code diagnostics for common errors
 
 <br>
 
 - **Snippets**
   - No issues
-  - No futures planned
+  - No planned features
 
 <br>
 <br>
@@ -181,9 +184,18 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 # What's new in Intouch-Language
 
+### V1.5.0
+
+- Added deeper multiline IF continuation indentation (base + 2) keeping THEN line aligned with expression
+- Removed spaces before semicolons outside of strings (strings remain untouched)
+- Preserved all spacing inside string literals and single-line brace comments
+- Added highlighting support for instance prefixes of the form `PREFIX:Variable`, prefix and variable now use different scopes for theming
+- General whitespace normalization (trailing whitespace removal, internal multi-space collapse outside strings/comments)
+
+
 ### V1.4.1-V1.4.3
 
-- Add math / intrinsic style functions for uppercasing in formatter 2025-09-25: sqr, sin, cos, tan, atn, exp, log, int, frac, round, rnd, sqrt
+- Add math / intrinsic style functions for uppercasing in formatter: sqr, sin, cos, tan, atn, exp, log, int, frac, round, rnd, sqrt
 - bugfix in formatter for '>=' operator
 - bugfix in deletion of last line in file
 - update dependencies
@@ -200,20 +212,10 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 - Add own dark theme based on [GitHub (Dark Classic) VS Code theme](https://github.com/BerriJ/github-vscode-theme-dark-classic) from BerriJ
 - Some bugfixes in regex for Keywords
 
-### V1.2.4
+### V1.2.1 - V1.2.4
 
 - Update dependencies
-
-### V1.2.3
-
-- Bomp bugfixes
-
-### V1.2.2
-
 - Bugfix on snippets
-
-### V1.2.1
-
 - Bugfix trailing whitespace before `-`
 
 ### V1.2.0
@@ -225,16 +227,12 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 - Add wordPattern and indentationRules into language configuration.
 - <fix bug - issue #13, formatter formats dashed variable `foo-bar` --> `foo - bar`
 
-### V1.1.1
-
-- Version issue with format problem on <>, =<, =>, == was published with greater version
-
-### V1.1.0
+### V1.1.0 - V1.1.1
 
 - Add Code-Blocks for Nesting and Folding in code without keywords Start:`{>`, End:`{<`
-- Add **Snipped** cb# : add new Code-Block
-- Add **Snipped** for# : add for-next-block
-- Add **Snipped** func# : add new empty Function
+- Add **Snippet** cb# : add new Code-Block
+- Add **Snippet** for# : add for-next-block
+- Add **Snippet** func# : add new empty Function
 - Correct some spelling mistakes
 - Remove debugging settings
 
