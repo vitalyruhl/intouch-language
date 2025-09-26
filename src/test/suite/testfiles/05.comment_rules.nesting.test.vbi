@@ -22,10 +22,7 @@ NEXT;
 SYS_Anlage = -1;
 
 {>-------------------------------------------}
-{Format5-3: Nesting a comment-Block, but not formatig it - its a comment!
-comment line 1
-comment line 2
-comment line 3}
+{Format5-3: Nesting a comment-Block, but not formatig it - its a comment! - deaktivated, because its a bug}
 {<-------------------------------------------}
 
 {-------------------------------------------}

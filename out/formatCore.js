@@ -388,6 +388,8 @@ function formatNestings(text, config) {
                 .replace(/u0001/gim, '\t')
                 .replace(/u0002/gim, ';');
         }
+        // Capture original line before potential leading whitespace removal
+        const originalLine = codeFragments[i];
         if (!isEmptyLine && !multilineComment) {
             const rawLine = codeFragments[i];
             const hasIF = /\bIF\b/i.test(rawLine);
@@ -396,6 +398,7 @@ function formatNestings(text, config) {
             const inlineIf = hasIF && hasTHEN && hasENDIF; // single-line
             const continuationTrigger = hasIF && !hasTHEN && /(AND|OR|NOT)\s*$/i.test(rawLine.trim());
             let exclude = false;
+            // Remove leading whitespace ONLY for lines that are subject to indentation logic.
             codeFragments[i] = codeFragments[i].replace(const_1.REGEX.gm_GET_NESTING, "");
             if (codeFragments[i].search(new RegExp(regexCB, 'gi')) !== -1) {
                 nestingCounter++;
@@ -485,6 +488,8 @@ function formatNestings(text, config) {
             // then we preserve indentation exactly as-is (no added / removed indent).
             const closesMultiline = prevMultilineState && codeFragments[i].includes('}');
             if (multilineComment || closesMultiline || prevMultilineState) {
+                // Restore original line (with its original indentation) because we may have trimmed earlier logic
+                codeFragments[i] = originalLine;
                 multiIfActive = false; // reset multi-IF state when traversing comment blocks
                 if (nestingCounterPrevious !== nestingCounter)
                     nestingCounterPrevious = nestingCounter;
