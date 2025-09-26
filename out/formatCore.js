@@ -348,6 +348,7 @@ function formatNestings(text, config) {
     const hadFinalCRLF = text.endsWith(const_1.CRLF);
     codeFragments = text.split(const_1.CRLF);
     for (let i = 0; i < codeFragments.length; i++) {
+        const prevMultilineState = multilineComment; // remember state entering this line
         let isEmptyLine = false;
         codeFragments[i] = codeFragments[i].replace(/\s+$/g, "");
         if (codeFragments[i] === "")
@@ -479,7 +480,17 @@ function formatNestings(text, config) {
             }
         }
         if (!isEmptyLine) {
-            // Determine visual depth
+            // If we are inside a multi-line brace comment block OR this is the closing line
+            // (previous line(s) were multiline comment and this one ends with a closing brace)
+            // then we preserve indentation exactly as-is (no added / removed indent).
+            const closesMultiline = prevMultilineState && codeFragments[i].includes('}');
+            if (multilineComment || closesMultiline || prevMultilineState) {
+                multiIfActive = false; // reset multi-IF state when traversing comment blocks
+                if (nestingCounterPrevious !== nestingCounter)
+                    nestingCounterPrevious = nestingCounter;
+                continue;
+            }
+            // Determine visual depth for real code lines
             let visualDepth = nestingCounterPrevious;
             if (multiIfActive) {
                 // lines after initial IF (continuation lines) show baseDepth+2 now (user request)

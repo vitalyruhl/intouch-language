@@ -311,11 +311,12 @@ export function formatNestings(text: string, config: FormatterConfig): string {
   const hadFinalCRLF = text.endsWith(CRLF);
   codeFragments = text.split(CRLF);
   for (let i = 0; i < codeFragments.length; i++) {
+    const prevMultilineState = multilineComment; // remember state entering this line
     let isEmptyLine = false;
     codeFragments[i] = codeFragments[i].replace(/\s+$/g, "");
     if (codeFragments[i] === "") isEmptyLine = true;
-    if (codeFragments[i].search(REGEX.g_CHECK_OPEN_COMMENT) !== -1) multilineComment = true;
-    if (codeFragments[i].search(REGEX.g_CHECK_CLOSE_COMMENT) !== -1) multilineComment = false;
+  if (codeFragments[i].search(REGEX.g_CHECK_OPEN_COMMENT) !== -1) multilineComment = true;
+  if (codeFragments[i].search(REGEX.g_CHECK_CLOSE_COMMENT) !== -1) multilineComment = false;
     let str = codeFragments[i].match(REGEX.gm_GET_STRING);
     if (str) {
       // Protect ALL string literals on the line by masking spaces/tabs/semicolons
@@ -347,6 +348,9 @@ export function formatNestings(text: string, config: FormatterConfig): string {
         .replace(/u0001/gim, '\t')
         .replace(/u0002/gim, ';');
     }
+    // Capture original line before potential leading whitespace removal
+    const originalLine = codeFragments[i];
+
     if (!isEmptyLine && !multilineComment) {
       const rawLine = codeFragments[i];
       const hasIF = /\bIF\b/i.test(rawLine);
@@ -356,7 +360,8 @@ export function formatNestings(text: string, config: FormatterConfig): string {
       const continuationTrigger = hasIF && !hasTHEN && /(AND|OR|NOT)\s*$/i.test(rawLine.trim());
 
       let exclude = false;
-      codeFragments[i] = codeFragments[i].replace(REGEX.gm_GET_NESTING, "");
+  // Remove leading whitespace ONLY for lines that are subject to indentation logic.
+  codeFragments[i] = codeFragments[i].replace(REGEX.gm_GET_NESTING, "");
       if (codeFragments[i].search(new RegExp(regexCB, 'gi')) !== -1) { nestingCounter++; }
       else if (codeFragments[i].search(new RegExp(regexCEx, 'gi')) !== -1) { thisLineBack = true; }
       else if (codeFragments[i].search(new RegExp(regexCE, 'gi')) !== -1) {
@@ -406,7 +411,19 @@ export function formatNestings(text: string, config: FormatterConfig): string {
       }
     }
     if (!isEmptyLine) {
-      // Determine visual depth
+      // If we are inside a multi-line brace comment block OR this is the closing line
+      // (previous line(s) were multiline comment and this one ends with a closing brace)
+      // then we preserve indentation exactly as-is (no added / removed indent).
+      const closesMultiline = prevMultilineState && codeFragments[i].includes('}');
+      if (multilineComment || closesMultiline || prevMultilineState) {
+        // Restore original line (with its original indentation) because we may have trimmed earlier logic
+        codeFragments[i] = originalLine;
+        multiIfActive = false; // reset multi-IF state when traversing comment blocks
+        if (nestingCounterPrevious !== nestingCounter) nestingCounterPrevious = nestingCounter;
+        continue;
+      }
+
+      // Determine visual depth for real code lines
       let visualDepth = nestingCounterPrevious;
       if (multiIfActive) {
         // lines after initial IF (continuation lines) show baseDepth+2 now (user request)

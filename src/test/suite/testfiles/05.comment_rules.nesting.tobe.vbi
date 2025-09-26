@@ -22,10 +22,10 @@
 SYS_Anlage = -1;
 
 {>-------------------------------------------}
-    {Format5-3: Nesting a comment-Block, but not formatig it - its a comment!
-    comment line 1
-    comment line 2
-    comment line 3}
+{Format5-3: Nesting a comment-Block, but not formatig it - its a comment!
+comment line 1
+comment line 2
+comment line 3}
 {<-------------------------------------------}
 
 {-------------------------------------------}
@@ -44,11 +44,11 @@ b = c;
 {Format5-5: Adwanced double nesting with comments}
 {> 1- will be nested +1}
     a = b; {comment}
-    {> 2- will be nested +1}
+{> 2- will be nested +1}
         a = b;
-    {# This line will be not nested, because its a special comment #}
+{# This line will be not nested, because its a special comment #}
         a = b;
-    {< go back = -1}
+{< go back = -1}
     b = c; {comment}
 {< go back to normal nesting}
 b = c;
@@ -72,18 +72,18 @@ c = "\\share\";
 {Format5-8: check region Rule}
 {region this is a region nesting rule}
     c = "\\share\";
-    {-------------------------------------------}
-    {Format5-8-2: Adwanced double nesting in region}
-    {> 1- will be nested +1}
+{-------------------------------------------}
+{Format5-8-2: Adwanced double nesting in region}
+{> 1- will be nested +1}
         a = b; {comment}
-        {> 2- will be nested +1}
+{> 2- will be nested +1}
             a = b;
-        {# This line will be not nested, because its a special comment #}
+{# This line will be not nested, because its a special comment #}
             a = b;
-        {< go back = -1}
+{< go back = -1}
         b = c; {comment}
-    {< go back to normal nesting}
+{< go back to normal nesting}
     b = c;
-    {-------------------------------------------}
+{-------------------------------------------}
 {endregion}
 {-------------------------------------------}

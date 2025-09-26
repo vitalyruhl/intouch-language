@@ -2,27 +2,27 @@
 
 {
 Changelog:
-	V0.0.1		25.10.2021 		ViRu 	define Tests
-	V0.0.2		27.10.2021 		ViRu 	add some Tests and modify comments
-	V1.0.0		28.10.2021 		ViRu 	add Test for next furures
-	V1.1.0		02.11.2021 		ViRu 	Add Comment-Blocks for Nesting and Folding in code without keywords
-	V1.1.1		22.01.2022 		ViRu 	Add add test for new issue on dashed variable, test for #region folding
-	V1.5.0		26.09.2025 		ViRu 	refactored for new version 1.5.0, remove obsolete tests
+    V0.0.1		25.10.2021		ViRu		define Tests
+    V0.0.2		27.10.2021		ViRu		add some Tests and modify comments
+    V1.0.0		28.10.2021		ViRu		add Test for next furures
+    V1.1.0		02.11.2021		ViRu		Add Comment-Blocks for Nesting and Folding in code without keywords
+    V1.1.1		22.01.2022		ViRu		Add add test for new issue on dashed variable, test for #region folding
+    V1.5.0		26.09.2025		ViRu		refactored for new version 1.5.0, remove obsolete tests
 }
 
 {-------------------------------------------}
-{>Bug 13.02.2022 Nesting bug -> code in multiline comment will formated to?!}
+{>Bug 26.09.2025 - idk, but if you format more than one time, then folowing comment moves to right}
 
     {Aufrufbutton:
-        IF cc == 0 THEN
-    	IF
-    	(a == 0 OR (SYS_STATION08Online == 1 AND STATION8:a == 0)) AND
-    	(b == 0 OR (SYS_STATION09Online == 1 AND STATION9:b == 0)) THEN
-    		aa = 1;
-    	ELSE
-     Show "picture";
-    	ENDIF;
-        ENDIF;
+    IF cc == 0 THEN
+    IF
+    (a == 0 OR (SYS_STATION08Online == 1 AND STATION8:a == 0)) AND
+    (b == 0 OR (SYS_STATION09Online == 1 AND STATION9:b == 0)) THEN
+        aa = 1;
+    ELSE
+        Show "picture"; 
+    ENDIF;
+    ENDIF;
     }
 {<-------------------------------------------}
 
@@ -70,7 +70,7 @@ Changelog:
 
 {>------------------------------------------------------------------------------}
     {Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
-    IF sys_Debug_info > 0 THEN LogMessage(eof Funkt + "if one of the keywords is big, and             spacing or 		tab is removed, then its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
+    IF sys_Debug_info > 0 THEN LogMessage(eof Funkt + "if one of the keywords is big, and             spacing or         tab is removed, then its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
     IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
 {# Test codeblock backline}
     IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
