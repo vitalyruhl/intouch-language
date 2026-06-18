@@ -2,8 +2,9 @@
 
 Repository guidance for contributors and coding agents.
 
-This repository is `excel-loadlist-maker-v5`, a TypeScript / Excel Office
-Add-in clean-room rewrite of the legacy V4 VBA / XLSM solution.
+This repository is `intouch-language`, a TypeScript VS Code extension for
+InTouch SCADA / VBI syntax highlighting, formatting, snippets, and theme
+support.
 
 ## Mandatory Governance Load Preflight
 
@@ -75,17 +76,23 @@ reported before any further action.
 ## Repository Scope
 
 - Primary project metadata is expected in `package.json`, `tsconfig*.json`,
-  Office Add-in manifest files, and repository governance.
+  VS Code extension contribution metadata, and repository governance.
 - Main application source is expected under `src/`.
-- UI, command, and workbook code is expected under `src/taskpane/`,
-  `src/commands/`, `src/functions/`, `src/services/`, `src/workbook/`, and
-  `src/i18n/`.
-- Core transformation logic is expected under `src/engine/`,
-  `src/importers/`, `src/exporters/`, and `src/profiles/`.
-- Examples or sample workbooks may live under `examples/`.
+- Extension activation, command registration, formatter, and language-support
+  code is expected under `src/`.
+- TextMate grammar, snippets, language configuration, themes, and VS Code
+  contribution assets are expected under `syntaxes/`, `snippets/`,
+  `language-configuration.json`, `themes/`, and `package.json`.
+- Core formatting and language transformation logic is expected under
+  `src/formats.ts`, `src/formatCore.ts`, `src/functions.ts`,
+  `src/nestingdef.ts`, and related `src/` modules.
+- Examples, sample VBI files, screenshots, or language reference material may
+  live under `LanguageDefinition/`, `src/test/suite/testfiles/`, `examples/`,
+  or documentation folders when present.
 - Supporting documentation lives under `docs/` and `README.md`.
-- Tests live under `test/` when present.
-- Support scripts and repository tooling live under `tools/` when present.
+- Tests live under `src/test/`, `test/`, or package test folders when present.
+- Support scripts and repository tooling live under `scripts/`, `tools/`, or
+  package scripts when present.
 - Serena project state may live under `.serena/`.
 - Do not assume Python application release flows, embedded-device workflows, or
   a standalone backend web service unless the repository explicitly introduces
@@ -93,26 +100,31 @@ reported before any further action.
 
 ## Architecture Guardrails
 
-- Do not port legacy VBA procedures 1:1 without reassigning them to a V5 layer.
-- Ribbon commands and Task Pane code must not own core transformation logic.
-- Services orchestrate workflow state, workbook coordination, profile
-  selection, diagnostics, and error handling.
-- The engine contains pure domain logic for normalization, rules, conversion,
+- Do not port legacy VBI/VBA-like procedures 1:1 without assigning them to the
+  correct VS Code extension layer.
+- VS Code command registration and activation code must not own core formatter
+  or language transformation logic.
+- Extension orchestration coordinates activation, command registration,
+  formatter registration, diagnostics when present, configuration access, and
+  error handling.
+- Formatter and language-support modules contain the domain logic for
+  normalization, nesting, spacing, keyword handling, grammar support, snippets,
   and validation.
-- Workbook access must be encapsulated behind explicit adapters,
-  repositories, or services. Do not scatter `Excel.run(...)` across business
+- VS Code API access must be encapsulated at extension boundaries. Do not
+  scatter direct editor or workspace side effects through pure formatting
   logic.
-- Custom Functions are allowed only for pure, side-effect-free helper logic.
-- Profiles and exporters translate validated domain models into target-system
-  specific output formats.
-- Keep user-facing text localizable. Do not hard-code German UI strings deep in
-  services or engine modules.
+- Helper functions are allowed only for pure, side-effect-free language or
+  formatter logic unless they intentionally sit at an extension boundary.
+- Grammar, snippets, themes, and formatter output translate validated language
+  knowledge into VS Code-specific contribution formats.
+- Keep user-facing text suitable for VS Code localization. Do not hard-code
+  German UI strings deep in formatter or language-support modules.
 
 ## Agent Routing
 
 - `.github/AGENTS.md` is the canonical source for repository-wide rules.
 - `.github/agents/control-plane.agent.md` only routes work.
-- Use `.github/agents/refactor.agent.md` for TypeScript / Office Add-in code
+- Use `.github/agents/refactor.agent.md` for TypeScript / VS Code extension code
   changes, refactors, tests, and validation.
 - Use `.github/agents/workflow.agent.md` for branches, issues, PRs, releases,
   checkpoints, and explicit session-close workflows.
@@ -159,9 +171,10 @@ reported before any further action.
   done immediately.
 - Level B, normal: small, clearly scoped changes may be implemented
   immediately.
-- Level C, risky: changes involving workbook side-effect structure, release
-  metadata, localization architecture, security-sensitive behavior, build
-  pipelines, or large refactors require explicit confirmation.
+- Level C, risky: changes involving VS Code command side effects, formatter
+  output behavior, grammar scope structure, extension packaging metadata,
+  release metadata, localization architecture, security-sensitive behavior,
+  build pipelines, or large refactors require explicit confirmation.
 
 ## Repository Workflow Rules
 
@@ -278,9 +291,10 @@ reported before any further action.
 ## Version Policy
 
 - Require an appropriate project version bump for dependency updates,
-  TypeScript/Office Add-in configuration changes, package metadata changes,
-  application code changes, or example changes that affect build outputs unless
-  the user explicitly says not to bump.
+  TypeScript / VS Code extension configuration changes, package metadata
+  changes, application code changes, grammar/snippet/theme changes, or example
+  changes that affect build outputs unless the user explicitly says not to
+  bump.
 - Governance-only and documentation-only changes do not require a version bump.
   Report that the version bump was skipped by policy.
 - Use patch version bumps for dependency updates, bug fixes, internal
@@ -289,21 +303,22 @@ reported before any further action.
 - Use minor version bumps for new public features, new examples, new public
   APIs, and compatible behavior additions.
 - Use major version bumps for breaking public API changes, incompatible
-  workbook schema changes, incompatible configuration schema changes, or
-  behavior changes requiring user migration.
-- `package.json` is the canonical source of truth for the application version
-  once the add-in scaffold exists. Do not silently use Office manifest files,
+  formatter output changes, incompatible language grammar or scope changes,
+  incompatible configuration schema changes, or behavior changes requiring user
+  migration.
+- `package.json` is the canonical source of truth for the extension version.
+  Do not silently use VS Code Marketplace metadata, generated package files,
   `package-lock.json`, README text, changelog text, or any example file as a
   source of truth.
 - All other project version occurrences are mirrors and must be synchronized
   from `package.json` when the application version changes.
 - Before changing versions, release metadata, changelog/release notes, package
-  metadata, Office manifest metadata, or any file that may contain the project
-  version, scan the repository and report candidate version files. The scan
-  must include at least:
+  metadata, VS Code extension contribution metadata, or any file that may
+  contain the project version, scan the repository and report candidate version
+  files. The scan must include at least:
   - `package.json`
   - `package-lock.json` when present
-  - `manifest.xml` or the resolved Office Add-in manifest path when different
+  - `package.json` VS Code extension contribution and package metadata
   - `docs/CHANGELOG.md` or the resolved changelog path when different
   - README version badges or version mentions, when present
   - any additional files found by ripgrep containing the current or target
@@ -315,21 +330,22 @@ reported before any further action.
   the project version changes:
   - `package.json`
   - `package-lock.json` when present
-  - Office Add-in manifest version references
+  - VS Code extension package and Marketplace metadata references
   - README version badges or project version mentions, when present
-  - example version references when an example package or manifest mirrors the
-    main application version
+  - example version references when an example package or extension metadata
+    mirror the main application version
 - If a required mirror path does not exist, report it instead of silently
   ignoring it.
-- The primary add-in package is part of the application baseline and must
-  mirror the canonical project version.
-- Other examples may have independent sample or workbook versions. Do not
-  automatically change them unless the issue explicitly asks for that example
-  version to change. Preserve example-specific version policies and mention
-  them in the report when relevant.
-- Treat the Office Add-in manifest and package lockfile as repository build
-  artifacts, not independent applications. Keep them aligned with the
-  canonical version policy.
+- The primary VS Code extension package is part of the application baseline and
+  must mirror the canonical project version.
+- Other examples, language reference files, or sample VBI assets may have
+  independent sample versions. Do not automatically change them unless the
+  issue explicitly asks for that example or reference version to change.
+  Preserve example-specific version policies and mention them in the report
+  when relevant.
+- Treat VS Code extension package metadata and the package lockfile as
+  repository build artifacts, not independent applications. Keep them aligned
+  with the canonical version policy.
 - `package-lock.json` is generated but still must be updated consistently when
   `package.json` changes. Prefer npm tooling so the lockfile remains
   consistent. If npm is not run, explain how `package-lock.json` was updated or
@@ -356,7 +372,8 @@ reported before any further action.
     meaningful English commit message
   - push the work branch to `origin`
   - run the narrowest relevant validation from the repository root when `.ts`,
-    `.tsx`, `.js`, `.jsx`, manifest, or package files changed
+    `.tsx`, `.js`, `.jsx`, grammar, snippet, theme, package, or extension
+    metadata files changed
   - if that validation succeeds, or was skipped because no relevant application
     files changed, update the active `release/*` branch to match the work branch
   - if no suitable release branch exists or no release branch is in scope,
@@ -374,7 +391,8 @@ reported before any further action.
 - Error and log messages must be in English.
 - Emojis are forbidden in code, comments, logs, and generated outputs.
 - Favor small, coherent changes over broad speculative refactors.
-- Keep workbook-facing and configuration-sensitive changes conservative.
+- Keep formatter-facing, grammar-facing, VS Code API-facing, and
+  configuration-sensitive changes conservative.
 
 ## Documentation Exception
 
@@ -409,8 +427,9 @@ this policy.
   `req`, `resp`, `wb`, `ws`, and `rng` where clarity remains intact.
 - Do not repeat information already encoded by severity tags, module prefixes,
   or surrounding context.
-- Workbook- and runtime-level logs are usually `[D]` or `[T]`. Use `[W]` for
-  notable recoverable conditions and `[E]` for critical failures.
+- Formatter-, language-, extension-runtime-, and VS Code API-level logs are
+  usually `[D]` or `[T]`. Use `[W]` for notable recoverable conditions and
+  `[E]` for critical failures.
 
 ## Rename And Logging Interaction
 
@@ -418,8 +437,8 @@ this policy.
 - Do not mix logging normalization into API rename phases.
 - Before any API rename, perform a full reference search with rg.
 - After renaming, rerun rg to ensure old names do not remain in relevant
-  project files such as `src/`, `test/`, `docs/`, manifest files, and examples
-  when present.
+  project files such as `src/`, `src/test/`, `test/`, `docs/`, extension
+  metadata, grammar, snippet, theme, and example/reference files when present.
 
 ## Tool Policy
 
@@ -502,13 +521,15 @@ this policy.
 - Do not invent required CI workflows.
 - If no enabled CI is configured, report that and rely on required local
   validation.
-- Always run at least one focused TypeScript / Office Add-in validation after
-  `.ts`, `.tsx`, `.js`, `.jsx`, manifest, or package metadata changes.
+- Always run at least one focused TypeScript / VS Code extension validation
+  after `.ts`, `.tsx`, `.js`, `.jsx`, grammar, snippet, theme, package, or
+  extension metadata changes.
 - Default validation check order:
   - `npm run lint` when present
-  - `npm run typecheck` when present
+  - `npm run typecheck` when present, otherwise `npm run compile` when present
   - `npm test` when present
-  - `npm run build` when present
+  - `npm run build` when present, otherwise `npm run bundle` or
+    `npm run vscode:prepublish` when relevant
 - For affected examples, run the relevant example validation.
 - If only Markdown or governance files changed, skip application validation
   unless the user asks for it.

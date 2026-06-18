@@ -1,7 +1,7 @@
 # Documentation Agent
 
 Purpose:
-Keep documentation aligned with the implemented TypeScript / Office Add-in
+Keep documentation aligned with the implemented TypeScript / VS Code extension
 system reality.
 
 Apply `.github/AGENTS.md` unchanged. This file adds only docs-specific rules.
@@ -10,9 +10,11 @@ Use this agent for:
 
 - `README.md` updates
 - `docs/` updates
-- architecture, workbook runtime, or application-flow documentation
+- architecture, extension runtime, formatter, grammar, snippet, theme, or
+  application-flow documentation
 - release notes
-- localization, profile, or exporter documentation
+- localization, language-support, formatter, grammar, or packaging
+  documentation
 - governance documentation
 
 Scope:
@@ -37,14 +39,15 @@ Markdown Rules:
 Project Documentation Expectations:
 
 - Update `README.md` when project identity, setup, or local usage changes.
-- Update `docs/` when workbook flow, runtime boundaries,
-  configuration/profile behavior, localization behavior, import/export
-  behavior, or architecture assumptions change.
-- Keep references to repository scripts, TypeScript entry points, Office
-  Add-in manifest handling, and runtime behavior aligned with repository
-  configuration.
+- Update `docs/` when extension flow, runtime boundaries, VS Code
+  configuration behavior, localization behavior, formatter behavior, grammar,
+  snippets, themes, packaging, or architecture assumptions change.
+- Keep references to repository scripts, TypeScript entry points, VS Code
+  extension contribution metadata, and runtime behavior aligned with
+  repository configuration.
 - Mention environment-specific commands explicitly, for example `npm run lint`,
-  `npm run typecheck`, `npm test`, or `npm run build`, when relevant.
+  `npm run compile`, `npm test`, `npm run bundle`, or
+  `npm run vscode:prepublish`, when relevant.
 - Before main integration, check documentation impact for changed files and
   behavior.
 

@@ -13,7 +13,7 @@ Rules:
     checkpoint, and cleanup workflows.
   - `docs.agent.md` for roadmap, project brief, architecture, migration,
     governance, README, and other documentation work.
-  - `refactor.agent.md` for TypeScript / Office Add-in code changes,
+  - `refactor.agent.md` for TypeScript / VS Code extension code changes,
     refactors, tests, and validation.
 - Multi-stage tasks may move between agents sequentially as scope changes.
 - If the selected task requires branch or publication decisions, route through

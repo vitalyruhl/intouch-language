@@ -4,18 +4,20 @@ Apply `.github/AGENTS.md` unchanged. This file adds refactor-specific rules.
 
 ## Purpose
 
-Perform safe TypeScript / Office Add-in code changes and structural
+Perform safe TypeScript / VS Code extension code changes and structural
 improvements without unintended behavior changes.
 
 Use this agent for:
 
-- TypeScript, JavaScript, JSON, manifest, and test changes under `src/`,
-  `test/`, or package roots when present
+- TypeScript, JavaScript, JSON, grammar, snippet, theme, package metadata, and
+  test changes under `src/`, `src/test/`, `test/`, or package roots when
+  present
 - internal refactors
 - API renames
 - logging normalization
 - build and test validation
-- TypeScript or Office Add-in configuration changes when explicitly in scope
+- TypeScript or VS Code extension configuration changes when explicitly in
+  scope
 
 ## Scope
 
@@ -23,11 +25,12 @@ Use this agent for:
   change.
 - Keep changes small and coherent.
 - Do not mix unrelated refactors into functional fixes.
-- Do not change workbook side-effect structure, persisted workbook schema,
-  profile output behavior, localization-sensitive behavior, security-sensitive
-  behavior, or build pipelines without explicit confirmation.
-- Keep workbook-facing and configuration-sensitive changes conservative and
-  easy to verify.
+- Do not change VS Code command side effects, formatter output behavior,
+  grammar scope structure, extension contribution metadata,
+  localization-sensitive behavior, security-sensitive behavior, or build
+  pipelines without explicit confirmation.
+- Keep formatter-facing, grammar-facing, VS Code API-facing, and
+  configuration-sensitive changes conservative and easy to verify.
 
 ## Branch And Workflow
 
@@ -43,23 +46,23 @@ Use this agent for:
 - Refactor work must not change versions unless the central policy requires it
   or the user explicitly requests it.
 - When refactor work touches versioning, release metadata, changelog/release
-  notes, package metadata, manifest metadata, or files that may contain the
-  project version, run and report a version scan before editing. Include at
-  least:
+  notes, package metadata, VS Code extension contribution metadata, or files
+  that may contain the project version, run and report a version scan before
+  editing. Include at least:
   - `rg -n "version|VERSION" .`
   - `rg -n "<current-version>|<target-version>" .`
 - Treat `package.json` as the only canonical source of truth for the
-  application version when it exists. `package-lock.json`, Office Add-in
-  manifest files, README text, changelog text, and example files are mirrors or
-  independent sample versions, not sources of truth.
+  extension version when it exists. `package-lock.json`, VS Code Marketplace
+  metadata, README text, changelog text, and example/reference files are
+  mirrors or independent sample versions, not sources of truth.
 - When the application version changes, synchronize `package.json`,
-  `package-lock.json`, Office Add-in manifest version entries, README version
-  badges or project version mentions, and any example or sample file
-  intentionally mirroring the main application version. Report any missing
-  listed path.
-- Keep the primary add-in package aligned with the canonical application
-  version. Do not automatically change other examples' sample versions unless
-  the issue explicitly asks for it.
+  `package-lock.json`, VS Code extension package metadata, README version
+  badges or project version mentions, and any example/reference file
+  intentionally mirroring the main extension version. Report any missing listed
+  path.
+- Keep the primary VS Code extension package aligned with the canonical
+  extension version. Do not automatically change other examples' sample
+  versions unless the issue explicitly asks for it.
 - Prefer npm tooling for package version changes so `package-lock.json` remains
   consistent. If npm is not run, explain how the lockfile was updated or why it
   was not updated.
@@ -77,7 +80,8 @@ Use this agent for:
 - After a rename, rerun rg to confirm old names do not remain in relevant
   locations.
 - A rename is incomplete if old references remain in `src/`, `test/`, `docs/`,
-  manifest files, or examples when present.
+  extension metadata, grammar, snippet, theme, or example/reference files when
+  present.
 - Report the rg pattern used for reference checks.
 
 ## Logging Changes
@@ -85,18 +89,19 @@ Use this agent for:
 - Follow the global logging policy in `.github/AGENTS.md`.
 - Keep API renames and logging normalization separate.
 - Do not treat log text changes as public API renames.
-- Workbook and runtime logs should default to `[D]` or `[T]` unless a higher
-  severity is technically justified.
+- Formatter, language-support, and extension-runtime logs should default to
+  `[D]` or `[T]` unless a higher severity is technically justified.
 
 ## Testing And Build Validation
 
 - Run at least one focused validation after `.ts`, `.tsx`, `.js`, `.jsx`,
-  manifest, or package metadata changes.
+  grammar, snippet, theme, package, or extension metadata changes.
 - Default validation:
   - `npm run lint` when present
-  - `npm run typecheck` when present
+  - `npm run typecheck` when present, otherwise `npm run compile` when present
   - `npm test` when present
-  - `npm run build` when present
+  - `npm run build` when present, otherwise `npm run bundle` or
+    `npm run vscode:prepublish` when relevant
 - For affected examples, run the relevant example validation.
 - If tests are affected, run the relevant test command for at least one
   relevant workspace or package.
@@ -109,11 +114,12 @@ Use this agent for:
   validation.
 - Docker or image builds are not required unless configured in this repository
   or explicitly in scope.
-- If workbook runtime behavior, manifest behavior, or packaging configuration
-  changes, validate the relevant repository script or build path as far as
-  safely possible without assuming Excel desktop availability.
-- Mock implementations or mocked workbook data used in tests must be clearly
-  marked as `[MOCKED!]`.
+- If extension runtime behavior, contribution metadata, grammar, formatter
+  output, or packaging configuration changes, validate the relevant repository
+  script or build path as far as safely possible without assuming an
+  interactive VS Code desktop session.
+- Mock implementations or mocked VS Code/editor data used in tests must be
+  clearly marked as `[MOCKED!]`.
 - If validation cannot be run, report the reason plainly.
 
 ## Reporting

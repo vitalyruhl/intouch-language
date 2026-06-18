@@ -79,8 +79,8 @@ Apply `.github/AGENTS.md` unchanged. This file adds workflow-specific rules.
   casing issue rather than interchangeable paths on every platform.
 - `use workflow.begin [gevernance-sharpenes]` may derive
   `feature/governance-sharpening`.
-- `use workflow.begin [update workbook exporter]` may derive
-  `feature/update-workbook-exporter`.
+- `use workflow.begin [update formatter nesting]` may derive
+  `feature/update-formatter-nesting`.
 
 ## GitHub Workflow
 
@@ -99,7 +99,7 @@ Apply `.github/AGENTS.md` unchanged. This file adds workflow-specific rules.
   workflow or the task explicitly uses project coordination.
 - Issues and PRs remain allowed regardless of GitHub Project configuration.
 
-## TypeScript / Office Add-in Workflow
+## TypeScript / VS Code Extension Workflow
 
 - Use configured and enabled GitHub Actions or checks when they exist.
 - Do not invent required CI workflows.
@@ -107,17 +107,20 @@ Apply `.github/AGENTS.md` unchanged. This file adds workflow-specific rules.
   validation.
 - Default validation:
   - `npm run lint` when present
-  - `npm run typecheck` when present
+  - `npm run typecheck` when present, otherwise `npm run compile` when present
   - `npm test` when present
-  - `npm run build` when present
+  - `npm run build` when present, otherwise `npm run bundle` or
+    `npm run vscode:prepublish` when relevant
 - For affected examples, run the relevant example validation.
-- Manifest packaging or build validation, when explicitly relevant:
+- Extension metadata, grammar, snippet, theme, packaging, or build validation,
+  when explicitly relevant:
   - run the relevant repository build or packaging script
-- Sideload, publish, deployment, or network-dependent validation commands
-  require explicit user request because they affect the local Office runtime or
-  external services.
-- If no `.ts`, `.tsx`, `.js`, `.jsx`, manifest, or package files changed, skip
-  application validation unless requested.
+- Publish, deployment, Marketplace, VS Code host, or network-dependent
+  validation commands require explicit user request because they affect local
+  tooling, an interactive VS Code runtime, or external services.
+- If no `.ts`, `.tsx`, `.js`, `.jsx`, grammar, snippet, theme, package, or
+  extension metadata files changed, skip application validation unless
+  requested.
 - Run relevant tests when tests are present and affected.
 - Docker or image builds are not required unless configured in this repository
   or explicitly in scope.
@@ -147,10 +150,10 @@ Apply `.github/AGENTS.md` unchanged. This file adds workflow-specific rules.
 - If multiple version declarations exist, report them before changing versions.
 - Treat the application package version from `package.json` as the main
   project version.
-- Treat the Office Add-in manifest and package lockfile as repository build
-  artifacts, not as independent applications.
-- When manifest metadata, package metadata, or build metadata change, align the
-  manifest/package mirrors with the application version.
+- Treat VS Code extension package metadata and the package lockfile as
+  repository build artifacts, not as independent applications.
+- When extension contribution metadata, package metadata, or build metadata
+  change, align the package mirrors with the application version.
 - Bump an example or sample version only when that example itself is
   intentionally changed or released.
 - If the version source of truth is unclear, stop and report candidate files
