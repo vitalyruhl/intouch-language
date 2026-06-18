@@ -1,9 +1,9 @@
 name: Unit-Testing
 on:
   push:
-    branches: [bugfixing,master]
+    branches: [bugfixing, main]
   pull_request:
-    branches: [master]
+    branches: [main]
  
 jobs:
   build:
@@ -29,4 +29,3 @@ jobs:
       if: runner.os == 'Linux'
     - run: npm test
       if: runner.os != 'Linux'
-   
