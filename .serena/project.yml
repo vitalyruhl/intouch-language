@@ -76,7 +76,7 @@ additional_workspace_folders: []
 # list of additional paths to ignore in this project.
 # Same syntax as gitignore, so you can use * and **.
 # Note: global ignored_paths from serena_config.yml are also applied additively.
-ignored_paths: 
+ignored_paths:
   - "node_modules/**"
   - ".git/**"
   - ".vscode/**"
