@@ -39,8 +39,8 @@ describes ownership and architecture; it does not define a second grammar.
 Serena excludes QuickScript because it does not natively support this language.
 ProjectAtlas may index `.vbi` and `.vi` as neutral text for repository
 navigation and lexical search. The extension's native language server supplies
-QuickScript symbols, document-local definitions/references, completion, hover,
-formatting, and diagnostics.
+QuickScript symbols, local and QuickFunction cross-file
+definitions/references, completion, hover, formatting, and diagnostics.
 
 ## Implemented architecture
 
@@ -82,9 +82,17 @@ one block while preserving relative indentation inside it.
 Known callable resolution combines the generated native InTouch and Hermes
 catalog entries with QuickFunction declarations discovered in the current
 document and workspace. The generated entries retain their catalog category;
-workspace declarations remain a separate source. Configurable activation of
+workspace declarations remain a separate, richer source and take precedence
+for definition and hover. Configurable activation of
 additional project-specific catalogs is planned rather than inferred from
 individual call sites.
+
+Document/script classification comes from the canonical comment-based metadata
+model described in [QuickScript Document Metadata](document-metadata.md).
+Explicit `@` metadata and structured classic headers take priority over
+filename conventions. QuickFunction names therefore do not require `QF_`.
+Window scripts (`OnShow`, `WhileRunning`, `OnClose`) and canonical InTouch
+KeyScripts/shortcuts are non-callable document symbols.
 
 ## Diagnostic layers
 

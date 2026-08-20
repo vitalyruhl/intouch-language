@@ -7,8 +7,9 @@ QuickScript source
         |
         v
 packages/core
-  tokenizer -> parser -> semantics -> quality diagnostics
-                              -> language features
+  tokenizer -> document metadata extractor -> parser -> semantics
+                                             -> quality diagnostics
+                                             -> language features
         |          |
         |          +-> structural formatter
         |                  |
@@ -49,10 +50,13 @@ formatter implementations have been removed.
 
 ## Semantic model and language features
 
-Each `.vbi` or `.vi` document is currently one local scope. `DIM` declarations
-provide local variable symbols and case-insensitive uses. Navigation resolves
-only those declarations; unknown identifiers, member accesses, and external
-call targets are not guessed.
+Each `.vbi` or `.vi` document has one canonical metadata model and one local
+scope. Metadata is extracted only from comment tokens, with explicit `@`
+fields taking priority over structured legacy headers and filename fallbacks.
+`DIM` declarations provide local variable symbols and case-insensitive uses.
+A URI-aware incremental language-server index adds cross-file QuickFunction
+definitions and call references without moving editor or transport types into
+core.
 
 Core diagnostics currently cover:
 
@@ -75,8 +79,8 @@ QuickFunction and parameter declarations extracted from metadata comment
 tokens. Window strings are inspected only as arguments of documented window
 commands/functions.
 
-The language service provides document symbols, local definition and reference
-results, completion, and hover. Completion includes QuickScript keywords and
+The language service provides metadata-aware document symbols, local and
+cross-file definition/reference results, completion, and hover. Completion includes QuickScript keywords and
 datatypes, document locals and call targets, and known InTouch/Hermes function
 names. The function catalog is generated from
 `syntaxes/intouch.tmLanguage.json`; it is not maintained as a parallel manual
@@ -89,7 +93,10 @@ The language server supports initialize/shutdown, incremental text document
 synchronization, document formatting, document symbols, definition,
 references, completion, hover, and publish diagnostics. Feature conversion is
 unit-tested independently, and a child-process protocol test exercises the
-server lifecycle and representative requests without a VS Code process.
+server lifecycle plus cross-file workspace requests without a VS Code process.
+The initial workspace scan reads `.vbi` and `.vi` once. Open/change and watched
+file events replace only the affected URI entry; requests do not reread or
+reparse every workspace file.
 
 `src/extension.ts` contains no parser, formatter, or semantic logic. It starts
 `dist/server.js` through `vscode-languageclient`, registers `vbi-format` as a
@@ -100,10 +107,17 @@ snippets and the theme remain declarative VS Code assets.
 ## Deliberate limits before manual HIL
 
 - Formatting is document-wide; selection/range formatting is not advertised.
-- Definition and references are document-local and require a proven `DIM`
-  declaration.
-- QuickFunction metadata supports workspace call-target resolution but does not
-  invent executable declaration syntax or cross-file navigation ranges.
+- Local-variable navigation remains document-local.
+- QuickFunction metadata supplies callable workspace symbols, cross-file
+  definition/reference locations, signatures, hover, and completion without
+  inventing executable declaration syntax.
+- Window, Application, DataChange, Condition, and KeyScript documents are
+  non-callable workspace symbols. Window events are limited to `OnShow`,
+  `WhileRunning`, and `OnClose`.
+- Signature metadata is canonical, but an LSP Signature Help provider remains
+  planned.
+- Duplicate Window-event diagnostics remain deferred until version/backup
+  exports can be distinguished reliably.
 - Project-wide variable symbol indexing and cross-file variable navigation are
   not implemented.
 - `.vbi` and `.vi` remain excluded from Serena semantic indexing; the native

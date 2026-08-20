@@ -18,7 +18,7 @@
 
 # Intouch-Language
 
-- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides syntax highlighting, snippets, parser-based formatting, diagnostics, symbols, completion, hover, and local definition/reference support for Intouch Basic. It also includes the Intouch Dark theme.
+- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides syntax highlighting, snippets, parser-based formatting, diagnostics, metadata-aware symbols, completion, hover, and local plus QuickFunction cross-file definition/reference support for Intouch Basic. It also includes the Intouch Dark theme.
 - **Intouch** is a programming language for AVEVA (Wonderware) SCADA Intouch Applications.
 
 <p align="center" bgcolor:=#3f3f3f>
@@ -132,6 +132,8 @@ Repository governance starts at [AGENTS.md](AGENTS.md). QuickScript language
 boundaries and the language-server architecture are documented in
 [docs/language/quickscript.md](docs/language/quickscript.md) and
 [docs/architecture/intouch-core-preparation.md](docs/architecture/intouch-core-preparation.md).
+The supported comment-based script metadata convention is documented in
+[docs/language/document-metadata.md](docs/language/document-metadata.md).
 
 The extension uses its own QuickScript language server for `.vbi` and `.vi`.
 Formatting and semantic features share the editor-independent core tokenizer
@@ -167,8 +169,9 @@ The following items are either recently resolved or planned but not yet implemen
 - Diagnostics cover unclosed or invalid block nesting, duplicate local `DIM`
   declarations, and unknown datatypes.
 - Formatting uses the shared tokenizer and recoverable structure parser.
-- Definition and references are intentionally document-local; project-wide
-  indexing and range formatting remain planned.
+- Definition and references are document-local for variables and cross-file for
+  metadata-declared workspace QuickFunctions; project-wide variable indexing
+  and range formatting remain planned.
 - NOTE: Multiline IF continuation indentation intentionally uses base + 2 spaces before THEN; THEN line stays aligned with expression by design.
 - NOTE: Spacing inside string literals and single-line brace comments is preserved intentionally; only outer code regions are normalized.
 

@@ -10,7 +10,7 @@
 - Replace the legacy formatter lexers with the shared QuickScript tokenizer and
   recoverable structure parser.
 - Add a native language server with diagnostics, symbols, completion, hover,
-  and document-local definition/reference support.
+  document-local variable navigation, and workspace QuickFunction navigation.
 - Route VS Code formatting through the language client while preserving the
   existing grammar, snippets, theme, and formatter command.
 - Add editor-independent core tests, language-server protocol smoke tests, and
@@ -23,6 +23,9 @@
   dotfields, and multiline `IF` continuation forms.
 - Add configurable QuickScript quality diagnostics for non-ASCII identifiers
   and problematic literal window names without changing language validity.
+- Add canonical comment-based document metadata, InTouch KeyScript/shortcut and
+  Window-event classification, plus URI-aware cross-file QuickFunction
+  definition, references, hover, and completion independent of filename prefixes.
 
 ### V1.4.0
 
