@@ -60,3 +60,14 @@ The formatter directly consumes core tokens and parser structure. The language
 server exposes the same engine through LSP formatting, and the VS Code client
 uses that standard request. TextMate grammar, snippets, and themes remain
 secondary presentation assets rather than semantic parsers.
+
+## Multiline brace-comment formatting
+
+A normal multiline `{ ... }` comment is reindented as one text block. The
+formatter calculates the opening line's original and structural target indent,
+then applies that same delta to every physical line through the closing brace.
+Relative indentation and comment text are otherwise preserved.
+
+The configured `{>` / `{<}`, `{#`, `{region`, and `{endregion}` forms remain
+formatter directives with their existing nesting behavior. They are not
+reclassified as normal multiline comments.

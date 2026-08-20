@@ -231,16 +231,58 @@ function matchesDirective(line: string, marker: string | undefined): boolean {
 	return marker !== undefined && marker.length > 0 && line.toLowerCase().startsWith(marker.toLowerCase());
 }
 
+interface MultilineCommentShift {
+	endLine: number;
+	originalIndent: string;
+	targetIndent: string;
+}
+
+function isFormatterDirective(line: string, options: FormatOptions): boolean {
+	return matchesDirective(line, options.blockCodeBegin ?? '{>')
+		|| matchesDirective(line, options.blockCodeEnd ?? '{<')
+		|| matchesDirective(line, options.blockCodeExclude ?? '{#')
+		|| matchesDirective(line, options.regionBlockCodeBegin ?? '{region')
+		|| matchesDirective(line, options.regionBlockCodeEnd ?? '{endregion')
+		|| matchesDirective(line, options.regionBlockCodeExclude ?? '{#');
+}
+
+function multilineCommentStarts(source: string, options: FormatOptions): Map<number, Token> {
+	const starts = new Map<number, Token>();
+	for (const token of tokenize(source)) {
+		if (token.kind !== TokenKind.Comment || token.range.end.line <= token.range.start.line) continue;
+		const lineStart = source.lastIndexOf('\n', token.span.start - 1) + 1;
+		const beforeComment = source.slice(lineStart, token.span.start);
+		const trimmed = token.lexeme.trimStart();
+		if (/^[ \t]*$/.test(beforeComment) && trimmed.startsWith('{') && !isFormatterDirective(trimmed, options)) {
+			starts.set(token.range.start.line, token);
+		}
+	}
+	return starts;
+}
+
+function shiftCommentLine(line: string, shift: MultilineCommentShift): string {
+	if (line.startsWith(shift.originalIndent)) {
+		return shift.targetIndent + line.slice(shift.originalIndent.length);
+	}
+	const leading = line.match(/^[ \t]*/)?.[0] ?? '';
+	const delta = shift.targetIndent.length - shift.originalIndent.length;
+	if (delta < 0) return line.slice(Math.min(-delta, leading.length));
+	if (delta > 0) return shift.targetIndent.slice(0, delta) + line;
+	return line;
+}
+
 /** Apply parser-driven indentation to lexically normalized QuickScript. */
 export function formatQuickScriptStructure(source: string, options: FormatOptions = {}): FormatResult {
 	const lineEnding = options.lineEnding ?? '\r\n';
 	const normalizedSource = source.replace(/\r\n|\r|\n/g, lineEnding);
 	const document = parseQuickScript(normalizedSource);
 	const sourceLines = normalizedSource.split(lineEnding);
+	const commentStarts = multilineCommentStarts(normalizedSource, options);
 	const output: string[] = [];
 	const indent = normalizedIndent(options);
 	let directiveDepth = 0;
 	let blankCount = 0;
+	let commentShift: MultilineCommentShift | undefined;
 	const maximumBlankLines = options.removeEmptyLines === false
 		? Number.POSITIVE_INFINITY
 		: Math.max(0, options.allowedNumberOfEmptyLines ?? 1);
@@ -248,6 +290,22 @@ export function formatQuickScriptStructure(source: string, options: FormatOption
 	for (let lineNumber = 0; lineNumber < sourceLines.length; lineNumber += 1) {
 		const original = sourceLines[lineNumber].replace(/[ \t]+$/g, '');
 		const structure = document.lines[lineNumber];
+		if (commentShift !== undefined && lineNumber <= commentShift.endLine) {
+			if (original.trim().length === 0) {
+				if (options.removeEmptyLinesInComments !== true) {
+					blankCount = 0;
+					output.push(shiftCommentLine(original, commentShift));
+				} else {
+					blankCount += 1;
+					if (blankCount <= maximumBlankLines) output.push('');
+				}
+			} else {
+				blankCount = 0;
+				output.push(shiftCommentLine(original, commentShift));
+			}
+			if (lineNumber === commentShift.endLine) commentShift = undefined;
+			continue;
+		}
 		if (original.trim().length === 0) {
 			if (structure?.preserveIndent && options.removeEmptyLinesInComments !== true) {
 				blankCount = 0;
@@ -271,11 +329,17 @@ export function formatQuickScriptStructure(source: string, options: FormatOption
 			directiveDepth = Math.max(0, directiveDepth - 1);
 		}
 
-		if (structure?.preserveIndent) {
+		const back = excludesDirective ? 1 : 0;
+		const depth = Math.max(0, (structure?.indentDepth ?? 0) + directiveDepth - back);
+		const multilineComment = commentStarts.get(lineNumber);
+		if (multilineComment !== undefined) {
+			const originalIndent = original.match(/^[ \t]*/)?.[0] ?? '';
+			const targetIndent = indent.repeat(depth);
+			output.push(targetIndent + original.slice(originalIndent.length));
+			commentShift = { endLine: multilineComment.range.end.line, originalIndent, targetIndent };
+		} else if (structure?.preserveIndent) {
 			output.push(original);
 		} else {
-			const back = excludesDirective ? 1 : 0;
-			const depth = Math.max(0, (structure?.indentDepth ?? 0) + directiveDepth - back);
 			output.push(indent.repeat(depth) + normalizeStructuredLine(trimmed));
 		}
 

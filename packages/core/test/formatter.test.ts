@@ -86,6 +86,56 @@ suite('QuickScript lexical formatter', () => {
 		assert.strictEqual(twice, once);
 	});
 
+	test('moves a multiline brace comment as one relative-indentation block', () => {
+		const source = [
+			'{------------------------------------------------------------------------------}',
+			'',
+			'                { Button:',
+			'                    CALL HideAllPLS( );',
+			'                    TAB_AAF.Name = AT01_B0008B0020B0.Name;',
+			'                    TAB_Sollwert.Reference = "";',
+			'                    TAB_Einheit = "";',
+			'                    PLSActive=sys_true;',
+			'                    CALL TABHER012EA( );',
+			'                }',
+		].join('\n');
+		const expected = [
+			'{------------------------------------------------------------------------------}',
+			'',
+			'{ Button:',
+			'    CALL HideAllPLS( );',
+			'    TAB_AAF.Name = AT01_B0008B0020B0.Name;',
+			'    TAB_Sollwert.Reference = "";',
+			'    TAB_Einheit = "";',
+			'    PLSActive=sys_true;',
+			'    CALL TABHER012EA( );',
+			'}',
+		].join('\r\n');
+
+		const once = formatQuickScript(source).text;
+		const twice = formatQuickScript(once).text;
+
+		assert.strictEqual(once, expected);
+		assert.strictEqual(twice, once);
+	});
+
+	test('keeps configured comment directives separate from normal comment blocks', () => {
+		const source = [
+			'{>',
+			'    { nested comment',
+			'        relative text',
+			'    }',
+			'{<-------------------------------------------}',
+			'{region sample}',
+			'{endregion}',
+		].join('\n');
+		const once = formatQuickScript(source).text;
+
+		assert.ok(once.includes('{>\r\n    { nested comment\r\n        relative text\r\n    }'));
+		assert.ok(once.endsWith('{<-------------------------------------------}\r\n{region sample}\r\n{endregion}'));
+		assert.strictEqual(formatQuickScript(once).text, once);
+	});
+
 	test('ends lexical preservation at a decorated block marker before later code', () => {
 		const source = [
 			'{>',
