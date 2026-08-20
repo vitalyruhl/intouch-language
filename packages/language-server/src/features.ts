@@ -111,7 +111,8 @@ export function diagnosticsFor(
 }
 
 export function formattingEdits(document: TextDocument, settings: ServerSettings): TextEdit[] {
-	const result = formatQuickScript(document.getText(), settings);
+	const lineEnding = settings.lineEnding ?? (document.getText().includes('\r\n') ? '\r\n' : '\n');
+	const result = formatQuickScript(document.getText(), { ...settings, lineEnding });
 	if (!result.changed) {
 		return [];
 	}

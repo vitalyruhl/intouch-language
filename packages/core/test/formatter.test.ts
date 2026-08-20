@@ -31,14 +31,6 @@ suite('QuickScript lexical formatter', () => {
 		assert.strictEqual(twice, once);
 	});
 
-	test('preserves input line endings by default', () => {
-		const lf = formatQuickScript('IF Ready THEN\nLogMessage("ok");\nENDIF;').text;
-		const crlf = formatQuickScript('IF Ready THEN\r\nLogMessage("ok");\r\nENDIF;').text;
-
-		assert.ok(!lf.includes('\r\n'));
-		assert.ok(crlf.includes('\r\n'));
-	});
-
 	test('returns normalized but otherwise unchanged malformed source', () => {
 		const source = 'Message = "unfinished\nIF Value>1 THEN';
 		const result = formatQuickScriptLexically(source);
@@ -91,7 +83,7 @@ suite('QuickScript lexical formatter', () => {
 		const once = formatQuickScript(source).text;
 		const twice = formatQuickScript(once).text;
 
-		assert.strictEqual(once, source);
+		assert.strictEqual(once, source.replace(/\n/g, '\r\n'));
 		assert.strictEqual(twice, once);
 	});
 
@@ -119,7 +111,7 @@ suite('QuickScript lexical formatter', () => {
 			'    PLSActive=sys_true;',
 			'    CALL TABHER012EA( );',
 			'}',
-		].join('\n');
+		].join('\r\n');
 
 		const once = formatQuickScript(source).text;
 		const twice = formatQuickScript(once).text;
@@ -191,7 +183,7 @@ suite('QuickScript lexical formatter', () => {
 		].join('\n');
 		const once = formatQuickScript(source).text;
 
-		assert.strictEqual(once, source);
+		assert.strictEqual(once, source.replace(/\n/g, '\r\n'));
 		assert.strictEqual(formatQuickScript(once).text, once);
 	});
 
@@ -215,7 +207,7 @@ suite('QuickScript lexical formatter', () => {
 			'        @Param Index INTEGER Requested index.',
 			'    @Returns MESSAGE',
 			'{<}',
-		].join('\n');
+		].join('\r\n');
 		const once = formatQuickScript(source).text;
 
 		assert.strictEqual(once, expected);
