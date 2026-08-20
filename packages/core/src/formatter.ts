@@ -69,6 +69,11 @@ function isUnaryMinus(tokens: readonly Token[], index: number): boolean {
 		|| (previous.kind === TokenKind.Punctuation && ['(', '[', ',', ';', ':'].includes(previous.lexeme));
 }
 
+function preferredLineEnding(source: string, options: FormatOptions): '\n' | '\r\n' {
+	if (options.lineEnding !== undefined) return options.lineEnding;
+	return source.includes('\r\n') ? '\r\n' : '\n';
+}
+
 function normalizeLineTails(text: string, lineEnding: '\n' | '\r\n'): string {
 	const lines = text.split(/\r\n|\r|\n/).map(line => line.replace(/[ \t\f\v]+$/g, ''));
 	return lines.join(lineEnding);
@@ -79,7 +84,7 @@ function normalizeLineTails(text: string, lineEnding: '\n' | '\r\n'): string {
  * String and comment lexemes are emitted unchanged; all classification comes from the tokenizer.
  */
 export function formatQuickScriptLexically(source: string, options: FormatOptions = {}): FormatResult {
-	const lineEnding = options.lineEnding ?? '\r\n';
+	const lineEnding = preferredLineEnding(source, options);
 	const normalizedSource = source.replace(/\r\n|\r|\n/g, lineEnding);
 	const tokens = tokenize(normalizedSource);
 
@@ -310,7 +315,7 @@ function shiftCommentLine(line: string, shift: MultilineCommentShift, lineNumber
 
 /** Apply parser-driven indentation to lexically normalized QuickScript. */
 export function formatQuickScriptStructure(source: string, options: FormatOptions = {}): FormatResult {
-	const lineEnding = options.lineEnding ?? '\r\n';
+	const lineEnding = preferredLineEnding(source, options);
 	const normalizedSource = source.replace(/\r\n|\r|\n/g, lineEnding);
 	const document = parseQuickScript(normalizedSource);
 	const sourceLines = normalizedSource.split(lineEnding);
