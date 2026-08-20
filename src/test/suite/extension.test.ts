@@ -3,28 +3,32 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
-async function waitForDiagnosticCode(uri: vscode.Uri, code: string): Promise<readonly vscode.Diagnostic[]> {
-	const find = (): readonly vscode.Diagnostic[] | undefined => {
-		const diagnostics = vscode.languages.getDiagnostics(uri);
-		return diagnostics.some(diagnostic => diagnostic.code === code) ? diagnostics : undefined;
-	};
-	const current = find();
-	if (current !== undefined) return current;
+async function waitForDiagnostics(
+	uri: vscode.Uri,
+	predicate: (diagnostics: readonly vscode.Diagnostic[]) => boolean,
+	description: string,
+): Promise<readonly vscode.Diagnostic[]> {
+	const current = vscode.languages.getDiagnostics(uri);
+	if (predicate(current)) return current;
 	return new Promise((resolve, reject) => {
 		let subscription: vscode.Disposable | undefined;
 		const timeout = setTimeout(() => {
 			subscription?.dispose();
-			reject(new Error(`Timed out waiting for diagnostic '${code}'.`));
+			reject(new Error(`Timed out waiting for diagnostics: ${description}.`));
 		}, 10000);
 		subscription = vscode.languages.onDidChangeDiagnostics(event => {
 			if (!event.uris.some(changed => changed.toString() === uri.toString())) return;
-			const diagnostics = find();
-			if (diagnostics === undefined) return;
+			const diagnostics = vscode.languages.getDiagnostics(uri);
+			if (!predicate(diagnostics)) return;
 			clearTimeout(timeout);
 			subscription?.dispose();
 			resolve(diagnostics);
 		});
 	});
+}
+
+async function waitForDiagnosticCode(uri: vscode.Uri, code: string): Promise<readonly vscode.Diagnostic[]> {
+	return waitForDiagnostics(uri, diagnostics => diagnostics.some(diagnostic => diagnostic.code === code), code);
 }
 
 suite('Extension Test Suite', () => {
@@ -112,5 +116,62 @@ suite('Extension Test Suite', () => {
 		assert.deepStrictEqual(diagnostics.map(diagnostic => [diagnostic.code, diagnostic.range.start.line]), [
 			['unknown-datatype', 11],
 		]);
+	});
+
+	test('routes naming quality settings and window context through the production language client', async () => {
+		const extension = vscode.extensions.getExtension('Vitaly-ruhl.intouch-language');
+		assert.ok(extension);
+		await extension.activate();
+		const configuration = vscode.workspace.getConfiguration('VBI');
+		const keys = [
+			'diagnostics.naming.nonAsciiIdentifiers',
+			'diagnostics.naming.windowWhitespace',
+			'diagnostics.naming.windowNonAscii',
+		] as const;
+		const previous = new Map(keys.map(key => [key, configuration.inspect<string>(key)?.globalValue]));
+
+		try {
+			for (const key of keys) await configuration.update(key, 'warning', vscode.ConfigurationTarget.Global);
+			const source = [
+				'DIM Größe AS INTEGER;',
+				'Show "Übersicht Anlage";',
+				'StatusMessage = "Übersicht Anlage";',
+			].join('\n');
+			const document = await vscode.workspace.openTextDocument({ language: 'intouch', content: source });
+			const initial = await waitForDiagnostics(document.uri, diagnostics =>
+				diagnostics.filter(item => item.source === 'intouch-quality').length === 3,
+			'initial quality warnings');
+			assert.deepStrictEqual(initial.filter(item => item.source === 'intouch-quality').map(item => [item.code, item.severity, item.range.start.line]), [
+				['quickscript.naming.nonAsciiIdentifier', vscode.DiagnosticSeverity.Warning, 0],
+				['quickscript.naming.windowWhitespace', vscode.DiagnosticSeverity.Warning, 1],
+				['quickscript.naming.windowNonAscii', vscode.DiagnosticSeverity.Warning, 1],
+			]);
+
+			for (const [setting, severity] of [
+				['information', vscode.DiagnosticSeverity.Information],
+				['warning', vscode.DiagnosticSeverity.Warning],
+				['error', vscode.DiagnosticSeverity.Error],
+			] as const) {
+				const changed = waitForDiagnostics(document.uri, diagnostics => diagnostics.some(item =>
+					item.code === 'quickscript.naming.nonAsciiIdentifier' && item.severity === severity), setting);
+				await configuration.update(keys[0], setting, vscode.ConfigurationTarget.Global);
+				await changed;
+			}
+
+			const identifierDisabled = waitForDiagnostics(document.uri, diagnostics =>
+				!diagnostics.some(item => item.code === 'quickscript.naming.nonAsciiIdentifier'), 'non-ASCII identifier off');
+			await configuration.update(keys[0], 'off', vscode.ConfigurationTarget.Global);
+			await identifierDisabled;
+
+			const allDisabled = waitForDiagnostics(document.uri, diagnostics =>
+				!diagnostics.some(item => item.source === 'intouch-quality'), 'all naming quality diagnostics off');
+			await configuration.update(keys[1], 'off', vscode.ConfigurationTarget.Global);
+			await configuration.update(keys[2], 'off', vscode.ConfigurationTarget.Global);
+			assert.deepStrictEqual(await allDisabled, []);
+		} finally {
+			for (const key of keys) {
+				await configuration.update(key, previous.get(key), vscode.ConfigurationTarget.Global);
+			}
+		}
 	});
 });

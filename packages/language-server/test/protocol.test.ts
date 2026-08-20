@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { createMessageConnection, StreamMessageReader, StreamMessageWriter } from 'vscode-jsonrpc/node';
-import { CompletionItem, InitializeResult, TextEdit } from 'vscode-languageserver/node';
+import { CompletionItem, Diagnostic, DiagnosticSeverity, InitializeResult, TextEdit } from 'vscode-languageserver/node';
 
 function applyFormattingEdits(source: string, edits: readonly TextEdit[]): string {
 	if (edits.length === 0) {
@@ -28,6 +28,25 @@ suite('QuickScript language server protocol', () => {
 		let stderr = '';
 		child.stderr.on('data', chunk => { stderr += chunk.toString(); });
 		const connection = createMessageConnection(new StreamMessageReader(child.stdout), new StreamMessageWriter(child.stdin));
+		const diagnosticWaiters: Array<{
+			uri: string;
+			predicate: (diagnostics: Diagnostic[]) => boolean;
+			resolve: (diagnostics: Diagnostic[]) => void;
+		}> = [];
+		const nextDiagnostics = (
+			uri: string,
+			predicate: (diagnostics: Diagnostic[]) => boolean = () => true,
+		): Promise<Diagnostic[]> => new Promise(resolve => {
+			diagnosticWaiters.push({ uri, predicate, resolve });
+		});
+		connection.onNotification('textDocument/publishDiagnostics', params => {
+			const published = params as { uri: string; diagnostics: Diagnostic[] };
+			const index = diagnosticWaiters.findIndex(waiter =>
+				waiter.uri === published.uri && waiter.predicate(published.diagnostics));
+			if (index < 0) return;
+			const [waiter] = diagnosticWaiters.splice(index, 1);
+			waiter.resolve(published.diagnostics);
+		});
 		let configurationRequested: (() => void) | undefined;
 		const configurationRequest = new Promise<void>(resolve => { configurationRequested = resolve; });
 		connection.onRequest('workspace/configuration', () => {
@@ -38,6 +57,11 @@ suite('QuickScript language server protocol', () => {
 					Region: { BlockCodeBegin: '{region', BlockCodeEnd: '{endregion', BlockCodeExclude: '{#' },
 					Misc: { ReplaceTabToSpaces: true, IndentSize: 4 },
 				},
+				diagnostics: { naming: {
+					nonAsciiIdentifiers: 'information',
+					windowWhitespace: 'information',
+					windowNonAscii: 'information',
+				} },
 			}];
 		});
 		connection.listen();
@@ -52,6 +76,18 @@ suite('QuickScript language server protocol', () => {
 			assert.strictEqual((initialize as InitializeResult).capabilities.documentFormattingProvider, true);
 			connection.sendNotification('initialized', {});
 			await configurationRequest;
+			connection.sendNotification('workspace/didChangeConfiguration', { settings: { VBI: {
+				formatter: {
+					BC: { BlockCodeBegin: '{>', BlockCodeEnd: '{<', BlockCodeExclude: '{#' },
+					Region: { BlockCodeBegin: '{region', BlockCodeEnd: '{endregion', BlockCodeExclude: '{#' },
+					Misc: { ReplaceTabToSpaces: true, IndentSize: 4 },
+				},
+				diagnostics: { naming: {
+					nonAsciiIdentifiers: 'information',
+					windowWhitespace: 'information',
+					windowNonAscii: 'information',
+				} },
+			} } });
 
 			const uri = 'file:///protocol-smoke.vbi';
 			connection.sendNotification('textDocument/didOpen', {
@@ -68,6 +104,38 @@ suite('QuickScript language server protocol', () => {
 					text: 'DIM Counter AS INTEGER;\nDIM Updated AS REAL;\nIF Counter>0 THEN\nCALL LogMessage("ok");\nENDIF;',
 				}],
 			});
+
+			const qualityUri = 'file:///protocol-quality.vbi';
+			const initialQualityDiagnostics = nextDiagnostics(qualityUri);
+			connection.sendNotification('textDocument/didOpen', {
+				textDocument: {
+					uri: qualityUri,
+					languageId: 'intouch',
+					version: 1,
+					text: 'DIM Größe AS INTEGER;\nShow "Übersicht Anlage";\nStatusMessage = "Übersicht Anlage";',
+				},
+			});
+			const qualityDiagnostics = await initialQualityDiagnostics;
+			assert.deepStrictEqual(qualityDiagnostics.map(item => [item.code, item.severity, item.source]), [
+				['quickscript.naming.nonAsciiIdentifier', DiagnosticSeverity.Information, 'intouch-quality'],
+				['quickscript.naming.windowWhitespace', DiagnosticSeverity.Information, 'intouch-quality'],
+				['quickscript.naming.windowNonAscii', DiagnosticSeverity.Information, 'intouch-quality'],
+			]);
+
+			const disabledQualityDiagnostics = nextDiagnostics(qualityUri, diagnostics => diagnostics.length === 0);
+			connection.sendNotification('workspace/didChangeConfiguration', { settings: { VBI: {
+				formatter: {
+					BC: { BlockCodeBegin: '{>', BlockCodeEnd: '{<', BlockCodeExclude: '{#' },
+					Region: { BlockCodeBegin: '{region', BlockCodeEnd: '{endregion', BlockCodeExclude: '{#' },
+					Misc: { ReplaceTabToSpaces: true, IndentSize: 4 },
+				},
+				diagnostics: { naming: {
+					nonAsciiIdentifiers: 'off',
+					windowWhitespace: 'off',
+					windowNonAscii: 'off',
+				} },
+			} } });
+			assert.deepStrictEqual(await disabledQualityDiagnostics, []);
 
 			const edits = await connection.sendRequest('textDocument/formatting', {
 				textDocument: { uri },

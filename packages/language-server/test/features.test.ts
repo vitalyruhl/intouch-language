@@ -3,6 +3,7 @@ import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { DiagnosticSeverity } from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
 import {
@@ -62,12 +63,19 @@ suite('QuickScript language server features', () => {
 	});
 
 	test('maps nested VS Code formatter settings to core options', () => {
-		const settings = readSettings({ VBI: { formatter: {
-			EmptyLine: { allowedNumberOfEmptyLines: 2, RemoveEmptyLines: true, EmptyLinesAlsoInComment: true },
-			BC: { BlockCodeBegin: '{begin', BlockCodeEnd: '{end', BlockCodeExclude: '{back' },
-			Region: { BlockCodeBegin: '{r', BlockCodeEnd: '{/r', BlockCodeExclude: '{rb' },
-			Misc: { ReplaceTabToSpaces: false, IndentSize: 3 },
-		} } });
+		const settings = readSettings({ VBI: {
+			formatter: {
+				EmptyLine: { allowedNumberOfEmptyLines: 2, RemoveEmptyLines: true, EmptyLinesAlsoInComment: true },
+				BC: { BlockCodeBegin: '{begin', BlockCodeEnd: '{end', BlockCodeExclude: '{back' },
+				Region: { BlockCodeBegin: '{r', BlockCodeEnd: '{/r', BlockCodeExclude: '{rb' },
+				Misc: { ReplaceTabToSpaces: false, IndentSize: 3 },
+			},
+			diagnostics: { naming: {
+				nonAsciiIdentifiers: 'information',
+				windowWhitespace: 'off',
+				windowNonAscii: 'error',
+			} },
+		} });
 
 		assert.deepStrictEqual(settings, {
 			allowedNumberOfEmptyLines: 2,
@@ -81,8 +89,53 @@ suite('QuickScript language server features', () => {
 			regionBlockCodeExclude: '{rb',
 			insertSpaces: false,
 			indentSize: 3,
+			qualityDiagnostics: {
+				nonAsciiIdentifiers: 'information',
+				windowWhitespace: 'off',
+				windowNonAscii: 'error',
+			},
 		});
 		assert.deepStrictEqual(formattingSettings(settings, { insertSpaces: true, tabSize: 8 }), settings);
+	});
+
+	test('maps quality settings to LSP severity and source without changing syntax validity', () => {
+		const source = [
+			'DIM Größe AS INTEGER;',
+			'Show "Anlage Übersicht";',
+			'StatusMessage = "Störung Lüftung";',
+		].join('\n');
+		const document = TextDocument.create('file:///quality.vbi', 'intouch', 1, source);
+		const defaults = diagnosticsFor(document);
+
+		assert.deepStrictEqual(defaults.map(item => [item.code, item.severity, item.source]), [
+			['quickscript.naming.nonAsciiIdentifier', DiagnosticSeverity.Warning, 'intouch-quality'],
+			['quickscript.naming.windowWhitespace', DiagnosticSeverity.Warning, 'intouch-quality'],
+			['quickscript.naming.windowNonAscii', DiagnosticSeverity.Warning, 'intouch-quality'],
+		]);
+		assert.ok(!defaults.some(item => item.range.start.line === 2));
+
+		for (const [setting, severity] of [
+			['hint', DiagnosticSeverity.Hint],
+			['information', DiagnosticSeverity.Information],
+			['warning', DiagnosticSeverity.Warning],
+			['error', DiagnosticSeverity.Error],
+		] as const) {
+			const diagnostics = diagnosticsFor(document, undefined, {
+				qualityDiagnostics: {
+					nonAsciiIdentifiers: setting,
+					windowWhitespace: 'off',
+					windowNonAscii: 'off',
+				},
+			});
+			assert.deepStrictEqual(diagnostics.map(item => item.severity), [severity]);
+		}
+		assert.deepStrictEqual(diagnosticsFor(document, undefined, {
+			qualityDiagnostics: {
+				nonAsciiIdentifiers: 'off',
+				windowWhitespace: 'off',
+				windowNonAscii: 'off',
+			},
+		}), []);
 	});
 
 	test('formats the established comment nesting fixture through the language-server formatter entrypoint', () => {
@@ -253,7 +306,7 @@ suite('QuickScript language server features', () => {
 	});
 
 	test('resolves project functions only when the workspace declares them', () => {
-		const definitions = TextDocument.create('file:///definitions.vi', 'intouch', 1, 'Type: QuickFunction\nName: WorkspaceFunction');
+		const definitions = TextDocument.create('file:///definitions.vi', 'intouch', 1, '{>\nType: QuickFunction\nName: WorkspaceFunction\n{<}');
 		const caller = TextDocument.create('file:///caller.vbi', 'intouch', 1, 'CALL workspacefunction();\nCALL WorkspaceFunctio();');
 		const workspace = new WorkspaceFunctionIndex();
 		const isolated = diagnosticsFor(caller).filter(diagnostic => diagnostic.code === 'unknown-function');
