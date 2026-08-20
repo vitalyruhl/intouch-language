@@ -31,9 +31,9 @@ ProjectAtlas can index these files as neutral text for repository navigation
 and lexical search only. Neither tool currently supplies QuickScript symbols,
 definitions, references, or diagnostics.
 
-## Planned architecture
+## Target architecture
 
-The approved future target is:
+The approved target is:
 
 ```text
 packages/
@@ -42,6 +42,7 @@ packages/
   vscode-extension/
 ```
 
-`core` and the language server must be independent of the VS Code API. This
-document records the boundary only; it does not introduce the package split or
-language-server implementation.
+`packages/core` now establishes the editor-independent source and tokenizer
+boundary. The language server must also remain independent of the VS Code API.
+`packages/language-server` and `packages/vscode-extension` are still planned;
+no language-server implementation or transport exists yet.
