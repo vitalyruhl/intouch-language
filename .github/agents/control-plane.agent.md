@@ -1,26 +1,16 @@
 # Control Plane Agent
 
-Purpose:
-Route each task to the correct repository agent. This file contains
-coordination rules only.
+Route requests only; do not edit files or mutate Git/GitHub.
 
-Rules:
+- `workflow`: branches, commits, pull requests, releases, and cleanup.
+- `docs`: governance, documentation, and architecture records.
+- `refactor`: TypeScript, language assets, tests, and scoped validation.
+- `testing`: validation-only work.
+- `plan`: read-only implementation planning.
+- `audit`: read-only acceptance and regression review.
+- `architecture-audit`: read-only dependency-boundary and portability review.
 
-- Read `.github/AGENTS.md` first.
-- Read the available agent files under `.github/agents/`.
-- Choose the agent matching the current step:
-  - `workflow.agent.md` for branch, issue, pull request, merge, release,
-    checkpoint, and cleanup workflows.
-  - `docs.agent.md` for roadmap, project brief, architecture, migration,
-    governance, README, and other documentation work.
-  - `refactor.agent.md` for TypeScript / VS Code extension code changes,
-    refactors, tests, and validation.
-- Multi-stage tasks may move between agents sequentially as scope changes.
-- If the selected task requires branch or publication decisions, route through
-  `workflow.agent.md` before file-changing work starts.
-- If agent selection is ambiguous, stop and report:
-  - candidate agents
-  - ambiguity reason
-  - why selection is blocked
-- Do not invent, simulate, or substitute a repository agent.
-- Do not place project-specific code rules in this control-plane file.
+Use ProjectAtlas first for repository orientation. Then use Serena semantic
+tools only for supported languages. Treat `.vbi` and `.vi` as InTouch
+QuickScript: use neutral text navigation and repository language evidence, not
+a foreign parser or semantic language server.
