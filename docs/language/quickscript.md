@@ -12,15 +12,14 @@ semantic approximation.
 Language knowledge is divided by responsibility:
 
 - `syntaxes/intouch.tmLanguage.json` provides lexical highlighting patterns,
-  built-in functions, Hermes helpers, dot fields, and presentation scopes.
+  native InTouch functions, dot fields, and presentation scopes.
 - `packages/core/src/languageData.ts` provides canonical lexical keywords,
   datatypes, operators, and punctuation.
 - `packages/core/src/tokenizer.ts` and `parser.ts` provide canonical lexical
   and structural interpretation.
 - `packages/core/src/generatedFunctionCatalog.ts` is generated from the
   TextMate grammar for completion, hover, and known-function diagnostics; it
-  preserves the distinction between native InTouch functions and Hermes
-  helpers and is not edited manually.
+  contains public native InTouch knowledge only and is not edited manually.
 - `language-configuration.json` and `snippets/vbi.json` provide editor behavior
   and authoring templates.
 - core tests and `src/test/suite/testfiles/` capture parser and formatter
@@ -36,8 +35,8 @@ describes ownership and architecture; it does not define a second grammar.
 
 ## Tooling boundary
 
-Serena excludes QuickScript because it does not natively support this language.
-ProjectAtlas may index `.vbi` and `.vi` as neutral text for repository
+Serena uses the thin QuickScript adapter to connect to the native language
+server. ProjectAtlas may index `.vbi` and `.vi` structurally for repository
 navigation and lexical search. The extension's native language server supplies
 QuickScript symbols, local and QuickFunction cross-file
 definitions/references, completion, hover, formatting, and diagnostics.
@@ -79,13 +78,12 @@ including a later `{<}` closing line, is comment trivia and cannot contribute
 parser or semantic diagnostics. The formatter indents that metadata comment as
 one block while preserving relative indentation inside it.
 
-Known callable resolution combines the generated native InTouch and Hermes
-catalog entries with QuickFunction declarations discovered in the current
-document and workspace. The generated entries retain their catalog category;
-workspace declarations remain a separate, richer source and take precedence
-for definition and hover. Configurable activation of
-additional project-specific catalogs is planned rather than inferred from
-individual call sites.
+Known callable resolution combines the generated public native InTouch catalog
+with QuickFunction declarations discovered in the current document and
+workspace. Workspace declarations remain a separate, richer source and take
+precedence for definition and hover. Project-specific function catalogs must be
+supplied externally or locally by a workspace and are not bundled by default;
+isolated files may therefore report project calls as unresolved.
 
 Document/script classification comes from the canonical comment-based metadata
 model described in [QuickScript Document Metadata](document-metadata.md).

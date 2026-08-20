@@ -205,23 +205,23 @@ suite('QuickScript language server features', () => {
 			'{>',
 			'    Script:',
 			'    Type: QuickFunction',
-			'    Name: TABHER012EA',
+			'    Name: WorkspaceFunctionA',
 			'',
 			'    Parameters:',
 			'    No formal parameters.',
 			'',
 			'    Usage:',
-			'    CALL TABHER012EA( );',
+			'    CALL WorkspaceFunctionA( );',
 			'{<}',
 			'',
 			'{>',
 			'    Version history:',
 			'    V2.0.0 16.10.2020 ViRu Irgend etwas passt da vorn und Hinten nicht!',
 			'    V2.1.0 03.02.2022 ViRu Typ (typ + 10 = ohne PLS --> PLSActive AS Memory Discrete --> Als Globale Variable festlegen!)',
-			'    V2.2.0 30.10.2024 ViRu debug mit xHerDebugL',
+			'    V2.2.0 30.10.2024 ViRu debug with workspace function',
 			'{<}',
 		].join('\r\n');
-		const document = TextDocument.create('file:///TABHER012EA.vbi', 'intouch', 1, source);
+		const document = TextDocument.create('file:///WorkspaceFunctionA.vbi', 'intouch', 1, source);
 
 		assert.deepStrictEqual(diagnosticsFor(document), []);
 	});
@@ -240,10 +240,10 @@ suite('QuickScript language server features', () => {
 
 	test('diagnoses unresolved CALL and expression functions while resolving catalogs and QuickFunctions', () => {
 		const source = [
-			'CALL xHerDebuga(Funkt + " ", 40);',
+			'CALL UnknownFunctionA(Funkt + " ", 40);',
 			'a = StringLaft(Test, 4);',
 			'a = StringLeft(Test, StringInString(Test, ".", 1, 0) - 1);',
-			'CALL xHerDebug(Funkt, 40);',
+			'CALL UnknownFunctionB(Funkt, 40);',
 			'{>',
 			'Type: QuickFunction',
 			'Name: GetFullTopic',
@@ -258,6 +258,7 @@ suite('QuickScript language server features', () => {
 		assert.deepStrictEqual(unknown.map(diagnostic => [diagnostic.range.start.line, diagnostic.range.start.character]), [
 			[0, 5],
 			[1, 4],
+			[3, 5],
 			[9, 5],
 		]);
 		assert.ok(unknown.every(diagnostic => diagnostic.severity === 2));
@@ -283,9 +284,9 @@ suite('QuickScript language server features', () => {
 
 	test('publishes only semantic diagnostics for syntactically valid CALL expressions', () => {
 		const source = [
-			'TAB_HandF.Reference = CALL SetReferenceBool(tTopic, 1, BitS1);',
-			'tTopic = StringLower(CALL GetSplittByIndex(TAB_AAFF.Reference, ".", 1));',
-			'Value = CALL GetSplittByIndeXx(Source, ".", 1);',
+			'TAB_HandF.Reference = CALL StringRight(tTopic, 1);',
+			'tTopic = StringLower(CALL StringLeft(TAB_AAFF.Reference, 1));',
+			'Value = CALL StringLeftX(Source, 1);',
 		].join('\n');
 		const calls = TextDocument.create('file:///call-expressions.vbi', 'intouch', 1, source);
 
@@ -293,7 +294,7 @@ suite('QuickScript language server features', () => {
 			['unknown-function', { line: 2, character: 13 }],
 		]);
 		assert.ok(hoverFor(calls, { line: 1, character: 34 }));
-		assert.ok(completionsFor(calls).some(item => item.label === 'GetSplittByIndex'));
+		assert.ok(completionsFor(calls).some(item => item.label === 'StringLeft'));
 	});
 
 	test('uses existing definition and references for CALL expression targets', () => {
@@ -410,13 +411,13 @@ suite('QuickScript language server features', () => {
 	});
 
 	test('replaces one physical Windows QuickFunction across scan and open-document lifecycle', () => {
-		const scanUri = 'file:///C:/HIL/QF_StartEP3_1.0.1.vbi';
-		const openUri = 'file:///c:/HIL/QF_StartEP3_1.0.1.vbi';
-		const source = '{>\n@ScriptType QuickFunction\n@Name StartEP3\n{<}';
-		const caller = TextDocument.create('file:///C:/HIL/caller.vbi', 'intouch', 1, 'CALL StartEP3();');
+		const scanUri = 'file:///C:/HIL/QF_WorkspaceFunctionB_1.0.1.vbi';
+		const openUri = 'file:///c:/HIL/QF_WorkspaceFunctionB_1.0.1.vbi';
+		const source = '{>\n@ScriptType QuickFunction\n@Name WorkspaceFunctionB\n{<}';
+		const caller = TextDocument.create('file:///C:/HIL/caller.vbi', 'intouch', 1, 'CALL WorkspaceFunctionB();');
 		const workspace = new WorkspaceSymbolIndex();
 		const assertPhase = (expectedUri: string): void => {
-			assert.strictEqual(workspace.quickFunctions('StartEP3').length, 1);
+			assert.strictEqual(workspace.quickFunctions('WorkspaceFunctionB').length, 1);
 			assert.strictEqual(
 				workspace.diagnostics(expectedUri).filter(diagnostic => diagnostic.code === 'duplicate-quickfunction').length,
 				0,
@@ -447,25 +448,25 @@ suite('QuickScript language server features', () => {
 		assert.deepStrictEqual(workspace.knownFunctionNames(), ['CanonicalName', 'FallbackOnly']);
 	});
 
-	test('keeps static Hermes catalog entries out of workspace definition counts', () => {
+	test('keeps workspace QuickFunctions out of static definition counts', () => {
 		const workspace = new WorkspaceSymbolIndex();
-		const definition = TextDocument.create('file:///StartEP3.vbi', 'intouch', 1, [
+		const definition = TextDocument.create('file:///WorkspaceFunctionC.vbi', 'intouch', 1, [
 			'{>',
 			'@ScriptType QuickFunction',
-			'@Name StartEP3',
+			'@Name WorkspaceFunctionC',
 			'@Description Workspace implementation.',
 			'{<}',
 		].join('\n'));
-		const caller = TextDocument.create('file:///hermes-caller.vbi', 'intouch', 1, 'CALL StartEP3();');
+		const caller = TextDocument.create('file:///workspace-caller.vbi', 'intouch', 1, 'CALL WorkspaceFunctionC();');
 		workspace.updateDocument(definition);
 		workspace.updateDocument(caller);
 
-		assert.strictEqual(KNOWN_FUNCTIONS.filter(entry => entry.name.toUpperCase() === 'STARTEP3').length, 1);
-		assert.strictEqual(workspace.quickFunctions('StartEP3').length, 1);
+		assert.strictEqual(KNOWN_FUNCTIONS.filter(entry => entry.name.toUpperCase() === 'WORKSPACEFUNCTIONC').length, 0);
+		assert.strictEqual(workspace.quickFunctions('WorkspaceFunctionC').length, 1);
 		assert.ok(!diagnosticsFor(definition, workspace).some(diagnostic => diagnostic.code === 'duplicate-quickfunction'));
 		assert.strictEqual(definitionFor(caller, { line: 0, character: 7 }, workspace)?.uri, definition.uri);
 		assert.match(JSON.stringify(hoverFor(caller, { line: 0, character: 7 }, workspace)?.contents), /Workspace implementation/);
-		assert.match(completionsFor(caller, workspace).find(item => item.label === 'StartEP3')?.detail ?? '', /Workspace implementation/);
+		assert.match(completionsFor(caller, workspace).find(item => item.label === 'WorkspaceFunctionC')?.detail ?? '', /Workspace implementation/);
 	});
 
 	test('keeps the positive HIL datatype and function diagnostics', () => {

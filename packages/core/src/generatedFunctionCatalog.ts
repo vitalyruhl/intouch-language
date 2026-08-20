@@ -29,11 +29,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 1"
 	},
 	{
-		"name": "Alarmkommentare",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
 		"name": "almAckAll",
 		"category": "IT-functions Ground Teil 1",
 		"sourceComment": "IT-functions Ground Teil 1"
@@ -204,51 +199,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 1"
 	},
 	{
-		"name": "APAntriebStatistik",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "APMonatAktualisierenZaehler1",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "APMonatAktualisierenZaehler2",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "APMonatAktualisierenZaehler3",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "AppButonsConfig",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "ApplicomToUAReference",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "APTagAktualisierenZaehler1",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "APTagAktualisierenZaehler2",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "APTagAktualisierenZaehler3",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
 		"name": "APUFindAlarmGroupInstance",
 		"category": "IT-functions Ground Teil 1",
 		"sourceComment": "IT-functions Ground Teil 1"
@@ -369,11 +319,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 1"
 	},
 	{
-		"name": "APZaehlerAbfragen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
 		"name": "ArcCos",
 		"category": "IT-functions-Math",
 		"sourceComment": "IT-functions-Math"
@@ -392,91 +337,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"name": "AttemptInvisibleLogon",
 		"category": "IT-functions Ground Teil 2",
 		"sourceComment": "IT-functions Ground Teil 2"
-	},
-	{
-		"name": "BDEDatenLesen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BDEDatenSpeichern",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BDEDatenSuchen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BDESchichtSchreiben",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BDESchichtwerteDatenOK",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BDESchichtwerteZuweisen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BDETageswerteDatenOK",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BDETageswerteSchreiben",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BDETageswerteZuweisen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BZBetriebsstunden",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "BZMonatAktualisierenZaehler1",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "BZMonatAktualisierenZaehler2",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "BZMonatAktualisierenZaehler3",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "BZTagAktualisierenZaehler1",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "BZTagAktualisierenZaehler2",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "BZTagAktualisierenZaehler3",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "BZZaehlerAbfragen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
 	},
 	{
 		"name": "ChangePassword",
@@ -539,11 +399,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions-Math"
 	},
 	{
-		"name": "ExterneModuleUeberwachen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
 		"name": "FileCopy",
 		"category": "IT-functions-System",
 		"sourceComment": "IT-functions-System"
@@ -589,11 +444,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions-System"
 	},
 	{
-		"name": "FUWerte",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
 		"name": "GeoArea",
 		"category": "IT-functions-Math",
 		"sourceComment": "IT-functions-Math"
@@ -629,11 +479,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 2"
 	},
 	{
-		"name": "GetFullTopic",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
 		"name": "GetNodeName",
 		"category": "IT-functions Ground Teil 2",
 		"sourceComment": "IT-functions Ground Teil 2"
@@ -654,54 +499,9 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 2"
 	},
 	{
-		"name": "GetSplittByIndex",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
 		"name": "GetWindowName",
 		"category": "IT-functions Ground Teil 2",
 		"sourceComment": "IT-functions Ground Teil 2"
-	},
-	{
-		"name": "HDWExport",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "HerBACKUP",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "HerGATEWAYanzeigeAktualisieren",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "HerGATEWAYStatusLesen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "HerGATEWAYtriggerFreigabe",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "HerGATEWAYueberwachen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "HerProViewStart",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "HerProViewStartV",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
 	},
 	{
 		"name": "Hide",
@@ -712,11 +512,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"name": "Hide_cursor",
 		"category": "IT-functions-Math",
 		"sourceComment": "IT-functions-Math"
-	},
-	{
-		"name": "HideAllPLS",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
 	},
 	{
 		"name": "HideSelf",
@@ -792,11 +587,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"name": "HTZoomOut",
 		"category": "IT-functions Ground Teil 2",
 		"sourceComment": "IT-functions Ground Teil 2"
-	},
-	{
-		"name": "Hubbodensteuerung",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
 	},
 	{
 		"name": "InfoAppActive",
@@ -1104,24 +894,9 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions-System"
 	},
 	{
-		"name": "KonfigLesen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "KonfigSpeichern",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
 		"name": "LaunchTagViewer",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
-	},
-	{
-		"name": "loadVarFromDB",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
 	},
 	{
 		"name": "Log",
@@ -1149,21 +924,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 3"
 	},
 	{
-		"name": "MADatum",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "MAKurvenAbfragen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "MAKurvenProfileAbfragen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
 		"name": "MessageBox",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
@@ -1184,11 +944,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions-Math"
 	},
 	{
-		"name": "Mouse",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
 		"name": "MoveWindow",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
@@ -1197,11 +952,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"name": "NumberRecipes",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
-	},
-	{
-		"name": "OnlineHilfeAufrufen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
 	},
 	{
 		"name": "OpenWindowsList",
@@ -1344,26 +1094,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 3"
 	},
 	{
-		"name": "QFFilter",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "QFFilterRegler15Schritt",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "QFLuftwerte",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "QFRinne",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
 		"name": "QueryGroupMembership",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
@@ -1429,11 +1159,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions-Math"
 	},
 	{
-		"name": "Scripsnippets_Intouch",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
 		"name": "SendKeys",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
@@ -1452,11 +1177,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"name": "SendSMTPMailwAttachment",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
-	},
-	{
-		"name": "SessionUserInfoAkt",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
 	},
 	{
 		"name": "SetCursorPosition",
@@ -1479,74 +1199,9 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 3"
 	},
 	{
-		"name": "SetReferenceBool",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "SetReferenceByte",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "SetReferenceDINT",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "SetReferenceDINTs",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "SetReferenceINT",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SetReferenceMerkerByte",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "SetReferenceReal",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "SetReferenceString",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "SetReferenceWord",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "SetSMELAccessname",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
 		"name": "SetTagEU",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
-	},
-	{
-		"name": "SetTopicTest",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SetVarInputBoolsch",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "SetVarToggleBoolsch",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
 	},
 	{
 		"name": "SetWindowPrinter",
@@ -1589,51 +1244,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions-Math"
 	},
 	{
-		"name": "SMELCPUPopup",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SMELEditorAufrufen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SMELInfo",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SMELInfoView",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SMELSQL",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SmelUpdateDB",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SMELUpdateDBWTaV",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SMELUpdateDBWTnV",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "Sollwertaenderung",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
 		"name": "SPCEXSetDataset",
 		"category": "Intouch AddOns functions",
 		"sourceComment": "Intouch AddOns functions"
@@ -1667,26 +1277,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"name": "SPCEXSetStartTime",
 		"category": "Intouch AddOns functions",
 		"sourceComment": "Intouch AddOns functions"
-	},
-	{
-		"name": "SpecialAccessChangeGUI",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SpecialAccessChangePw",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SpecialAccessCheckGUI",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "SpeciallAccessCheckPw",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
 	},
 	{
 		"name": "SQLAppendStatement",
@@ -1904,26 +1494,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions-System"
 	},
 	{
-		"name": "StartEP2",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "StartEP3",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "StatusExtApp",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "StatusleistenInfofelder",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
 		"name": "StdFromMetFluid",
 		"category": "IT-functions-Math",
 		"sourceComment": "IT-functions-Math"
@@ -2059,11 +1629,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 3"
 	},
 	{
-		"name": "SWReal",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
 		"name": "SysBeep",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
@@ -2072,66 +1637,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"name": "SystemIsNT",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
-	},
-	{
-		"name": "sysuhrzeitsynchron",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABAntrieb",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABCommentTo2z",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABHER012AZ",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABHER012AZS",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABHER012EA",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABHER012EAF",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABHER012EAFB",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABHER012EAS",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABHER062",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABResetPLSReferences",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "TABWILO",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
 	},
 	{
 		"name": "TagExists",
@@ -2177,51 +1682,6 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"name": "UTCDateTime",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
-	},
-	{
-		"name": "VZMonatAktualisierenZaehler1",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "VZMonatAktualisierenZaehler2",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "VZMonatAktualisierenZaehler3",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "VZTagAktualisierenZaehler1",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "VZTagAktualisierenZaehler2",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "VZTagAktualisierenZaehler3",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "VZVerbrauchsdaten",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "VZZaehlerAbfragen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "WBBetriebsstunden",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
 	},
 	{
 		"name": "wcAddItem",
@@ -2294,24 +1754,9 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "IT-functions Ground Teil 3"
 	},
 	{
-		"name": "WebCPUaufrufen",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
 		"name": "WindowState",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
-	},
-	{
-		"name": "WVVerbrauchsdaten",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "wwalmdbtrigger",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
 	},
 	{
 		"name": "WWAlwaysOnTop",
@@ -2442,185 +1887,5 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"name": "WWVirtualMonitorWidth",
 		"category": "IT-functions Ground Teil 3",
 		"sourceComment": "IT-functions Ground Teil 3"
-	},
-	{
-		"name": "xAnlagenConfig",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xAT01Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xAT02Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xAT03Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xAT04Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xAT05Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xAT06Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xAT07Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xAT08Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xAT09Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xAT10Config",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xBZVZSettings",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xGatawaySettings",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xHerDebug",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xHerDebugL",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xHerGATEWAYSettings",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xHerGatewayStart",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xKonfigSpeichern",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xLoggingConfig",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xLogoffOnTSMaster",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xLogoutFromStationTS",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xSetDateiPfade",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xSetDeverloper",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xSetSQLConfig",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xSetTSStation",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xSetUhrzeitserver",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 1"
-	},
-	{
-		"name": "xSetupDeploymentMode",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes ground-program QuickFunctions"
-	},
-	{
-		"name": "xSTATION1BiosName",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 2"
-	},
-	{
-		"name": "xSTATION2BiosName",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 2"
-	},
-	{
-		"name": "xSTATION3BiosName",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 2"
-	},
-	{
-		"name": "xSTATION4BiosName",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 2"
-	},
-	{
-		"name": "xSTATION5BiosName",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 2"
-	},
-	{
-		"name": "xSTATION6BiosName",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 2"
-	},
-	{
-		"name": "xSTATION7BiosName",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 2"
-	},
-	{
-		"name": "xSTATION8BiosName",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 2"
-	},
-	{
-		"name": "xSTATION9BiosName",
-		"category": "Hermes helper",
-		"sourceComment": "Hermes Own functions 2"
 	}
 ] as const;

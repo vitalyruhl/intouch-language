@@ -71,16 +71,12 @@ suite('QuickScript semantic model', () => {
 		assert.deepStrictEqual(model.diagnostics.map(item => item.code), ['unknown-datatype', 'unknown-function']);
 	});
 
-	test('classifies ground-program functions as Hermes helpers without accepting misspellings', () => {
-		const catalogEntries = ['xHerDebugL', 'Alarmkommentare', 'AppButonsConfig']
+	test('preserves native function knowledge without accepting misspellings', () => {
+		const catalogEntries = ['LogMessage', 'StringLeft', 'TagExists']
 			.map(name => KNOWN_FUNCTIONS.find(item => item.name === name));
-		const model = analyzeQuickScript('CALL xHerDebugL("ok", 10);\nCALL xHerDebugLX("ok", 10);');
+		const model = analyzeQuickScript('CALL LogMessage("ok");\nCALL LogMessageX("ok");');
 
-		assert.deepStrictEqual(catalogEntries.map(item => item?.category), [
-			'Hermes helper',
-			'Hermes helper',
-			'Hermes helper',
-		]);
+		assert.ok(catalogEntries.every(item => item !== undefined));
 		assert.deepStrictEqual(
 			model.diagnostics.filter(item => item.code === 'unknown-function').map(item => item.range.start),
 			[{ line: 1, character: 5 }],
@@ -89,11 +85,11 @@ suite('QuickScript semantic model', () => {
 
 	test('separates CALL expression syntax from known-function resolution', () => {
 		const known = analyzeQuickScript([
-			'X = CALL GetSplittByIndex(Source, ".", 1);',
-			'Object.Field = CALL SetReferenceBool(Topic, 1, Bit);',
-			'X = StringLower(CALL GetSplittByIndex(Source, ".", 1));',
+			'X = CALL StringLeft(Source, 1);',
+			'Object.Field = CALL StringRight(Topic, 1);',
+			'X = StringLower(CALL StringLeft(Source, 1));',
 		].join('\n'));
-		const unknown = analyzeQuickScript('X = CALL GetSplittByIndeXx(Source, ".", 1);');
+		const unknown = analyzeQuickScript('X = CALL StringLeftX(Source, 1);');
 
 		assert.deepStrictEqual(known.diagnostics, []);
 		assert.deepStrictEqual(unknown.diagnostics.map(item => [item.code, item.range.start]), [

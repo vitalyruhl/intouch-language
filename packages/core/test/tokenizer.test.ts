@@ -38,11 +38,11 @@ suite('QuickScript tokenizer', () => {
 		]);
 	});
 
-	test('preserves case and treats InTouch and Hermes function names as identifiers', () => {
-		const tokens = significant(tokenize('CALL LogMessage(); CALL xGatawaySettings();'));
+	test('preserves case and treats native and workspace function names as identifiers', () => {
+		const tokens = significant(tokenize('CALL LogMessage(); CALL WorkspaceFunction();'));
 		const identifiers = tokens.filter(token => token.kind === TokenKind.Identifier);
 
-		assert.deepStrictEqual(identifiers.map(token => token.lexeme), ['LogMessage', 'xGatawaySettings']);
+		assert.deepStrictEqual(identifiers.map(token => token.lexeme), ['LogMessage', 'WorkspaceFunction']);
 	});
 
 	test('recognizes established identifier forms without splitting instance prefixes', () => {
