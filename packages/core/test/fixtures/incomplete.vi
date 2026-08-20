@@ -1,0 +1,4 @@
+DIM Reading AS REAL;
+IF Reading >
+    MessageText = "unfinished input
+    @

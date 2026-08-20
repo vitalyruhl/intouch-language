@@ -11,7 +11,7 @@
     { "include": "#keywords" },
     { "include": "#dotfields" },
     { "include": "#strings" },
-    { "include": "#HermesKeywords" },
+    { "include": "#systemVariables" },
     { "include": "#variables" },
     { "include": "#var_declaration" },
     { "include": "#numbers_simple" },
@@ -19,7 +19,6 @@
   ],
   "repository": {
     "Ground-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": {},
-
     "keywords": {
       "patterns": [
         {
@@ -121,23 +120,12 @@
       ]
     },
 
-    "HermesKeywords": {
+    "systemVariables": {
       "patterns": [
         {
           "match": "(?i:\\b(SYS_|MA_|SMEL_|HER_)\\w*)",
           "name": "variable.other",
-          "comment": "Systemvariablen (Hermes - OWN)"
-        },
-
-        {
-          "match": "(?i:\\s*\\b(GetSplittByIndex|HerGATEWAYanzeigeAktualisieren|HerGATEWAYtriggerFreigabe|HerGATEWAYueberwachen|SetReferenceBool|SetReferenceByte|SetReferenceDINT|SetReferenceDINTs|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord|SetVarInputBoolsch|SetVarToggleBoolsch|BDEDatenLesen|BDEDatenSpeichern|BDEDatenSuchen|BDESchichtSchreiben|BDESchichtwerteDatenOK|BDESchichtwerteZuweisen|BDETageswerteDatenOK|BDETageswerteSchreiben|BDETageswerteZuweisen|BZBetriebsstunden|BZZaehlerAbfragen|ExterneModuleUeberwachen|FUWerte|GetSplittByIndex|HerBACKUP|HerProViewStart|HideAllPLS|KonfigLesen|KonfigSpeichern|QFFilter|QFFilterRegler15Schritt|QFLuftwerte|QFRinne|SessionUserInfoAkt|Sollwertaenderung|StatusExtApp|StatusleistenInfofelder|SWReal|wwalmdbtrigger|xAnlagenConfig|xBZVZSettings|xGatawaySettings|xHerGATEWAYSettings|xLoggingConfig|xSetDateiPfade|xSetSQLConfig|xSetTSStation|xSetUhrzeitserver)\\b\\s*)",
-          "name": "keyword.other",
-          "comment": "Hermes Own functions 1"
-        },
-        {
-          "match": "(?i:\\s*\\b(xSTATION9BiosName|xSTATION8BiosName|xSTATION7BiosName|xSTATION6BiosName|xSTATION5BiosName|xSTATION4BiosName|xSTATION3BiosName|xSTATION2BiosName|xSTATION1BiosName)\\b\\s*)",
-          "name": "support.function",
-          "comment": "Hermes Own functions 2"
+          "comment": "Known QuickScript system-variable prefixes"
         }
       ]
     },

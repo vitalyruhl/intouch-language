@@ -1,0 +1,11 @@
+{ Representative QuickScript tokenizer fixture }
+DIM MessageText AS MESSAGE;
+DIM Index AS INTEGER;
+
+IF Index >= 1 THEN
+    LogMessage("IF and { braces } stay in this string");
+ELSE
+    FOR Index = 1 TO 2 STEP 1
+        CALL WorkspaceFunction(); ' Workspace QuickFunction call target
+    NEXT;
+ENDIF;

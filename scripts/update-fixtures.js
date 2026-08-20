@@ -5,13 +5,13 @@ const path = require("path");
 // Use pure pipeline from compiled sources (no vscode dependency)
 let pure;
 try {
-    pure = require('../out/formatCore');
+    pure = require('@intouch-language/core');
 } catch (e) {
     console.error('Could not load out/formatCore.js. Run npm run compile first.', e);
     process.exit(1);
 }
 
-function getConfigFallback() { return { allowedNumberOfEmptyLines:1, RemoveEmptyLines:true, EmptyLinesAlsoInComment:false, BlockCodeBegin:'{>', BlockCodeEnd:'{<', BlockCodeExclude:'{#', RegionBlockCodeBegin:'{region', RegionBlockCodeEnd:'{endregion', RegionBlockCodeExclude:'{#', FormatAlsoInComment:false }; }
+function getConfigFallback() { return { allowedNumberOfEmptyLines:1, removeEmptyLines:true, removeEmptyLinesInComments:false, blockCodeBegin:'{>', blockCodeEnd:'{<', blockCodeExclude:'{#', regionBlockCodeBegin:'{region', regionBlockCodeEnd:'{endregion', regionBlockCodeExclude:'{#', insertSpaces:true, indentSize:4 }; }
  (function main() {
     try {
         const config = getConfigFallback();
@@ -26,19 +26,7 @@ function getConfigFallback() { return { allowedNumberOfEmptyLines:1, RemoveEmpty
         const testPath = path.join(baseDir, testFile);
         const expectedPath = path.join(baseDir, testFile.replace('.test.vbi', '.tobe.vbi'));
         const input = fs.readFileSync(testPath, 'utf8');
-        // full pipeline (mirror formats.fixtures.test.ts)
-        let stage2 = pure.pureFormatPipeline(input, config);
-        const nEL = (config.allowedNumberOfEmptyLines || 1) + 1.0;
-        if (config.RemoveEmptyLines) {
-            let regex;
-            if (config.EmptyLinesAlsoInComment) {
-                regex = new RegExp(`(?![^{]*})(^[\t]*$\r?\n){${nEL},}`, 'gm');
-            }
-            else {
-                regex = new RegExp(`(^[\t]*$\r?\n){${nEL},}`, 'gm');
-            }
-            stage2 = stage2.replace(regex, '\r\n');
-        }
+        const stage2 = pure.formatQuickScript(input, config).text;
         if (fs.existsSync(expectedPath)) {
             const old = fs.readFileSync(expectedPath, 'utf8');
             if (old !== stage2) {

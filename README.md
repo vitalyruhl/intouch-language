@@ -18,8 +18,24 @@
 
 # Intouch-Language
 
-- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides `syntax highlighting`, `snippets` and `auto-format` function for Intouch Basic. New since 2022.11.28 - own darkmode theme for VSC, names Intouch Dark.
+- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides native QuickScript language-server support for `.vbi` and `.vi` files, including formatting, diagnostics, document metadata, QuickFunction discovery, cross-file definition and references, hover, completion, and document symbols. It also includes the Intouch Dark theme.
 - **Intouch** is a programming language for AVEVA (Wonderware) SCADA Intouch Applications.
+
+## QuickScript Language Server
+
+The extension includes a native, editor-independent QuickScript language
+server for `.vbi` and `.vi` files. It provides:
+
+- Parser-based formatting and diagnostics.
+- Comment-based document metadata for QuickFunctions, Windows, Applications,
+  DataChanges, Conditions, and KeyScripts.
+- Workspace QuickFunction discovery with cross-file definition and references.
+- Hover, completion, and document symbols.
+- Window event support for `OnShow`, `WhileRunning`, and `OnClose`.
+- Non-callable Application, DataChange, Condition, and KeyScript symbols.
+
+Project-specific QuickFunctions are discovered from the current workspace;
+private project catalogs are not bundled with the public extension.
 
 <p align="center" bgcolor:=#3f3f3f>
   <br />
@@ -129,13 +145,16 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 ## Development and agent workflow
 
 Repository governance starts at [AGENTS.md](AGENTS.md). QuickScript language
-boundaries and the planned language-server architecture are documented in
+boundaries and the language-server architecture are documented in
 [docs/language/quickscript.md](docs/language/quickscript.md) and
 [docs/architecture/intouch-core-preparation.md](docs/architecture/intouch-core-preparation.md).
+The supported comment-based script metadata convention is documented in
+[docs/language/document-metadata.md](docs/language/document-metadata.md).
 
-The current extension does not include a language server. Until a native
-InTouch language server exists, `.vbi` and `.vi` are not semantically analysed
-by a foreign language server.
+The extension uses its own QuickScript language server for `.vbi` and `.vi`.
+Formatting and semantic features share the editor-independent core tokenizer
+and parser. Manual validation against real project files remains the release
+gate; see [Manual QuickScript HIL](docs/testing/manual-hil.md).
 
 ---
 
@@ -163,8 +182,12 @@ by a foreign language server.
 The following items are either recently resolved or planned but not yet implemented:
 
 - PLANNED: Range (selection) formatting. Current command formats the entire document.
-- PLANNED: Diagnostics (unclosed IF/FOR, unexpected ENDIF/NEXT) – tracked in modernization plan.
-- PLANNED: Tokenizer-based nesting & keyword uppercasing refactor for improved robustness.
+- Diagnostics cover unclosed or invalid block nesting, duplicate local `DIM`
+  declarations, and unknown datatypes.
+- Formatting uses the shared tokenizer and recoverable structure parser.
+- Definition and references are document-local for variables and cross-file for
+  metadata-declared workspace QuickFunctions; project-wide variable indexing
+  and range formatting remain planned.
 - NOTE: Multiline IF continuation indentation intentionally uses base + 2 spaces before THEN; THEN line stays aligned with expression by design.
 - NOTE: Spacing inside string literals and single-line brace comments is preserved intentionally; only outer code regions are normalized.
 
@@ -283,6 +306,6 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
 
 ## Copyright
 
-`2021-2025 (c)Vitaly Ruhl`
+`2021-2026 (c)Vitaly Ruhl`
 
 License: GNU General Public License v3.0

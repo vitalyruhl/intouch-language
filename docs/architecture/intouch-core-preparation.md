@@ -1,52 +1,129 @@
-# InTouch Core Preparation Audit
+# InTouch Language Architecture
 
-## Current extension shape
+## Dependency direction
 
-The repository is a single npm-managed VS Code extension. `package.json`
-registers language ID `intouch` for `.vbi` and `.vi`, a TextMate grammar,
-snippets, a formatter command, and the theme. `src/extension.ts` is the VS Code
-activation boundary; compiled output is `out/` and the bundle is
-`dist/extension.js`.
+```text
+QuickScript source
+        |
+        v
+packages/core
+  tokenizer -> document metadata extractor -> parser -> semantics
+                                             -> quality diagnostics
+                                             -> language features
+        |          |
+        |          +-> structural formatter
+        |                  |
+        v                  v
+packages/language-server (LSP transport and protocol conversion)
+        |
+        v
+src/extension.ts (thin VS Code language client)
+```
 
-No `packages/`, tokenizer, parser, language server, LSP transport, semantic
-definition/reference provider, or diagnostics provider exists yet.
+`packages/core` is editor-independent. The formatter directly consumes core
+tokens and parser structure; it does not depend on LSP types or transport.
+`packages/language-server` converts core results into LSP responses. The VS
+Code extension starts that server, synchronizes `intouch` documents and `VBI`
+settings, and retains the existing grammar, snippets, theme, and formatter
+command contributions.
 
-## Migration inventory
+## Canonical language layers
 
-| Current source | Current responsibility | Future target module | Dependencies | Risk |
-| --- | --- | --- | --- | --- |
-| `src/extension.ts` | Activates VS Code command and formatting provider | `packages/vscode-extension` | VS Code API, formatter adapter | Keep VS Code effects at this boundary. |
-| `src/functions.ts` | Reads editor configuration, creates `TextEdit`s, invokes formatting | `packages/vscode-extension` plus thin adapter | VS Code API and formatter pipeline | Separate editor I/O from pure formatting without changing output. |
-| `src/formatCore.ts` | Whitespace, keyword, string/comment preservation, and indentation pipeline | `packages/core/formatter` | `const.ts`, `nestingdef.ts`, formatter tests | Regex ordering and fixture compatibility are behavior-sensitive. |
-| `src/const.ts` | Formatter keywords and operators | `packages/core/language-data` | Formatter pipeline | Grammar has overlapping but not identical vocabulary. |
-| `src/nestingdef.ts` | Nesting/exclusion definitions | `packages/core/syntax` | Formatter pipeline | Existing blocks must be characterized by tests before extraction. |
-| `syntaxes/intouch.tmLanguage.json` | TextMate lexical highlighting, functions, data types, and scopes | Retain in `packages/vscode-extension` initially; later generate/shared language data only after validation | VS Code TextMate grammar | Highlighting patterns are not a parser specification. |
-| `language-configuration.json`, `snippets/vbi.json` | Editor rules and authoring snippets | `packages/vscode-extension` | VS Code contribution model | Keep declarative assets out of core. |
-| `src/test/suite/*.test.ts` and `testfiles/` | Extension-host tests and formatter golden fixtures | Core formatter test suite plus extension integration tests | Mocha, VS Code test host | Fixtures should stay byte-for-byte stable unless behavior intentionally changes. |
+The tokenizer is the only lexical interpretation used by the parser,
+formatter, and semantic services. Tokens retain their original lexemes and
+zero-based UTF-16, half-open offset and position ranges. Strings, brace
+comments, apostrophe comments, incomplete input, dashed identifiers, and
+QuickScript operators therefore pass through one shared scanner.
 
-## Language knowledge and duplication
+The recoverable parser is the only structural interpretation. It represents
+`DIM`, `CALL`, `IF`/`ELSE`/`ENDIF`, `FOR`/`NEXT`, and the repository-evidenced
+`WHILE`/`NEXT` form. Blocks expose opener, body, middle, closer, parent, child,
+and full ranges. Invalid nesting and missing closers produce diagnostics
+without preventing later lines from being parsed or formatted.
 
-Language vocabulary currently appears in the grammar and formatter constants;
-block behavior appears in the formatter and language configuration. This is
-useful evidence but not yet one canonical typed model. The first core milestone
-should inventory these sets, write characterization tests for their intentional
-overlap/divergence, and then extract a VS Code-independent language-data and
-formatter surface.
+The formatter exposes `formatQuickScript(source, options)` and returns a
+`FormatResult`. Its first stage formats lexical tokens while emitting string
+and comment lexemes unchanged. Its second stage uses parser line structure for
+indentation and configured comment block markers. Formatting is deterministic,
+document-wide, and idempotent. Historical regex and character-scanning
+formatter implementations have been removed.
 
-## Diagnostics and semantic navigation
+## Semantic model and language features
 
-The README lists diagnostics such as unmatched `IF`/`ENDIF` and `FOR`/`NEXT` as
-planned. No diagnostics implementation was found. A future tokenizer and
-structure parser should first support formatter-safe token boundaries, block
-matching, declarations, and scopes; only then should diagnostics, document
-symbols, definitions, and references be implemented.
+Each `.vbi` or `.vi` document has one canonical metadata model and one local
+scope. Metadata is extracted only from comment tokens, with explicit `@`
+fields taking priority over structured legacy headers and filename fallbacks.
+`DIM` declarations provide local variable symbols and case-insensitive uses.
+A URI-aware incremental language-server index adds cross-file QuickFunction
+definitions and call references without moving editor or transport types into
+core.
 
-## Recommended next autonomous block
+Core diagnostics currently cover:
 
-1. Create a read-only language-data inventory from grammar, formatter constants,
-   nesting definitions, and fixtures.
-2. Add characterization tests that protect existing formatter output and record
-   intentional vocabulary differences.
-3. Define a small VS Code-independent `intouch-core` API and extract only pure
-   language data and formatting helpers behind it.
-4. Do not create LSP transport or Serena QuickScript integration in that block.
+- missing `ENDIF` and `NEXT`;
+- invalid block nesting and duplicate `ELSE`;
+- duplicate local `DIM` declarations;
+- unknown `DIM` datatypes;
+- unresolved function calls.
+
+Quality diagnostics are a separate post-semantic layer. They report technically
+valid but less portable or maintainable names and never change parser validity,
+symbols, navigation, or formatter output. Quality diagnostics use
+`intouch-quality` as their LSP source, while syntax and semantic diagnostics
+continue to use `intouch-language`.
+
+The initial quality rules cover non-ASCII identifiers and literal InTouch
+window names containing whitespace or non-ASCII characters. Identifier
+candidates come from the semantic model, including local and external uses plus
+QuickFunction and parameter declarations extracted from metadata comment
+tokens. Window strings are inspected only as arguments of documented window
+commands/functions.
+
+The language service provides metadata-aware document symbols, local and
+cross-file definition/reference results, completion, and hover. Completion includes QuickScript keywords and
+datatypes, document locals and call targets, and known InTouch/Hermes function
+names. The function catalog is generated from
+`syntaxes/intouch.tmLanguage.json`; it is not maintained as a parallel manual
+list. Hover descriptions use only document facts or labels already present in
+that source grammar.
+
+## Language server and VS Code boundary
+
+The language server supports initialize/shutdown, incremental text document
+synchronization, document formatting, document symbols, definition,
+references, completion, hover, and publish diagnostics. Feature conversion is
+unit-tested independently, and a child-process protocol test exercises the
+server lifecycle plus cross-file workspace requests without a VS Code process.
+The initial workspace scan reads `.vbi` and `.vi` once. Open/change and watched
+file events replace only the affected URI entry; requests do not reread or
+reparse every workspace file.
+
+`src/extension.ts` contains no parser, formatter, or semantic logic. It starts
+`dist/server.js` through `vscode-languageclient`, registers `vbi-format` as a
+request to VS Code's standard format command, and lets the language client own
+all providers. The TextMate grammar remains the syntax-highlighting surface;
+snippets and the theme remain declarative VS Code assets.
+
+## Deliberate limits before manual HIL
+
+- Formatting is document-wide; selection/range formatting is not advertised.
+- Local-variable navigation remains document-local.
+- QuickFunction metadata supplies callable workspace symbols, cross-file
+  definition/reference locations, signatures, hover, and completion without
+  inventing executable declaration syntax.
+- Window, Application, DataChange, Condition, and KeyScript documents are
+  non-callable workspace symbols. Window events are limited to `OnShow`,
+  `WhileRunning`, and `OnClose`.
+- Signature metadata is canonical, but an LSP Signature Help provider remains
+  planned.
+- Duplicate Window-event diagnostics remain deferred until version/backup
+  exports can be distinguished reliably.
+- Project-wide variable symbol indexing and cross-file variable navigation are
+  not implemented.
+- `.vbi` and `.vi` remain excluded from Serena semantic indexing; the native
+  language server provides their semantics.
+
+The automated implementation is considered ready for manual HIL only after
+compile, core tests, protocol tests, VS Code extension-host tests, lint,
+prepublish bundling, VSIX packaging, and repository freshness checks pass. The
+manual procedure is documented in [Manual QuickScript HIL](../testing/manual-hil.md).

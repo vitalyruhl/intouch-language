@@ -1,8 +1,8 @@
 import * as assert from "assert";
 // import * as vscode from "vscode";
 
-const fo = require("../../formats")
-const functions = require("../../functions")
+const fo = require('./formatterTestSupport')
+const functions = require('./formatterTestSupport')
 let config = functions.getConfig()
 
 

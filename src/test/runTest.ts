@@ -4,6 +4,10 @@ import { runTests } from '@vscode/test-electron';
 
 async function main() {
 	try {
+		// Codex and VS Code extension hosts set this for their own child processes.
+		// The test runner must launch Code as Electron, not as a Node.js process.
+		delete process.env.ELECTRON_RUN_AS_NODE;
+
 		// The folder containing the Extension Manifest package.json
 		// Passed to `--extensionDevelopmentPath`
 		const extensionDevelopmentPath = path.resolve(__dirname, '../../');
@@ -18,7 +22,7 @@ async function main() {
 			extensionDevelopmentPath,
 			extensionTestsPath,
 		});
-	} catch (err) {
+	} catch {
 		console.error('Failed to run tests');
 		process.exit(1);
 	}

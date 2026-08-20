@@ -5,6 +5,28 @@
 <!-- markdownlint-disable MD013 -->
 <!-- markdownlint-disable MD025 -->
 
+## 1.6.0
+
+- Replace the legacy formatter lexers with the shared QuickScript tokenizer and
+  recoverable structure parser.
+- Add a native language server with diagnostics, symbols, completion, hover,
+  document-local variable navigation, and workspace QuickFunction navigation.
+- Route VS Code formatting through the language client while preserving the
+  existing grammar, snippets, theme, and formatter command.
+- Add editor-independent core tests, language-server protocol smoke tests, and
+  a manual `.vbi`/`.vi` HIL gate.
+- Keep unclosed `{>` metadata blocks inside one multiline brace-comment token
+  while preserving diagnostics between same-line-closed nesting markers.
+- Keep project-specific QuickFunctions external to the public static catalog;
+  workspace declarations remain dynamically discoverable.
+- Accept corpus-evidenced Unicode and digit-prefixed identifiers, numeric
+  dotfields, and multiline `IF` continuation forms.
+- Add configurable QuickScript quality diagnostics for non-ASCII identifiers
+  and problematic literal window names without changing language validity.
+- Add canonical comment-based document metadata, InTouch KeyScript/shortcut and
+  Window-event classification, plus URI-aware cross-file QuickFunction
+  definition, references, hover, and completion independent of filename prefixes.
+
 ### V1.4.0
 
 - 29.11.2022 VitalyRuhl

@@ -1,6 +1,6 @@
 import * as assert from 'assert';
-import { preFormat } from '../../formats';
-const functions = require('../../functions');
+import { preFormat } from './formatterTestSupport';
+const functions = require('./formatterTestSupport');
 const config = functions.getConfig();
 
 const KEYWORDS = [

@@ -1,6 +1,7 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "Node16",
+		"moduleResolution": "Node16",
 		"target": "es2021",
 		"outDir": "out",
 		"lib": [
@@ -15,5 +16,8 @@
 		"temp",
 		".vscode-test",
 		"scripts"
+	],
+	"include": [
+		"src/**/*.ts"
 	]
 }

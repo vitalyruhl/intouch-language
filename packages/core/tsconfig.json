@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"lib": [
+			"es2021"
+		],
+		"module": "commonjs",
+		"outDir": "../../out/core",
+		"rootDir": ".",
+		"sourceMap": true,
+		"strict": true,
+		"target": "es2021",
+		"types": [
+			"mocha",
+			"node"
+		]
+	},
+	"include": [
+		"src/**/*.ts",
+		"test/**/*.ts"
+	]
+}

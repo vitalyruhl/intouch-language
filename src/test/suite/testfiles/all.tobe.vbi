@@ -38,11 +38,11 @@ Changelog:
 
 {>------------------------------------------------------------------------------}
     {Test wrong Nesting and inline if - then and Spacings on +/-/<> and other Keywords un strings}
-    IF sys_Debug_info > 0 THEN LogMessage(eof Funkt + "if one of the keywords is big, and             spacing or         tab is removed, then its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
-    IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
+    IF sys_Debug_info > 0 THEN LogMessage(EOF Funkt + "if one of the keywords is big, and             spacing or         tab is removed, then its Wrong! | [" + Text(iErsteMA, "#") "]"); ENDIF;
+    IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#") "]"); ENDIF;
 {# Test codeblock backline}
-    IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
-    IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#")"]"); ENDIF;
+    IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#") "]"); ENDIF;
+    IF sys_Debug_info > 0 THEN LogMessage(Funkt + "eof if one of eof is big -> its Wrong! | [" + Text(iErsteMA, "#") "]"); ENDIF;
 {<------------------------------------------------------------------------------}
 
 {------------------------------------------------------------------------------}
