@@ -18,8 +18,24 @@
 
 # Intouch-Language
 
-- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides syntax highlighting, snippets, parser-based formatting, diagnostics, metadata-aware symbols, completion, hover, and local plus QuickFunction cross-file definition/reference support for Intouch Basic. It also includes the Intouch Dark theme.
+- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides native QuickScript language-server support for `.vbi` and `.vi` files, including formatting, diagnostics, document metadata, QuickFunction discovery, cross-file definition and references, hover, completion, and document symbols. It also includes the Intouch Dark theme.
 - **Intouch** is a programming language for AVEVA (Wonderware) SCADA Intouch Applications.
+
+## QuickScript Language Server
+
+The extension includes a native, editor-independent QuickScript language
+server for `.vbi` and `.vi` files. It provides:
+
+- Parser-based formatting and diagnostics.
+- Comment-based document metadata for QuickFunctions, Windows, Applications,
+  DataChanges, Conditions, and KeyScripts.
+- Workspace QuickFunction discovery with cross-file definition and references.
+- Hover, completion, and document symbols.
+- Window event support for `OnShow`, `WhileRunning`, and `OnClose`.
+- Non-callable Application, DataChange, Condition, and KeyScript symbols.
+
+Project-specific QuickFunctions are discovered from the current workspace;
+private project catalogs are not bundled with the public extension.
 
 <p align="center" bgcolor:=#3f3f3f>
   <br />

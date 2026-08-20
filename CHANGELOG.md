@@ -5,7 +5,7 @@
 <!-- markdownlint-disable MD013 -->
 <!-- markdownlint-disable MD025 -->
 
-## Unreleased
+## 1.6.0
 
 - Replace the legacy formatter lexers with the shared QuickScript tokenizer and
   recoverable structure parser.
@@ -17,8 +17,8 @@
   a manual `.vbi`/`.vi` HIL gate.
 - Keep unclosed `{>` metadata blocks inside one multiline brace-comment token
   while preserving diagnostics between same-line-closed nesting markers.
-- Complete the generated Hermes helper catalog from the validated ground-program
-  QuickFunctions without reclassifying project helpers as native InTouch built-ins.
+- Keep project-specific QuickFunctions external to the public static catalog;
+  workspace declarations remain dynamically discoverable.
 - Accept corpus-evidenced Unicode and digit-prefixed identifiers, numeric
   dotfields, and multiline `IF` continuation forms.
 - Add configurable QuickScript quality diagnostics for non-ASCII identifiers

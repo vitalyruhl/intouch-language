@@ -27,7 +27,8 @@ For each file:
 3. Trigger completion in code and verify representative keywords, datatypes,
    InTouch functions, Hermes helpers, local variables, and existing `CALL`
    targets.
-4. Hover a local variable, a known InTouch function, and a known Hermes helper;
+4. Hover a local variable, a known native InTouch function, and a workspace
+   QuickFunction;
    verify that unknown project identifiers do not receive invented details.
 5. Use Go to Definition and Find All References on a local `DIM` variable.
    Confirm that results stay within the document and do not jump to unrelated

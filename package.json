@@ -1,8 +1,8 @@
 {
 	"name": "intouch-language",
 	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021-2026 vitalyruhl",
-	"description": "Intouch-Language syntax highlighting, formatter and code snippets for VSCode",
-	"version": "1.5.8",
+	"description": "Native InTouch QuickScript language server, formatter and diagnostics for VS Code",
+	"version": "1.6.0",
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
@@ -28,12 +28,12 @@
 	],
 	"keywords": [
 		"Intouch",
-		"Invensys",
+		"QuickScript",
+		"AVEVA",
 		"Wonderware",
-		"Aveva",
 		"formatter",
-		"theme",
-		"dark"
+		"language-server",
+		"LSP"
 	],
 	"main": "./dist/extension.js",
 	"activationEvents": [
