@@ -120,9 +120,9 @@ export function analyzeQuickScript(source: string, options: AnalyzeOptions = {})
 	for (const symbol of symbols) {
 		declarationOffsets.set(offsetAt(source, symbol.selectionRange.start), symbol);
 	}
-	const callRanges = new Map<number, string>();
+	const statementCallTargets = new Set<number>();
 	for (const call of document.statements.filter(statement => statement.kind === 'call' && statement.name !== undefined && statement.nameRange !== undefined)) {
-		callRanges.set(offsetAt(source, call.nameRange!.start), call.name!);
+		statementCallTargets.add(offsetAt(source, call.nameRange!.start));
 	}
 
 	const references: QuickReference[] = [];
@@ -141,9 +141,8 @@ export function analyzeQuickScript(source: string, options: AnalyzeOptions = {})
 			continue;
 		}
 		const resolved = declarationsByName.get(token.lexeme.toUpperCase());
-		const callName = callRanges.get(token.span.start);
 		const next = nextSignificant(document.tokens, index);
-		const isFunctionCall = callName !== undefined || next?.lexeme === '(';
+		const isFunctionCall = statementCallTargets.has(token.span.start) || next?.lexeme === '(';
 		if (isFunctionCall && !knownCallableNames.has(token.lexeme.toUpperCase())) {
 			diagnostics.push({
 				code: 'unknown-function',
@@ -152,8 +151,8 @@ export function analyzeQuickScript(source: string, options: AnalyzeOptions = {})
 				range: token.range,
 			});
 		}
-		if (resolved !== undefined || callName !== undefined) {
-			const kind: ReferenceKind = callName !== undefined ? 'call' : next?.lexeme === '=' ? 'write' : 'read';
+		if (resolved !== undefined || isFunctionCall) {
+			const kind: ReferenceKind = isFunctionCall ? 'call' : next?.lexeme === '=' ? 'write' : 'read';
 			references.push({ name: token.lexeme, kind, range: token.range, declarationId: resolved?.id });
 		}
 	}

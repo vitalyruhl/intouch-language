@@ -90,7 +90,7 @@ interface ParsedStatement {
 }
 
 interface ExpressionIssue {
-	code: 'missing-expression' | 'unexpected-token' | 'unclosed-delimiter';
+	code: 'missing-call-arguments' | 'missing-call-target' | 'missing-expression' | 'unexpected-token' | 'unclosed-delimiter';
 	message: string;
 	token?: Token;
 }
@@ -218,15 +218,7 @@ class ExpressionParser {
 			const value = this.tokens[this.position].lexeme;
 			if (value === '(') {
 				const opening = this.tokens[this.position];
-				this.position += 1;
-				if (this.tokens[this.position]?.lexeme !== ')') {
-					while (this.issue === undefined) {
-						this.parseBinary(1);
-						if (this.tokens[this.position]?.lexeme !== ',') break;
-						this.position += 1;
-					}
-				}
-				this.expectClosing(')', opening);
+				this.parseArguments(opening);
 				continue;
 			}
 			if (value === '[') {
@@ -255,6 +247,10 @@ class ExpressionParser {
 			this.issue = { code: 'missing-expression', message: 'Expected a QuickScript expression.' };
 			return;
 		}
+		if (word(token) === 'CALL') {
+			this.parseCallExpression(token);
+			return;
+		}
 		if (token.lexeme === '(') {
 			this.position += 1;
 			this.parseBinary(1);
@@ -267,6 +263,55 @@ class ExpressionParser {
 			return;
 		}
 		this.issue = { code: 'unexpected-token', message: `Unexpected token '${token.lexeme}' in expression.`, token };
+	}
+
+	private parseCallExpression(call: Token): void {
+		this.position += 1;
+		const target = this.tokens[this.position];
+		if (!this.isName(target)) {
+			this.issue = {
+				code: 'missing-call-target',
+				message: 'CALL requires a callable name.',
+				token: target ?? call,
+			};
+			return;
+		}
+		this.position += 1;
+		while (['.', '->', ':'].includes(this.tokens[this.position]?.lexeme ?? '')) {
+			const separator = this.tokens[this.position];
+			this.position += 1;
+			if (!this.isName(this.tokens[this.position])) {
+				this.issue = {
+					code: 'missing-expression',
+					message: `Expected an identifier after '${separator.lexeme}'.`,
+					token: this.tokens[this.position],
+				};
+				return;
+			}
+			this.position += 1;
+		}
+		const opening = this.tokens[this.position];
+		if (opening?.lexeme !== '(') {
+			this.issue = {
+				code: 'missing-call-arguments',
+				message: "CALL requires '(' after the callable name.",
+				token: opening,
+			};
+			return;
+		}
+		this.parseArguments(opening);
+	}
+
+	private parseArguments(opening: Token): void {
+		this.position += 1;
+		if (this.tokens[this.position]?.lexeme !== ')') {
+			while (this.issue === undefined) {
+				this.parseBinary(1);
+				if (this.tokens[this.position]?.lexeme !== ',') break;
+				this.position += 1;
+			}
+		}
+		this.expectClosing(')', opening);
 	}
 
 	private expectClosing(value: ')' | ']', opening: Token): void {
@@ -649,7 +694,21 @@ class StatementParser {
 	}
 }
 
+function delimiterContinuationEnd(tokensByLine: readonly Token[][], startLine: number): number {
+	let depth = 0;
+	for (let line = startLine; line < tokensByLine.length; line += 1) {
+		for (const token of tokensByLine[line]) {
+			if (token.lexeme === '(' || token.lexeme === '[') depth += 1;
+			if (token.lexeme === ')' || token.lexeme === ']') depth = Math.max(0, depth - 1);
+		}
+		if (depth === 0 || tokensByLine[line].some(token => token.lexeme === ';')) return line;
+	}
+	return tokensByLine.length - 1;
+}
+
 function continuationEnd(tokensByLine: readonly Token[][], startLine: number): number {
+	const delimiterEnd = delimiterContinuationEnd(tokensByLine, startLine);
+	if (delimiterEnd > startLine) return delimiterEnd;
 	const first = tokensByLine[startLine];
 	if (keyword(first[0]) !== 'IF' || first.some(token => keyword(token) === 'THEN')) return startLine;
 	if (!['AND', 'OR', 'NOT'].includes(keyword(first[first.length - 1]) ?? '')) return startLine;
