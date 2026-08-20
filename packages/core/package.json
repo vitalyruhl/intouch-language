@@ -1,0 +1,5 @@
+{
+	"name": "@intouch-language/core",
+	"private": true,
+	"description": "Editor-independent QuickScript language primitives"
+}

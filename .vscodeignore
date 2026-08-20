@@ -27,6 +27,7 @@ docs/**
 node_modules/**
 other/**
 out/**
+packages/**
 scripts/**
 src/**
 temp/**

@@ -19,6 +19,7 @@ all-agents-combined.md
 #.vscode/**
 typings/**
 out/test/**
+/out/core/
 #src/**
 **/*.map
 
