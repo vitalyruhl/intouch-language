@@ -1,11 +1,11 @@
 import { CoreDiagnostic, QuickScriptDocument, parseQuickScript } from './parser';
+import { MetadataExtractionOptions, QuickScriptDocumentMetadata, extractDocumentMetadata } from './documentMetadata';
 import { KNOWN_FUNCTIONS } from './generatedFunctionCatalog';
 import { Position, Range, offsetAt, sourceRange } from './source';
 import { Token, TokenKind } from './token';
-import { tokenize } from './tokenizer';
 
 export type SymbolKind = 'variable' | 'call-target';
-export type ReferenceKind = 'declaration' | 'read' | 'write' | 'call';
+export type ReferenceKind = 'declaration' | 'read' | 'write' | 'call' | 'trigger';
 export type SemanticIdentifierKind = 'function' | 'parameter' | 'local' | 'global' | 'member';
 
 export interface QuickSymbol {
@@ -35,6 +35,7 @@ export interface QuickFunctionDeclaration {
 	name: string;
 	nameRange: Range;
 	parameters: SemanticIdentifier[];
+	metadata: QuickScriptDocumentMetadata;
 }
 
 export interface Scope {
@@ -51,12 +52,15 @@ export interface SemanticModel {
 	references: QuickReference[];
 	identifiers: SemanticIdentifier[];
 	quickFunctions: QuickFunctionDeclaration[];
+	metadata: QuickScriptDocumentMetadata;
 	diagnostics: CoreDiagnostic[];
 }
 
 export interface AnalyzeOptions {
 	/** Additional QuickFunctions resolved by the language-server workspace index. */
 	knownFunctionNames?: Iterable<string>;
+	/** Optional filename used only after structured metadata sources are exhausted. */
+	fileName?: string;
 }
 
 function contains(range: Range, position: Position): boolean {
@@ -82,48 +86,23 @@ function nextSignificant(tokens: readonly Token[], index: number): Token | undef
 	return undefined;
 }
 
-const METADATA_IDENTIFIER = '[\\p{L}_$#][\\p{L}\\p{N}_$#-]*';
-
-function quickFunctionDeclarationsFromTokens(source: string, tokens: readonly Token[]): QuickFunctionDeclaration[] {
-	const declarations: QuickFunctionDeclaration[] = [];
-	const metadata = new RegExp(`\\bType\\s*:\\s*QuickFunction\\b[\\s\\S]{0,1000}?\\bName\\s*:\\s*(${METADATA_IDENTIFIER})`, 'giu');
-	const parameterLine = new RegExp(`^[ \\t]*(?:DISCRETE|INTEGER|MESSAGE|REAL)[ \\t]+(${METADATA_IDENTIFIER})\\b`, 'gimu');
-
-	for (const token of tokens.filter(candidate => candidate.kind === TokenKind.Comment)) {
-		for (const match of token.lexeme.matchAll(metadata)) {
-			const name = match[1];
-			const matchStart = match.index ?? 0;
-			const nameStart = matchStart + match[0].lastIndexOf(name);
-			const nameRange = sourceRange(source, {
-				start: token.span.start + nameStart,
-				end: token.span.start + nameStart + name.length,
-			}).range;
-			const parameters: SemanticIdentifier[] = [];
-			const parameterSection = token.lexeme.slice(matchStart).match(/\bParameters\s*:\s*([\s\S]*?)(?:\r?\n[ \t]*\r?\n|\bUsage\s*:|\bVersion\s+history\s*:|\{<|$)/iu);
-			if (parameterSection !== null) {
-				const sectionStart = matchStart + (parameterSection.index ?? 0) + parameterSection[0].indexOf(parameterSection[1]);
-				for (const parameter of parameterSection[1].matchAll(parameterLine)) {
-					const parameterName = parameter[1];
-					const relativeStart = sectionStart + (parameter.index ?? 0) + parameter[0].lastIndexOf(parameterName);
-					parameters.push({
-						name: parameterName,
-						kind: 'parameter',
-						range: sourceRange(source, {
-							start: token.span.start + relativeStart,
-							end: token.span.start + relativeStart + parameterName.length,
-						}).range,
-					});
-				}
-			}
-			declarations.push({ name, nameRange, parameters });
-		}
-	}
-	return declarations;
+function quickFunctionDeclarationFromMetadata(source: string, metadata: QuickScriptDocumentMetadata): QuickFunctionDeclaration[] {
+	if (metadata.scriptType !== 'QuickFunction' || metadata.name === undefined) return [];
+	return [{
+		name: metadata.name,
+		nameRange: metadata.nameRange ?? sourceRange(source, { start: 0, end: 0 }).range,
+		parameters: metadata.parameters.map(parameter => ({
+			name: parameter.name,
+			kind: 'parameter',
+			range: parameter.nameRange,
+		})),
+		metadata,
+	}];
 }
 
 /** Extract QuickFunction declarations only from canonical comment tokens. */
-export function quickFunctionDeclarations(source: string): QuickFunctionDeclaration[] {
-	return quickFunctionDeclarationsFromTokens(source, tokenize(source));
+export function quickFunctionDeclarations(source: string, options: MetadataExtractionOptions = {}): QuickFunctionDeclaration[] {
+	return quickFunctionDeclarationFromMetadata(source, extractDocumentMetadata(source, options));
 }
 
 /** Extract documented QuickFunction names from established Script metadata blocks. */
@@ -136,9 +115,10 @@ export function quickFunctionNames(source: string): string[] {
 /** Build document-local QuickScript declarations, uses, scopes, and semantic diagnostics. */
 export function analyzeQuickScript(source: string, options: AnalyzeOptions = {}): SemanticModel {
 	const document = parseQuickScript(source);
-	const diagnostics = [...document.diagnostics];
+	const metadata = extractDocumentMetadata(source, { fileName: options.fileName, tokens: document.tokens });
+	const diagnostics = [...document.diagnostics, ...metadata.diagnostics];
 	const symbols: QuickSymbol[] = [];
-	const quickFunctions = quickFunctionDeclarationsFromTokens(source, document.tokens);
+	const quickFunctions = quickFunctionDeclarationFromMetadata(source, metadata);
 	const declarationsByName = new Map<string, QuickSymbol>();
 	const knownCallableNames = new Set(KNOWN_FUNCTIONS.map(item => item.name.toUpperCase()));
 	for (const declaration of quickFunctions) {
@@ -182,11 +162,18 @@ export function analyzeQuickScript(source: string, options: AnalyzeOptions = {})
 		statementCallTargets.add(offsetAt(source, call.nameRange!.start));
 	}
 
-	const references: QuickReference[] = [];
+	const references: QuickReference[] = metadata.trigger === undefined || metadata.triggerRange === undefined ? [] : [{
+		name: metadata.trigger,
+		kind: 'trigger',
+		range: metadata.triggerRange,
+	}];
 	const identifiers: SemanticIdentifier[] = quickFunctions.flatMap(declaration => [
 		{ name: declaration.name, kind: 'function' as const, range: declaration.nameRange },
 		...declaration.parameters,
 	]);
+	if (metadata.trigger !== undefined && metadata.triggerRange !== undefined) {
+		identifiers.push({ name: metadata.trigger, kind: 'global', range: metadata.triggerRange });
+	}
 	for (const symbol of symbols) identifiers.push({ name: symbol.name, kind: 'local', range: symbol.selectionRange });
 	for (let index = 0; index < document.tokens.length; index += 1) {
 		const token = document.tokens[index];
@@ -232,6 +219,7 @@ export function analyzeQuickScript(source: string, options: AnalyzeOptions = {})
 		references,
 		identifiers,
 		quickFunctions,
+		metadata,
 		diagnostics,
 	};
 }

@@ -1,4 +1,5 @@
 export * from './languageData';
+export * from './documentMetadata';
 export * from './formatter';
 export * from './generatedFunctionCatalog';
 export * from './languageService';

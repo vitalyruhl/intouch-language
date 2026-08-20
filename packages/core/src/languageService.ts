@@ -20,7 +20,7 @@ export interface HoverEntry {
 
 export interface DocumentSymbolEntry {
 	name: string;
-	kind: 'variable' | 'if' | 'for' | 'while';
+	kind: 'variable' | 'if' | 'for' | 'while' | 'function' | 'window' | 'event' | 'application' | 'data-change' | 'condition' | 'key-script';
 	range: Range;
 	selectionRange: Range;
 	children: DocumentSymbolEntry[];
@@ -90,7 +90,7 @@ export function documentSymbols(model: SemanticModel): DocumentSymbolEntry[] {
 		if (block.parentId === undefined) roots.push(blocks[block.id]);
 		else blocks[block.parentId].children.push(blocks[block.id]);
 	}
-	return [
+	const body = [
 		...model.symbols.map(symbol => ({
 			name: symbol.name,
 			kind: 'variable' as const,
@@ -100,4 +100,53 @@ export function documentSymbols(model: SemanticModel): DocumentSymbolEntry[] {
 		})),
 		...roots,
 	];
+	const metadata = model.metadata;
+	const selectionRange = metadata.nameRange ?? metadata.triggerRange ?? model.document.range;
+	if (metadata.scriptType === 'QuickFunction' && metadata.name !== undefined) {
+		return [{
+			name: metadata.name,
+			kind: 'function',
+			range: model.document.range,
+			selectionRange,
+			children: body,
+		}];
+	}
+	if (metadata.scriptType === 'Window' && metadata.name !== undefined) {
+		const eventChildren = metadata.event === undefined ? body : [{
+			name: metadata.event,
+			kind: 'event' as const,
+			range: model.document.range,
+			selectionRange: metadata.eventRange ?? selectionRange,
+			children: body,
+		}];
+		return [{ name: metadata.name, kind: 'window', range: model.document.range, selectionRange, children: eventChildren }];
+	}
+	if (metadata.scriptType === 'Application') {
+		const name = metadata.name ?? 'Application';
+		const children = metadata.event === undefined ? body : [{
+			name: metadata.event,
+			kind: 'event' as const,
+			range: model.document.range,
+			selectionRange: metadata.eventRange ?? selectionRange,
+			children: body,
+		}];
+		return [{ name, kind: 'application', range: model.document.range, selectionRange, children }];
+	}
+	if (metadata.scriptType === 'DataChange' || metadata.scriptType === 'Condition') {
+		const kind = metadata.scriptType === 'DataChange' ? 'data-change' as const : 'condition' as const;
+		const name = metadata.name ?? metadata.trigger ?? metadata.scriptType;
+		return [{ name, kind, range: model.document.range, selectionRange, children: body }];
+	}
+	if (metadata.scriptType === 'KeyScript') {
+		const name = metadata.name ?? 'KeyScript';
+		const children = metadata.shortcut === undefined ? body : [{
+			name: metadata.shortcut,
+			kind: 'event' as const,
+			range: model.document.range,
+			selectionRange: metadata.shortcutRange ?? selectionRange,
+			children: body,
+		}];
+		return [{ name, kind: 'key-script', range: model.document.range, selectionRange, children }];
+	}
+	return body;
 }
