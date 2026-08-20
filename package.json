@@ -157,6 +157,24 @@
 					"minimum": 1,
 					"maximum": 10,
 					"markdownDescription": "Number of spaces to use for each indentation level (1-10)."
+				},
+				"VBI.diagnostics.naming.nonAsciiIdentifiers": {
+					"type": "string",
+					"enum": ["off", "hint", "information", "warning", "error"],
+					"default": "warning",
+					"markdownDescription": "Severity for non-ASCII identifier quality diagnostics."
+				},
+				"VBI.diagnostics.naming.windowWhitespace": {
+					"type": "string",
+					"enum": ["off", "hint", "information", "warning", "error"],
+					"default": "warning",
+					"markdownDescription": "Severity for whitespace in literal InTouch window names."
+				},
+				"VBI.diagnostics.naming.windowNonAscii": {
+					"type": "string",
+					"enum": ["off", "hint", "information", "warning", "error"],
+					"default": "warning",
+					"markdownDescription": "Severity for non-ASCII characters in literal InTouch window names."
 				}
 			}
 		}

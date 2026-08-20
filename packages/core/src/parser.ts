@@ -19,13 +19,14 @@ export type StatementKind =
 	| 'exit-for'
 	| 'return'
 	| 'unknown';
-export type DiagnosticSeverity = 'error' | 'warning';
+export type DiagnosticSeverity = 'error' | 'warning' | 'information' | 'hint';
 
 export interface CoreDiagnostic {
 	code: string;
 	message: string;
 	severity: DiagnosticSeverity;
 	range: Range;
+	source?: string;
 }
 
 export interface StatementNode {

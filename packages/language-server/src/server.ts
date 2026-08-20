@@ -31,7 +31,7 @@ let workspaceFolders: string[] = [];
 function publishDiagnostics(document: TextDocument): void {
 	connection.sendDiagnostics({
 		uri: document.uri,
-		diagnostics: diagnosticsFor(document, workspaceFunctions.knownFunctionNames()),
+		diagnostics: diagnosticsFor(document, workspaceFunctions.knownFunctionNames(), settings),
 	});
 }
 

@@ -16,16 +16,20 @@ import {
 import { TextDocument } from 'vscode-languageserver-textdocument';
 import {
 	FormatOptions,
+	QualityDiagnosticSettings,
 	analyzeQuickScript,
 	completions,
 	definitionAt,
 	documentSymbols,
 	formatQuickScript,
 	hoverAt,
+	qualityDiagnostics,
 	referencesAt,
 } from '@intouch-language/core';
 
-export type ServerSettings = FormatOptions;
+export interface ServerSettings extends FormatOptions {
+	qualityDiagnostics?: QualityDiagnosticSettings;
+}
 
 export function serverCapabilities(): InitializeResult {
 	return {
@@ -51,13 +55,27 @@ function completionKind(kind: string): CompletionItemKind {
 	}
 }
 
-export function diagnosticsFor(document: TextDocument, knownFunctionNames?: Iterable<string>): Diagnostic[] {
-	return analyzeQuickScript(document.getText(), { knownFunctionNames }).diagnostics.map(item => ({
+function lspDiagnosticSeverity(severity: 'error' | 'warning' | 'information' | 'hint'): DiagnosticSeverity {
+	switch (severity) {
+		case 'error': return DiagnosticSeverity.Error;
+		case 'information': return DiagnosticSeverity.Information;
+		case 'hint': return DiagnosticSeverity.Hint;
+		default: return DiagnosticSeverity.Warning;
+	}
+}
+
+export function diagnosticsFor(
+	document: TextDocument,
+	knownFunctionNames?: Iterable<string>,
+	settings: ServerSettings = {},
+): Diagnostic[] {
+	const model = analyzeQuickScript(document.getText(), { knownFunctionNames });
+	return [...model.diagnostics, ...qualityDiagnostics(model, settings.qualityDiagnostics)].map(item => ({
 		code: item.code,
 		message: item.message,
 		range: item.range,
-		severity: item.severity === 'error' ? DiagnosticSeverity.Error : DiagnosticSeverity.Warning,
-		source: 'intouch-language',
+		severity: lspDiagnosticSeverity(item.severity),
+		source: item.source ?? 'intouch-language',
 	}));
 }
 

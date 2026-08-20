@@ -3,6 +3,7 @@ export * from './formatter';
 export * from './generatedFunctionCatalog';
 export * from './languageService';
 export * from './parser';
+export * from './quality';
 export * from './semantics';
 export * from './source';
 export * from './token';

@@ -17,6 +17,13 @@ function stringValue(candidate: unknown): string | undefined {
 	return typeof candidate === 'string' ? candidate : undefined;
 }
 
+function severityValue(candidate: unknown): 'off' | 'hint' | 'information' | 'warning' | 'error' | undefined {
+	const value = stringValue(candidate)?.toLowerCase();
+	return value !== undefined && ['off', 'hint', 'information', 'warning', 'error'].includes(value)
+		? value as 'off' | 'hint' | 'information' | 'warning' | 'error'
+		: undefined;
+}
+
 export function readSettings(value: unknown): ServerSettings {
 	const root = asRecord(value);
 	const vbi = root.VBI === undefined ? root : asRecord(root.VBI);
@@ -25,6 +32,8 @@ export function readSettings(value: unknown): ServerSettings {
 	const block = asRecord(formatter.BC);
 	const region = asRecord(formatter.Region);
 	const misc = asRecord(formatter.Misc);
+	const diagnostics = asRecord(vbi.diagnostics);
+	const naming = asRecord(diagnostics.naming);
 	return {
 		allowedNumberOfEmptyLines: numberValue(emptyLine.allowedNumberOfEmptyLines),
 		removeEmptyLines: booleanValue(emptyLine.RemoveEmptyLines),
@@ -37,6 +46,11 @@ export function readSettings(value: unknown): ServerSettings {
 		regionBlockCodeExclude: stringValue(region.BlockCodeExclude),
 		insertSpaces: booleanValue(misc.ReplaceTabToSpaces),
 		indentSize: numberValue(misc.IndentSize),
+		qualityDiagnostics: {
+			nonAsciiIdentifiers: severityValue(naming.nonAsciiIdentifiers),
+			windowWhitespace: severityValue(naming.windowWhitespace),
+			windowNonAscii: severityValue(naming.windowNonAscii),
+		},
 	};
 }
 
