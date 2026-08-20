@@ -187,6 +187,33 @@ suite('QuickScript lexical formatter', () => {
 		assert.strictEqual(formatQuickScript(once).text, once);
 	});
 
+	test('preserves explicit document metadata content and relative indentation idempotently', () => {
+		const source = [
+			'{>',
+			'        @ScriptType QuickFunction',
+			'        @Name GetSomething',
+			'        @Description Returns something useful.',
+			'            @Param Source MESSAGE Source value.',
+			'            @Param Index INTEGER Requested index.',
+			'        @Returns MESSAGE',
+			'{<}',
+		].join('\n');
+		const expected = [
+			'{>',
+			'    @ScriptType QuickFunction',
+			'    @Name GetSomething',
+			'    @Description Returns something useful.',
+			'        @Param Source MESSAGE Source value.',
+			'        @Param Index INTEGER Requested index.',
+			'    @Returns MESSAGE',
+			'{<}',
+		].join('\r\n');
+		const once = formatQuickScript(source).text;
+
+		assert.strictEqual(once, expected);
+		assert.strictEqual(formatQuickScript(once).text, once);
+	});
+
 	test('ends lexical preservation at a decorated block marker before later code', () => {
 		const source = [
 			'{>',

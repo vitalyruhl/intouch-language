@@ -17,7 +17,7 @@ import {
 	symbolsFor,
 } from '../src/features';
 import { formattingSettings, readSettings } from '../src/settings';
-import { WorkspaceFunctionIndex } from '../src/workspaceFunctions';
+import { WorkspaceFunctionIndex, WorkspaceSymbolIndex } from '../src/workspaceFunctions';
 
 function formattedText(document: TextDocument, settings = {}): string {
 	const [edit] = formattingEdits(document, settings);
@@ -318,6 +318,120 @@ suite('QuickScript language server features', () => {
 			{ line: 1, character: 5 },
 		]);
 		assert.deepStrictEqual(diagnostics.map(diagnostic => diagnostic.range.start), [{ line: 1, character: 5 }]);
+	});
+
+	test('resolves metadata QuickFunctions across files without a QF filename prefix', () => {
+		const definition = TextDocument.create('file:///SomethingCompletelyDifferent.vbi', 'intouch', 1, [
+			'{>',
+			'@ScriptType QuickFunction',
+			'@Name MyFunction',
+			'@Description Test function.',
+			'@Param Source MESSAGE Source value.',
+			'@Returns MESSAGE',
+			'{<}',
+		].join('\n'));
+		const caller = TextDocument.create('file:///caller.vbi', 'intouch', 1, 'CALL MyFunction(Value);');
+		const nestedCaller = TextDocument.create('file:///nested-caller.vi', 'intouch', 1, 'X = Wrapper(CALL MyFunction(Value));');
+		const workspace = new WorkspaceSymbolIndex();
+		workspace.updateDocument(definition);
+		workspace.updateDocument(caller);
+		workspace.updateDocument(nestedCaller);
+
+		assert.ok(!diagnosticsFor(caller, workspace).some(diagnostic => diagnostic.code === 'unknown-function'));
+		assert.deepStrictEqual(definitionFor(caller, { line: 0, character: 7 }, workspace), {
+			uri: definition.uri,
+			range: { start: { line: 2, character: 6 }, end: { line: 2, character: 16 } },
+		});
+		assert.deepStrictEqual(
+			referencesFor(caller, { line: 0, character: 7 }, true, workspace).map(location => location.uri).sort(),
+			[definition.uri, caller.uri, nestedCaller.uri].sort(),
+		);
+		assert.match(String((hoverFor(caller, { line: 0, character: 7 }, workspace)?.contents as { value: string }).value), /MyFunction\(Source: MESSAGE\): MESSAGE/);
+		assert.match(completionsFor(caller, workspace).find(item => item.label === 'MyFunction')?.detail ?? '', /Test function/);
+	});
+
+	test('classifies Window events as non-callable document symbols', () => {
+		const workspace = new WorkspaceSymbolIndex();
+		for (const event of ['OnShow', 'WhileRunning', 'OnClose']) {
+			const document = TextDocument.create(`file:///MainWindow-${event}.vbi`, 'intouch', 1, [
+				'{>',
+				'@ScriptType Window',
+				'@Name MainWindow',
+				`@Event ${event}`,
+				'{<}',
+			].join('\n'));
+			workspace.updateDocument(document);
+			const symbols = symbolsFor(document);
+			assert.strictEqual(symbols[0].name, 'MainWindow');
+			assert.strictEqual(symbols[0]?.children?.[0]?.name, event);
+			assert.match(JSON.stringify(hoverFor(document, { line: 2, character: 8 }, workspace)?.contents), /Window/);
+		}
+		const caller = TextDocument.create('file:///window-caller.vbi', 'intouch', 1, 'CALL MainWindow();');
+		workspace.updateDocument(caller);
+
+		assert.ok(diagnosticsFor(caller, workspace).some(diagnostic => diagnostic.code === 'unknown-function'));
+		assert.ok(!workspace.knownFunctionNames().includes('MainWindow'));
+		assert.ok(!completionsFor(caller, workspace).some(item => item.label === 'MainWindow'));
+		assert.deepStrictEqual(workspace.symbols().filter(symbol => symbol.kind === 'WindowEvent').map(symbol => symbol.metadata.event), [
+			'OnClose', 'OnShow', 'WhileRunning',
+		]);
+	});
+
+	test('indexes Application, DataChange, Condition, and KeyScript documents without making them callable', () => {
+		const workspace = new WorkspaceSymbolIndex();
+		const sources = [
+			['application.vbi', 'Type: ApplicationScript\nName: APP_Application_on_startup', 'ApplicationScript'],
+			['datachange.vbi', 'Type: datachange\nTagname[.field]: SomeTag', 'DataChangeScript'],
+			['condition.vbi', 'Type: ConditionalScript\nName: ReadyCondition\nCondition: Ready\nCondition Type: OnTrue', 'ConditionScript'],
+			['key.vbi', 'Type: KeyScript\nName: KEY_Ctrl_D\nShortcut: Ctrl+d', 'KeyScript'],
+		] as const;
+		for (const [file, body] of sources) {
+			workspace.updateDocument(TextDocument.create(`file:///${file}`, 'intouch', 1, `{>\n${body}\n{<}`));
+		}
+
+		assert.deepStrictEqual(workspace.symbols().map(symbol => symbol.kind).sort(), sources.map(([, , kind]) => kind).sort());
+		assert.deepStrictEqual(workspace.knownFunctionNames(), []);
+	});
+
+	test('diagnoses duplicate QuickFunctions and never chooses an arbitrary definition', () => {
+		const workspace = new WorkspaceSymbolIndex();
+		const source = '{>\n@ScriptType QuickFunction\n@Name DuplicateName\n{<}';
+		const first = TextDocument.create('file:///first.vbi', 'intouch', 1, source);
+		const second = TextDocument.create('file:///second.vbi', 'intouch', 1, source);
+		const caller = TextDocument.create('file:///duplicate-caller.vbi', 'intouch', 1, 'CALL DuplicateName();');
+		for (const document of [first, second, caller]) workspace.updateDocument(document);
+
+		assert.ok(diagnosticsFor(first, workspace).some(diagnostic => diagnostic.code === 'duplicate-quickfunction'));
+		assert.ok(diagnosticsFor(caller, workspace).some(diagnostic => diagnostic.code === 'ambiguous-quickfunction'));
+		assert.strictEqual(definitionFor(caller, { line: 0, character: 7 }, workspace), undefined);
+		assert.strictEqual(referencesFor(caller, { line: 0, character: 7 }, true, workspace).length, 3);
+	});
+
+	test('uses QF filenames only when structured metadata is absent', () => {
+		const workspace = new WorkspaceSymbolIndex();
+		workspace.updateDocument(TextDocument.create('file:///QF_FallbackOnly_1.0.0.vbi', 'intouch', 1, ''));
+		workspace.updateDocument(TextDocument.create('file:///QF_WrongName_1.0.0.vbi', 'intouch', 1, '{>\n@ScriptType QuickFunction\n@Name CanonicalName\n{<}'));
+
+		assert.deepStrictEqual(workspace.knownFunctionNames(), ['CanonicalName', 'FallbackOnly']);
+	});
+
+	test('prefers a real workspace definition over static Hermes catalog metadata', () => {
+		const workspace = new WorkspaceSymbolIndex();
+		const definition = TextDocument.create('file:///hermes-debug.vbi', 'intouch', 1, [
+			'{>',
+			'@ScriptType QuickFunction',
+			'@Name xHerDebugL',
+			'@Description Workspace implementation.',
+			'@Param Message MESSAGE Debug text.',
+			'@Param Level INTEGER Debug level.',
+			'{<}',
+		].join('\n'));
+		const caller = TextDocument.create('file:///hermes-caller.vbi', 'intouch', 1, 'CALL xHerDebugL("ok", 10);');
+		workspace.updateDocument(definition);
+		workspace.updateDocument(caller);
+
+		assert.strictEqual(definitionFor(caller, { line: 0, character: 7 }, workspace)?.uri, definition.uri);
+		assert.match(JSON.stringify(hoverFor(caller, { line: 0, character: 7 }, workspace)?.contents), /Workspace implementation/);
 	});
 
 	test('keeps the positive HIL datatype and function diagnostics', () => {

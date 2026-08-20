@@ -33,4 +33,14 @@ suite('QuickScript language service', () => {
 
 		assert.deepStrictEqual(symbols.map(symbol => symbol.kind), ['variable', 'if']);
 	});
+
+	test('builds metadata-backed QuickFunction, Window, and KeyScript outlines', () => {
+		const quickFunction = documentSymbols(analyzeQuickScript('{>\n@ScriptType QuickFunction\n@Name Foo\n{<}\nDIM Value AS INTEGER;'));
+		const window = documentSymbols(analyzeQuickScript('{>\n@ScriptType Window\n@Name MainWindow\n@Event OnShow\n{<}\nDIM Value AS INTEGER;'));
+		const keyScript = documentSymbols(analyzeQuickScript('{>\n@ScriptType KeyScript\n@Name OpenPrint\n@Shortcut Ctrl+d\n{<}'));
+
+		assert.deepStrictEqual([quickFunction[0].name, quickFunction[0].kind, quickFunction[0].children[0].kind], ['Foo', 'function', 'variable']);
+		assert.deepStrictEqual([window[0].name, window[0].kind, window[0].children[0].name], ['MainWindow', 'window', 'OnShow']);
+		assert.deepStrictEqual([keyScript[0].name, keyScript[0].kind, keyScript[0].children[0].name], ['OpenPrint', 'key-script', 'Ctrl+d']);
+	});
 });

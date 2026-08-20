@@ -2,9 +2,10 @@ import * as assert from 'assert';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+import { pathToFileURL } from 'url';
 
 import { createMessageConnection, StreamMessageReader, StreamMessageWriter } from 'vscode-jsonrpc/node';
-import { CompletionItem, Diagnostic, DiagnosticSeverity, InitializeResult, TextEdit } from 'vscode-languageserver/node';
+import { CompletionItem, Diagnostic, DiagnosticSeverity, Hover, InitializeResult, Location, TextEdit } from 'vscode-languageserver/node';
 
 function applyFormattingEdits(source: string, edits: readonly TextEdit[]): string {
 	if (edits.length === 0) {
@@ -18,6 +19,29 @@ function applyFormattingEdits(source: string, edits: readonly TextEdit[]): strin
 suite('QuickScript language server protocol', () => {
 	test('handles lifecycle, synchronization, and representative requests without VS Code', async function () {
 		this.timeout(10_000);
+		const localTemporaryRoot = path.resolve(process.cwd(), '.pio');
+		fs.mkdirSync(localTemporaryRoot, { recursive: true });
+		const workspacePath = fs.mkdtempSync(path.join(localTemporaryRoot, 'metadata-protocol-'));
+		const definitionPath = path.join(workspacePath, 'SomethingCompletelyDifferent.vbi');
+		const callerPath = path.join(workspacePath, 'caller.vbi');
+		const nestedCallerPath = path.join(workspacePath, 'nested-caller.vi');
+		const definitionSource = [
+			'{>',
+			'@ScriptType QuickFunction',
+			'@Name MyFunction',
+			'@Description Test function.',
+			'@Param Source MESSAGE Source value.',
+			'@Returns MESSAGE',
+			'{<}',
+		].join('\n');
+		const callerSource = 'CALL MyFunction(Value);';
+		fs.writeFileSync(definitionPath, definitionSource, 'utf8');
+		fs.writeFileSync(callerPath, callerSource, 'utf8');
+		fs.writeFileSync(nestedCallerPath, 'X = Wrapper(CALL MyFunction(Value));', 'utf8');
+		const workspaceUri = pathToFileURL(workspacePath).toString();
+		const definitionUri = pathToFileURL(definitionPath).toString();
+		const callerUri = pathToFileURL(callerPath).toString();
+		const nestedCallerUri = pathToFileURL(nestedCallerPath).toString();
 		const serverPath = path.resolve(__dirname, '../src/server.js');
 		const environment = { ...process.env };
 		delete environment.ELECTRON_RUN_AS_NODE;
@@ -69,9 +93,9 @@ suite('QuickScript language server protocol', () => {
 		try {
 			const initialize = await connection.sendRequest('initialize', {
 				processId: null,
-				rootUri: null,
+				rootUri: workspaceUri,
 				capabilities: { workspace: { configuration: true } },
-				workspaceFolders: null,
+				workspaceFolders: [{ uri: workspaceUri, name: 'metadata-protocol' }],
 			});
 			assert.strictEqual((initialize as InitializeResult).capabilities.documentFormattingProvider, true);
 			connection.sendNotification('initialized', {});
@@ -88,6 +112,45 @@ suite('QuickScript language server protocol', () => {
 					windowNonAscii: 'information',
 				} },
 			} } });
+
+			const metadataDiagnosticWaiter = nextDiagnostics(callerUri, diagnostics =>
+				!diagnostics.some(diagnostic => diagnostic.code === 'unknown-function'));
+			connection.sendNotification('textDocument/didOpen', {
+				textDocument: {
+					uri: callerUri,
+					languageId: 'intouch',
+					version: 1,
+					text: callerSource,
+				},
+			});
+			const metadataDiagnostics = await metadataDiagnosticWaiter;
+			assert.ok(!metadataDiagnostics.some(diagnostic => diagnostic.code === 'unknown-function'));
+
+			const crossFileDefinition = await connection.sendRequest<Location | undefined>('textDocument/definition', {
+				textDocument: { uri: callerUri },
+				position: { line: 0, character: 7 },
+			});
+			assert.strictEqual(crossFileDefinition?.uri, definitionUri);
+			assert.deepStrictEqual(crossFileDefinition?.range.start, { line: 2, character: 6 });
+
+			const crossFileReferences = await connection.sendRequest<Location[]>('textDocument/references', {
+				textDocument: { uri: callerUri },
+				position: { line: 0, character: 7 },
+				context: { includeDeclaration: true },
+			});
+			assert.deepStrictEqual(crossFileReferences.map(location => location.uri).sort(), [definitionUri, callerUri, nestedCallerUri].sort());
+
+			const metadataHover = await connection.sendRequest<Hover | undefined>('textDocument/hover', {
+				textDocument: { uri: callerUri },
+				position: { line: 0, character: 7 },
+			});
+			assert.match(JSON.stringify(metadataHover?.contents), /MyFunction\(Source: MESSAGE\): MESSAGE/);
+
+			const metadataCompletion = await connection.sendRequest<CompletionItem[]>('textDocument/completion', {
+				textDocument: { uri: callerUri },
+				position: { line: 0, character: 5 },
+			});
+			assert.match(metadataCompletion.find(item => item.label === 'MyFunction')?.detail ?? '', /Test function/);
 
 			const uri = 'file:///protocol-smoke.vbi';
 			connection.sendNotification('textDocument/didOpen', {
@@ -200,6 +263,9 @@ suite('QuickScript language server protocol', () => {
 			if (!child.killed && child.exitCode === null) {
 				child.kill();
 			}
+			const resolvedWorkspace = path.resolve(workspacePath);
+			assert.ok(resolvedWorkspace.startsWith(`${localTemporaryRoot}${path.sep}`));
+			fs.rmSync(resolvedWorkspace, { recursive: true, force: true });
 		}
 	});
 });

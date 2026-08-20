@@ -118,6 +118,72 @@ suite('Extension Test Suite', () => {
 		]);
 	});
 
+	test('resolves metadata QuickFunctions across files through the production language client', async () => {
+		const extension = vscode.extensions.getExtension('Vitaly-ruhl.intouch-language');
+		assert.ok(extension);
+		await extension.activate();
+		const localTemporaryRoot = path.resolve(extension.extensionPath, '.pio');
+		const workspacePath = path.join(localTemporaryRoot, `metadata-host-${process.pid}-${Date.now()}`);
+		fs.mkdirSync(workspacePath, { recursive: true });
+		const definitionPath = path.join(workspacePath, 'SomethingCompletelyDifferent.vbi');
+		const callerPath = path.join(workspacePath, 'caller.vbi');
+		const nestedCallerPath = path.join(workspacePath, 'nested-caller.vi');
+		const definitionSource = [
+			'{>',
+			'@ScriptType QuickFunction',
+			'@Name HostFunction',
+			'@Description Production host function.',
+			'@Param Source MESSAGE Source value.',
+			'@Returns MESSAGE',
+			'{<}',
+		].join('\n');
+		const callerSource = 'CALL HostFunction(Value);';
+		fs.writeFileSync(definitionPath, definitionSource, 'utf8');
+		fs.writeFileSync(callerPath, callerSource, 'utf8');
+		fs.writeFileSync(nestedCallerPath, 'X = Wrapper(CALL HostFunction(Value));', 'utf8');
+
+		try {
+			const definitionDocument = await vscode.workspace.openTextDocument(definitionPath);
+			const callerDocument = await vscode.workspace.openTextDocument(callerPath);
+			await vscode.workspace.openTextDocument(nestedCallerPath);
+			const callPosition = new vscode.Position(0, 7);
+			let definitions: vscode.Location[] | undefined;
+			const deadline = Date.now() + 10_000;
+			do {
+				definitions = await vscode.commands.executeCommand<vscode.Location[]>(
+					'vscode.executeDefinitionProvider', callerDocument.uri, callPosition,
+				);
+				if ((definitions?.length ?? 0) > 0) break;
+				await new Promise(resolve => setTimeout(resolve, 100));
+			} while (Date.now() < deadline);
+
+			assert.strictEqual(definitions?.length, 1);
+			assert.strictEqual(definitions?.[0].uri.toString(), definitionDocument.uri.toString());
+			assert.deepStrictEqual(definitions?.[0].range.start, new vscode.Position(2, 6));
+
+			const references = await vscode.commands.executeCommand<vscode.Location[]>(
+				'vscode.executeReferenceProvider', callerDocument.uri, callPosition,
+			);
+			assert.strictEqual(references?.length, 3);
+			const hovers = await vscode.commands.executeCommand<vscode.Hover[]>(
+				'vscode.executeHoverProvider', callerDocument.uri, callPosition,
+			);
+			const hoverText = hovers?.flatMap(hover => hover.contents)
+				.map(content => typeof content === 'string' ? content : content.value)
+				.join('\n') ?? '';
+			assert.match(hoverText, /HostFunction\(Source: MESSAGE\): MESSAGE/);
+			const completion = await vscode.commands.executeCommand<vscode.CompletionList>(
+				'vscode.executeCompletionItemProvider', callerDocument.uri, new vscode.Position(0, 5),
+			);
+			assert.match(completion?.items.find(item => item.label === 'HostFunction')?.detail ?? '', /Production host function/);
+			assert.ok(!vscode.languages.getDiagnostics(callerDocument.uri).some(diagnostic => diagnostic.code === 'unknown-function'));
+		} finally {
+			const resolvedWorkspace = path.resolve(workspacePath);
+			assert.ok(resolvedWorkspace.startsWith(`${localTemporaryRoot}${path.sep}`));
+			fs.rmSync(resolvedWorkspace, { recursive: true, force: true });
+		}
+	});
+
 	test('routes naming quality settings and window context through the production language client', async () => {
 		const extension = vscode.extensions.getExtension('Vitaly-ruhl.intouch-language');
 		assert.ok(extension);
