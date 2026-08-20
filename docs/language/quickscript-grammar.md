@@ -47,8 +47,9 @@ additive         = multiplicative, { ("+" | "-"), multiplicative } ;
 multiplicative   = unary, { ("*" | "/" | "%" | "MOD"), unary } ;
 unary            = { "+" | "-" | "NOT" | "!" | "~" }, postfix ;
 postfix          = primary, { callSuffix | memberSuffix | indexSuffix } ;
-primary          = identifier | number | string | "TRUE" | "FALSE" |
-                   "NULL" | "EOF" | "(", expression, ")" ;
+primary          = callExpression | identifier | number | string | "TRUE" |
+                   "FALSE" | "NULL" | "EOF" | "(", expression, ")" ;
+callExpression   = "CALL", callable, "(", [ arguments ], ")" ;
 callSuffix       = "(", [ expression, { ",", expression } ], ")" ;
 memberSuffix     = ("." | "->" | ":"), identifier ;
 indexSuffix      = "[", expression, "]" ;
@@ -70,7 +71,7 @@ statement         = dimStatement | assignment | callStatement |
 
 dimStatement      = "DIM", identifier, { ",", identifier }, "AS", datatype, ";" ;
 assignment        = assignable, "=", expression, ";" ;
-callStatement     = "CALL", callable, "(", [ arguments ], ")", ";" ;
+callStatement     = callExpression, ";" ;
 directCallStatement = callable, "(", [ arguments ], ")", ";" ;
 commandStatement  = commandName, expression, ";" ;
 arguments         = expression, { ",", expression } ;
@@ -101,8 +102,11 @@ in `AND`, `OR`, or `NOT`.
 `EXIT FOR;` never opens or closes a loop.
 
 A function call may be used as a statement with or without `CALL`, as shown by
-the repository corpus. Other bare expressions are not statements. In
-particular, `X + X + 1;` is invalid while `X = X + 1;` is an assignment.
+the repository corpus. Real HIL QuickScript also establishes `CALL` as an
+expression prefix, including assignment values and nested arguments such as
+`Value = CALL Foo();` and `Value = Bar(CALL Foo());`. Syntax validation and
+callable-name resolution remain separate. Other bare expressions are not
+statements. In particular, `X + X + 1;` is invalid while `X = X + 1;` is an assignment.
 The listed classic command statements use the repository-evidenced
 parenthesis-free form; the same names may still use normal call syntax when
 followed by `(`.
