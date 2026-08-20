@@ -6,6 +6,7 @@ import {
 	Range,
 	analyzeQuickScript,
 } from '@intouch-language/core';
+import * as path from 'node:path';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
 export type WorkspaceSymbolKind =
@@ -43,6 +44,28 @@ export interface WorkspaceDocumentEntry {
 	metadata: QuickScriptDocumentMetadata;
 	calls: QuickReference[];
 	symbols: WorkspaceSymbol[];
+}
+
+/** Stable identity key for one physical document across equivalent URI spellings. */
+export function workspaceDocumentKey(uri: string): string {
+	try {
+		const parsed = new URL(uri);
+		if (parsed.protocol !== 'file:') return parsed.toString();
+
+		const decodedPath = decodeURIComponent(parsed.pathname);
+		if (/^\/[A-Za-z]:(?:\/|$)/.test(decodedPath)) {
+			const windowsPath = path.win32.normalize(decodedPath.slice(1).replace(/\//g, '\\'));
+			return `file-win:${windowsPath.toLowerCase()}`;
+		}
+		if (parsed.hostname !== '') {
+			const windowsPath = path.win32.normalize(`\\\\${parsed.hostname}${decodedPath.replace(/\//g, '\\')}`);
+			return `file-win:${windowsPath.toLowerCase()}`;
+		}
+		return `file-posix:${path.posix.normalize(decodedPath)}`;
+	} catch {
+		if (/^[A-Za-z]:[\\/]/.test(uri)) return `file-win:${path.win32.normalize(uri).toLowerCase()}`;
+		return uri;
+	}
 }
 
 function contains(range: Range, position: Position): boolean {
@@ -124,33 +147,34 @@ export class WorkspaceSymbolIndex {
 
 	public replaceWorkspaceDocuments(sources: Iterable<WorkspaceDocumentSource>): void {
 		this.workspaceDocuments.clear();
-		for (const source of sources) this.workspaceDocuments.set(source.uri, indexDocument(source));
+		for (const source of sources) this.workspaceDocuments.set(workspaceDocumentKey(source.uri), indexDocument(source));
 	}
 
 	public updateWorkspaceDocument(source: WorkspaceDocumentSource): void {
-		this.workspaceDocuments.set(source.uri, indexDocument(source));
+		this.workspaceDocuments.set(workspaceDocumentKey(source.uri), indexDocument(source));
 	}
 
 	public removeWorkspaceDocument(uri: string): void {
-		this.workspaceDocuments.delete(uri);
+		this.workspaceDocuments.delete(workspaceDocumentKey(uri));
 	}
 
 	public updateDocument(document: TextDocument): void {
-		this.openDocuments.set(document.uri, indexDocument({ uri: document.uri, text: document.getText() }));
+		this.openDocuments.set(workspaceDocumentKey(document.uri), indexDocument({ uri: document.uri, text: document.getText() }));
 	}
 
 	public removeDocument(uri: string): void {
-		this.openDocuments.delete(uri);
+		this.openDocuments.delete(workspaceDocumentKey(uri));
 	}
 
 	public entries(): WorkspaceDocumentEntry[] {
 		const documents = new Map(this.workspaceDocuments);
-		for (const [uri, entry] of this.openDocuments) documents.set(uri, entry);
+		for (const [key, entry] of this.openDocuments) documents.set(key, entry);
 		return [...documents.values()].sort((left, right) => left.uri.localeCompare(right.uri, 'en'));
 	}
 
 	public entry(uri: string): WorkspaceDocumentEntry | undefined {
-		return this.openDocuments.get(uri) ?? this.workspaceDocuments.get(uri);
+		const key = workspaceDocumentKey(uri);
+		return this.openDocuments.get(key) ?? this.workspaceDocuments.get(key);
 	}
 
 	public symbols(): WorkspaceSymbol[] {

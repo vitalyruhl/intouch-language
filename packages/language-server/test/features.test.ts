@@ -6,6 +6,8 @@ import * as path from 'path';
 import { DiagnosticSeverity } from 'vscode-languageserver/node';
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
+import { KNOWN_FUNCTIONS } from '@intouch-language/core';
+
 import {
 	completionsFor,
 	definitionFor,
@@ -17,7 +19,7 @@ import {
 	symbolsFor,
 } from '../src/features';
 import { formattingSettings, readSettings } from '../src/settings';
-import { WorkspaceFunctionIndex, WorkspaceSymbolIndex } from '../src/workspaceFunctions';
+import { WorkspaceFunctionIndex, WorkspaceSymbolIndex, workspaceDocumentKey } from '../src/workspaceFunctions';
 
 function formattedText(document: TextDocument, settings = {}): string {
 	const [edit] = formattingEdits(document, settings);
@@ -407,6 +409,36 @@ suite('QuickScript language server features', () => {
 		assert.strictEqual(referencesFor(caller, { line: 0, character: 7 }, true, workspace).length, 3);
 	});
 
+	test('replaces one physical Windows QuickFunction across scan and open-document lifecycle', () => {
+		const scanUri = 'file:///C:/HIL/QF_StartEP3_1.0.1.vbi';
+		const openUri = 'file:///c:/HIL/QF_StartEP3_1.0.1.vbi';
+		const source = '{>\n@ScriptType QuickFunction\n@Name StartEP3\n{<}';
+		const caller = TextDocument.create('file:///C:/HIL/caller.vbi', 'intouch', 1, 'CALL StartEP3();');
+		const workspace = new WorkspaceSymbolIndex();
+		const assertPhase = (expectedUri: string): void => {
+			assert.strictEqual(workspace.quickFunctions('StartEP3').length, 1);
+			assert.strictEqual(
+				workspace.diagnostics(expectedUri).filter(diagnostic => diagnostic.code === 'duplicate-quickfunction').length,
+				0,
+			);
+			assert.strictEqual(definitionFor(caller, { line: 0, character: 7 }, workspace)?.uri, expectedUri);
+		};
+
+		assert.strictEqual(workspaceDocumentKey(scanUri), workspaceDocumentKey(openUri));
+		workspace.replaceWorkspaceDocuments([{ uri: scanUri, text: source }]);
+		workspace.updateDocument(caller);
+		assertPhase(scanUri);
+
+		workspace.updateDocument(TextDocument.create(openUri, 'intouch', 1, source));
+		assertPhase(openUri);
+		workspace.updateDocument(TextDocument.create(openUri, 'intouch', 2, `${source}\n`));
+		assertPhase(openUri);
+		workspace.removeDocument(openUri);
+		assertPhase(scanUri);
+		workspace.updateDocument(TextDocument.create(openUri, 'intouch', 3, source));
+		assertPhase(openUri);
+	});
+
 	test('uses QF filenames only when structured metadata is absent', () => {
 		const workspace = new WorkspaceSymbolIndex();
 		workspace.updateDocument(TextDocument.create('file:///QF_FallbackOnly_1.0.0.vbi', 'intouch', 1, ''));
@@ -415,23 +447,25 @@ suite('QuickScript language server features', () => {
 		assert.deepStrictEqual(workspace.knownFunctionNames(), ['CanonicalName', 'FallbackOnly']);
 	});
 
-	test('prefers a real workspace definition over static Hermes catalog metadata', () => {
+	test('keeps static Hermes catalog entries out of workspace definition counts', () => {
 		const workspace = new WorkspaceSymbolIndex();
-		const definition = TextDocument.create('file:///hermes-debug.vbi', 'intouch', 1, [
+		const definition = TextDocument.create('file:///StartEP3.vbi', 'intouch', 1, [
 			'{>',
 			'@ScriptType QuickFunction',
-			'@Name xHerDebugL',
+			'@Name StartEP3',
 			'@Description Workspace implementation.',
-			'@Param Message MESSAGE Debug text.',
-			'@Param Level INTEGER Debug level.',
 			'{<}',
 		].join('\n'));
-		const caller = TextDocument.create('file:///hermes-caller.vbi', 'intouch', 1, 'CALL xHerDebugL("ok", 10);');
+		const caller = TextDocument.create('file:///hermes-caller.vbi', 'intouch', 1, 'CALL StartEP3();');
 		workspace.updateDocument(definition);
 		workspace.updateDocument(caller);
 
+		assert.strictEqual(KNOWN_FUNCTIONS.filter(entry => entry.name.toUpperCase() === 'STARTEP3').length, 1);
+		assert.strictEqual(workspace.quickFunctions('StartEP3').length, 1);
+		assert.ok(!diagnosticsFor(definition, workspace).some(diagnostic => diagnostic.code === 'duplicate-quickfunction'));
 		assert.strictEqual(definitionFor(caller, { line: 0, character: 7 }, workspace)?.uri, definition.uri);
 		assert.match(JSON.stringify(hoverFor(caller, { line: 0, character: 7 }, workspace)?.contents), /Workspace implementation/);
+		assert.match(completionsFor(caller, workspace).find(item => item.label === 'StartEP3')?.detail ?? '', /Workspace implementation/);
 	});
 
 	test('keeps the positive HIL datatype and function diagnostics', () => {

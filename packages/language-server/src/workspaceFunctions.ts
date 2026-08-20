@@ -1,4 +1,4 @@
-export { WorkspaceFunctionIndex, WorkspaceSymbolIndex } from './workspaceSymbols';
+export { WorkspaceFunctionIndex, WorkspaceSymbolIndex, workspaceDocumentKey } from './workspaceSymbols';
 export type {
 	WorkspaceDocumentEntry,
 	WorkspaceDocumentSource,
