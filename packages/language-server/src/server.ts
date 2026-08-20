@@ -19,7 +19,7 @@ import {
 	serverCapabilities,
 	symbolsFor,
 } from './features';
-import { readSettings } from './settings';
+import { formattingSettings, readSettings } from './settings';
 import { WorkspaceFunctionIndex } from './workspaceFunctions';
 
 const connection = createConnection(ProposedFeatures.all);
@@ -105,11 +105,7 @@ documents.onDidClose(change => {
 
 connection.onDocumentFormatting(params => {
 	const document = documents.get(params.textDocument.uri);
-	return document === undefined ? [] : formattingEdits(document, {
-		...settings,
-		insertSpaces: params.options.insertSpaces,
-		indentSize: params.options.tabSize,
-	});
+	return document === undefined ? [] : formattingEdits(document, formattingSettings(settings, params.options));
 });
 connection.onDocumentSymbol(params => {
 	const document = documents.get(params.textDocument.uri);

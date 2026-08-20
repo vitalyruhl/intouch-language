@@ -62,6 +62,8 @@ interface OpenBlock {
 	hasElse: boolean;
 }
 
+const STATEMENT_KEYWORDS = ['DIM', 'CALL', 'IF', 'ELSE', 'ENDIF', 'FOR', 'NEXT', 'WHILE'] as const;
+
 function isTrivia(token: Token): boolean {
 	return token.kind === TokenKind.Whitespace || token.kind === TokenKind.Newline || token.kind === TokenKind.Comment || token.kind === TokenKind.EOF;
 }
@@ -96,6 +98,19 @@ function lineTokens(tokens: readonly Token[], line: number): Token[] {
 	return tokens.filter(token => token.range.start.line === line && !isTrivia(token));
 }
 
+function hasKeyword(tokens: readonly Token[], value: string): boolean {
+	return tokens.some(token => keyword(token) === value);
+}
+
+function hasLexeme(tokens: readonly Token[], value: string): boolean {
+	return tokens.some(token => token.lexeme === value);
+}
+
+function statementEndRange(source: string, tokens: readonly Token[]): Range {
+	const last = tokens[tokens.length - 1];
+	return sourceRange(source, { start: last.span.end, end: last.span.end }).range;
+}
+
 /** Parse recoverable QuickScript structure from the canonical token stream. */
 export function parseQuickScript(source: string): QuickScriptDocument {
 	const tokens = tokenize(source);
@@ -105,6 +120,7 @@ export function parseQuickScript(source: string): QuickScriptDocument {
 	const diagnostics: CoreDiagnostic[] = [];
 	const lines: LineStructure[] = [];
 	const stack: OpenBlock[] = [];
+	const recoveredForStackDepths: number[] = [];
 	let continuation: { baseDepth: number } | undefined;
 
 	for (let line = 0; line < lineCount; line += 1) {
@@ -112,7 +128,7 @@ export function parseQuickScript(source: string): QuickScriptDocument {
 		const spanningComment = tokens.some(token => token.kind === TokenKind.Comment
 			&& token.range.end.line > token.range.start.line
 			&& token.range.start.line <= line && token.range.end.line >= line);
-		let visualDepth = stack.length;
+		let visualDepth = stack.length + recoveredForStackDepths.length;
 		let closesAtStart = false;
 		const firstKeyword = significant.map(keyword).find(value => value !== undefined);
 		if (firstKeyword === 'ELSE' || firstKeyword === 'ENDIF' || firstKeyword === 'NEXT') {
@@ -124,6 +140,24 @@ export function parseQuickScript(source: string): QuickScriptDocument {
 		}
 		lines.push({ line, indentDepth: visualDepth, preserveIndent: spanningComment });
 
+		const first = significant[0];
+		const invalidDeclarationStart = first?.kind === TokenKind.Identifier
+			&& hasKeyword(significant, 'AS')
+			&& significant.some(token => token.kind === TokenKind.Datatype);
+		const invalidForStart = first?.kind === TokenKind.Identifier
+			&& hasLexeme(significant, '=')
+			&& hasKeyword(significant, 'TO');
+		if (invalidDeclarationStart || invalidForStart) {
+			diagnostics.push(diagnostic(
+				'invalid-statement',
+				`Unknown or invalid QuickScript statement '${first.lexeme}'.`,
+				first,
+			));
+			if (invalidForStart) {
+				recoveredForStackDepths.push(stack.length);
+			}
+		}
+
 		for (let index = 0; index < significant.length; index += 1) {
 			const token = significant[index];
 			const value = keyword(token);
@@ -131,7 +165,7 @@ export function parseQuickScript(source: string): QuickScriptDocument {
 				continue;
 			}
 
-			if (['DIM', 'CALL', 'IF', 'ELSE', 'ENDIF', 'FOR', 'NEXT', 'WHILE'].includes(value)) {
+			if ((STATEMENT_KEYWORDS as readonly string[]).includes(value)) {
 				const startIndex = index;
 				let last = token;
 				for (let endIndex = startIndex + 1; endIndex < significant.length && significant[endIndex].lexeme !== ';'; endIndex += 1) {
@@ -149,6 +183,17 @@ export function parseQuickScript(source: string): QuickScriptDocument {
 				};
 				let pushed = false;
 				if (value === 'DIM') {
+					const nextStatementIndex = significant.findIndex((candidate, candidateIndex) => candidateIndex > startIndex
+						&& (STATEMENT_KEYWORDS as readonly string[]).includes(keyword(candidate) ?? ''));
+					const statementTokens = significant.slice(startIndex, nextStatementIndex < 0 ? undefined : nextStatementIndex);
+					if (!hasLexeme(statementTokens, ';')) {
+						diagnostics.push({
+							code: 'missing-semicolon',
+							message: 'DIM statement is missing the required semicolon.',
+							severity: 'error',
+							range: statementEndRange(source, statementTokens),
+						});
+					}
 					const asIndex = significant.findIndex((candidate, candidateIndex) => candidateIndex > startIndex && keyword(candidate) === 'AS');
 					const datatype = asIndex >= 0 ? significant[asIndex + 1] : undefined;
 					for (const name of significant.slice(startIndex + 1, asIndex >= 0 ? asIndex : undefined)) {
@@ -210,6 +255,11 @@ export function parseQuickScript(source: string): QuickScriptDocument {
 				continue;
 			}
 			if (value === 'ENDIF' || value === 'NEXT') {
+				const recoveredForStackDepth = recoveredForStackDepths[recoveredForStackDepths.length - 1];
+				if (value === 'NEXT' && recoveredForStackDepth === stack.length) {
+					recoveredForStackDepths.pop();
+					continue;
+				}
 				const expected = value === 'ENDIF' ? ['if'] : ['for', 'while'];
 				const open = stack[stack.length - 1];
 				if (open === undefined || !expected.includes(open.block.kind)) {

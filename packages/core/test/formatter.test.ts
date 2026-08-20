@@ -64,4 +64,41 @@ suite('QuickScript lexical formatter', () => {
 		assert.ok(compacted.text.includes('first\r\n\r\nsecond'));
 		assert.ok(!compacted.text.includes('first\r\n\r\n\r\nsecond'));
 	});
+
+	test('restores normal formatting after the reported multiline brace comment', () => {
+		const source = [
+			'CALL HideAllPLS();',
+			'',
+			'{Debug-Status Zwischenspeichern}',
+			'',
+			'{ DIM altDebug AS DISCRETE;',
+			'',
+			'altDebug = Sys_Debug_info;',
+			'',
+			'Sys_Debug_info = 1; }',
+			'',
+			'CALL xHerDebug(Funkt + " ", 0);',
+		].join('\n');
+		const once = formatQuickScript(source).text;
+		const twice = formatQuickScript(once).text;
+
+		assert.strictEqual(once, source.replace(/\n/g, '\r\n'));
+		assert.strictEqual(twice, once);
+	});
+
+	test('ends lexical preservation at a decorated block marker before later code', () => {
+		const source = [
+			'{>',
+			'protected payload',
+			'{<-------------------------------------------}',
+			'{ DIM altDebug AS DISCRETE;',
+			'altDebug = Sys_Debug_info;',
+			'Sys_Debug_info = 1; }',
+			'call xHerDebug(Funkt+" ",0);',
+		].join('\n');
+
+		const formatted = formatQuickScript(source).text;
+
+		assert.ok(formatted.endsWith('CALL xHerDebug(Funkt + " ", 0);'));
+	});
 });

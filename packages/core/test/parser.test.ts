@@ -54,4 +54,46 @@ suite('QuickScript structure parser', () => {
 		assert.deepStrictEqual(document.lines.map(line => line.indentDepth), [0, 0, 1, 0]);
 		assert.deepStrictEqual(document.diagnostics, []);
 	});
+
+	test('diagnoses a missing DIM terminator without flagging a terminated DIM', () => {
+		const missing = parseQuickScript('DIM TEXT6 AS MESSAGE');
+		const terminated = parseQuickScript('DIM TEXT6 AS MESSAGE;');
+		const diagnostic = missing.diagnostics.find(item => item.code === 'missing-semicolon');
+
+		assert.ok(diagnostic);
+		assert.deepStrictEqual(diagnostic.range, {
+			start: { line: 0, character: 20 },
+			end: { line: 0, character: 20 },
+		});
+		assert.ok(!terminated.diagnostics.some(item => item.code === 'missing-semicolon'));
+	});
+
+	test('diagnoses declaration- and FOR-shaped unknown statements locally without a NEXT cascade', () => {
+		const document = parseQuickScript([
+			'DI TEXT9 AS MESSAGE;',
+			'FR TABINDEX = 1 TO StringLen(TEXT9)',
+			'CALL LogMessage(TEXT9);',
+			'NEXT;',
+		].join('\n'));
+		const invalidStatements = document.diagnostics.filter(item => item.code === 'invalid-statement');
+
+		assert.deepStrictEqual(invalidStatements.map(item => item.range), [
+			{ start: { line: 0, character: 0 }, end: { line: 0, character: 2 } },
+			{ start: { line: 1, character: 0 }, end: { line: 1, character: 2 } },
+		]);
+		assert.ok(!document.diagnostics.some(item => item.code === 'invalid-nesting'));
+	});
+
+	test('does not require semicolons on block, control, or comment lines', () => {
+		const document = parseQuickScript([
+			'IF Ready THEN',
+			'ELSE',
+			'ENDIF;',
+			'FOR Index = 1 TO 2',
+			'NEXT;',
+			'{Comment}',
+		].join('\n'));
+
+		assert.ok(!document.diagnostics.some(item => item.code === 'missing-semicolon'));
+	});
 });

@@ -69,6 +69,27 @@ suite('QuickScript tokenizer', () => {
 		);
 	});
 
+	test('ends a multiline brace comment at its closing brace and resumes code tokens', () => {
+		const source = [
+			'{ DIM altDebug AS DISCRETE;',
+			'',
+			'altDebug = Sys_Debug_info;',
+			'',
+			'Sys_Debug_info = 1; }',
+			'',
+			'CALL xHerDebug(Funkt + " ", 0);',
+		].join('\n');
+		const tokens = tokenize(source);
+		const comment = tokens.find(token => token.kind === TokenKind.Comment);
+		const call = tokens.find(token => token.kind === TokenKind.Keyword && token.lexeme === 'CALL');
+
+		assert.deepStrictEqual(comment?.range, {
+			start: { line: 0, character: 0 },
+			end: { line: 4, character: 21 },
+		});
+		assert.deepStrictEqual(call?.range.start, { line: 6, character: 0 });
+	});
+
 	test('keeps standalone comment nesting markers on their own line', () => {
 		const tokens = tokenize('{>\nScript:\n{<}');
 		const comments = tokens.filter(token => token.kind === TokenKind.Comment);

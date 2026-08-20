@@ -98,7 +98,10 @@ export function formatQuickScriptLexically(source: string, options: FormatOption
 			break;
 		}
 		const standaloneDirective = token.kind === TokenKind.Comment ? token.lexeme.trim() : undefined;
-		if (standaloneDirective === '{<' || standaloneDirective === '{<}') {
+		const closesStandaloneDirective = standaloneDirective !== undefined
+			&& (matchesDirective(standaloneDirective, options.blockCodeEnd ?? '{<')
+				|| matchesDirective(standaloneDirective, options.regionBlockCodeEnd ?? '{endregion'));
+		if (closesStandaloneDirective) {
 			preserveStandaloneDirectiveContent = false;
 		}
 		if (preserveStandaloneDirectiveContent) {
@@ -178,7 +181,11 @@ export function formatQuickScriptLexically(source: string, options: FormatOption
 				appendSingleSpace(output);
 			}
 			output.push(token.lexeme);
-			if (standaloneDirective === '{>') {
+			const opensStandaloneDirective = standaloneDirective !== undefined
+				&& !standaloneDirective.endsWith('}')
+				&& (matchesDirective(standaloneDirective, options.blockCodeBegin ?? '{>')
+					|| matchesDirective(standaloneDirective, options.regionBlockCodeBegin ?? '{region'));
+			if (opensStandaloneDirective) {
 				preserveStandaloneDirectiveContent = true;
 			}
 			if (next !== undefined && (next.kind === TokenKind.Identifier || next.kind === TokenKind.Keyword || next.kind === TokenKind.Datatype)) {

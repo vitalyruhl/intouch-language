@@ -1,9 +1,19 @@
 import * as assert from 'assert';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
+import * as fs from 'fs';
 import * as path from 'path';
 
 import { createMessageConnection, StreamMessageReader, StreamMessageWriter } from 'vscode-jsonrpc/node';
-import { CompletionItem, InitializeResult } from 'vscode-languageserver/node';
+import { CompletionItem, InitializeResult, TextEdit } from 'vscode-languageserver/node';
+
+function applyFormattingEdits(source: string, edits: readonly TextEdit[]): string {
+	if (edits.length === 0) {
+		return source;
+	}
+	assert.strictEqual(edits.length, 1);
+	assert.deepStrictEqual(edits[0].range.start, { line: 0, character: 0 });
+	return edits[0].newText;
+}
 
 suite('QuickScript language server protocol', () => {
 	test('handles lifecycle, synchronization, and representative requests without VS Code', async function () {
@@ -18,17 +28,30 @@ suite('QuickScript language server protocol', () => {
 		let stderr = '';
 		child.stderr.on('data', chunk => { stderr += chunk.toString(); });
 		const connection = createMessageConnection(new StreamMessageReader(child.stdout), new StreamMessageWriter(child.stdin));
+		let configurationRequested: (() => void) | undefined;
+		const configurationRequest = new Promise<void>(resolve => { configurationRequested = resolve; });
+		connection.onRequest('workspace/configuration', () => {
+			configurationRequested?.();
+			return [{
+				formatter: {
+					BC: { BlockCodeBegin: '{>', BlockCodeEnd: '{<', BlockCodeExclude: '{#' },
+					Region: { BlockCodeBegin: '{region', BlockCodeEnd: '{endregion', BlockCodeExclude: '{#' },
+					Misc: { ReplaceTabToSpaces: true, IndentSize: 4 },
+				},
+			}];
+		});
 		connection.listen();
 
 		try {
 			const initialize = await connection.sendRequest('initialize', {
 				processId: null,
 				rootUri: null,
-				capabilities: {},
+				capabilities: { workspace: { configuration: true } },
 				workspaceFolders: null,
 			});
 			assert.strictEqual((initialize as InitializeResult).capabilities.documentFormattingProvider, true);
 			connection.sendNotification('initialized', {});
+			await configurationRequest;
 
 			const uri = 'file:///protocol-smoke.vbi';
 			connection.sendNotification('textDocument/didOpen', {
@@ -51,6 +74,35 @@ suite('QuickScript language server protocol', () => {
 				options: { tabSize: 4, insertSpaces: true },
 			});
 			assert.ok(Array.isArray(edits) && edits.length === 1);
+
+			const fixtureDirectory = path.resolve(__dirname, '../../../src/test/suite/testfiles');
+			const nestingSource = fs.readFileSync(path.join(fixtureDirectory, '05.comment_rules.nesting.test.vbi'), 'utf8');
+			const nestingExpected = fs.readFileSync(path.join(fixtureDirectory, '05.comment_rules.nesting.tobe.vbi'), 'utf8');
+			const nestingUri = 'file:///protocol-nesting.vbi';
+			connection.sendNotification('textDocument/didOpen', {
+				textDocument: {
+					uri: nestingUri,
+					languageId: 'intouch',
+					version: 1,
+					text: nestingSource,
+				},
+			});
+			const nestingEdits = await connection.sendRequest<TextEdit[]>('textDocument/formatting', {
+				textDocument: { uri: nestingUri },
+				options: { tabSize: 8, insertSpaces: true },
+			});
+			const nestingOnce = applyFormattingEdits(nestingSource, nestingEdits);
+			assert.strictEqual(nestingOnce, nestingExpected);
+
+			connection.sendNotification('textDocument/didChange', {
+				textDocument: { uri: nestingUri, version: 2 },
+				contentChanges: [{ text: nestingOnce }],
+			});
+			const nestingSecondEdits = await connection.sendRequest<TextEdit[]>('textDocument/formatting', {
+				textDocument: { uri: nestingUri },
+				options: { tabSize: 8, insertSpaces: true },
+			});
+			assert.strictEqual(applyFormattingEdits(nestingOnce, nestingSecondEdits), nestingOnce);
 
 			const completion = await connection.sendRequest('textDocument/completion', {
 				textDocument: { uri },

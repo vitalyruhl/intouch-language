@@ -15,7 +15,7 @@ import {
 	serverCapabilities,
 	symbolsFor,
 } from '../src/features';
-import { readSettings } from '../src/settings';
+import { formattingSettings, readSettings } from '../src/settings';
 import { WorkspaceFunctionIndex } from '../src/workspaceFunctions';
 
 function formattedText(document: TextDocument, settings = {}): string {
@@ -82,6 +82,7 @@ suite('QuickScript language server features', () => {
 			insertSpaces: false,
 			indentSize: 3,
 		});
+		assert.deepStrictEqual(formattingSettings(settings, { insertSpaces: true, tabSize: 8 }), settings);
 	});
 
 	test('formats the established comment nesting fixture through the language-server formatter entrypoint', () => {
@@ -177,5 +178,46 @@ suite('QuickScript language server features', () => {
 
 		const diagnostics = diagnosticsFor(caller, workspace.knownFunctionNames()).filter(diagnostic => diagnostic.code === 'unknown-function');
 		assert.deepStrictEqual(diagnostics.map(diagnostic => diagnostic.range.start), [{ line: 1, character: 5 }]);
+	});
+
+	test('keeps the positive HIL datatype and function diagnostics', () => {
+		const document = TextDocument.create('file:///hil-positive.vbi', 'intouch', 1, [
+			'DIM ENDE AS DISCRET;',
+			'Value = StringLang(Source);',
+			'Value = StraingMid(Source, 1, 2);',
+		].join('\n'));
+		const diagnostics = diagnosticsFor(document);
+
+		assert.deepStrictEqual(
+			diagnostics.filter(item => item.code === 'unknown-datatype').map(item => item.range.start),
+			[{ line: 0, character: 12 }],
+		);
+		assert.deepStrictEqual(
+			diagnostics.filter(item => item.code === 'unknown-function').map(item => item.range.start),
+			[{ line: 1, character: 8 }, { line: 2, character: 8 }],
+		);
+		const unmatchedNext = TextDocument.create('file:///hil-next.vbi', 'intouch', 1, 'NEXT;');
+		assert.ok(diagnosticsFor(unmatchedNext).some(item => item.code === 'invalid-nesting'));
+	});
+
+	test('reports focused statement diagnostics without cascading from FR to NEXT', () => {
+		const document = TextDocument.create('file:///hil-statements.vbi', 'intouch', 1, [
+			'DIM TEXT6 AS MESSAGE',
+			'DIM TEXT6 AS MESSAGE;',
+			'DI TEXT9 AS MESSAGE;',
+			'FR TABINDEX = 1 TO StringLen(TEXT9)',
+			'NEXT;',
+		].join('\n'));
+		const diagnostics = diagnosticsFor(document);
+
+		assert.deepStrictEqual(
+			diagnostics.filter(item => item.code === 'missing-semicolon').map(item => item.range.start),
+			[{ line: 0, character: 20 }],
+		);
+		assert.deepStrictEqual(
+			diagnostics.filter(item => item.code === 'invalid-statement').map(item => item.range.start),
+			[{ line: 2, character: 0 }, { line: 3, character: 0 }],
+		);
+		assert.ok(!diagnostics.some(item => item.code === 'invalid-nesting' && item.range.start.line === 4));
 	});
 });

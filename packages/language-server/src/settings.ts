@@ -1,4 +1,5 @@
 import { ServerSettings } from './features';
+import { FormattingOptions } from 'vscode-languageserver/node';
 
 function asRecord(candidate: unknown): Record<string, unknown> {
 	return typeof candidate === 'object' && candidate !== null ? candidate as Record<string, unknown> : {};
@@ -36,5 +37,14 @@ export function readSettings(value: unknown): ServerSettings {
 		regionBlockCodeExclude: stringValue(region.BlockCodeExclude),
 		insertSpaces: booleanValue(misc.ReplaceTabToSpaces),
 		indentSize: numberValue(misc.IndentSize),
+	};
+}
+
+/** Keep explicit extension formatter settings authoritative over generic editor tab settings. */
+export function formattingSettings(settings: ServerSettings, options: FormattingOptions): ServerSettings {
+	return {
+		...settings,
+		insertSpaces: settings.insertSpaces ?? options.insertSpaces,
+		indentSize: settings.indentSize ?? options.tabSize,
 	};
 }
