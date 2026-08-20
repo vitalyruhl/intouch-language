@@ -69,6 +69,14 @@ suite('QuickScript tokenizer', () => {
 		);
 	});
 
+	test('keeps standalone comment nesting markers on their own line', () => {
+		const tokens = tokenize('{>\nScript:\n{<}');
+		const comments = tokens.filter(token => token.kind === TokenKind.Comment);
+
+		assert.deepStrictEqual(comments.map(token => token.lexeme), ['{>', '{<}']);
+		assert.ok(tokens.some(token => token.lexeme === 'Script'));
+	});
+
 	test('matches operators longest-first and recognizes QuickScript punctuation', () => {
 		const tokens = significant(tokenize('A==B; C<>D; E<=F; G>=H; Tag.Field->Method()[1], X:Y;'));
 

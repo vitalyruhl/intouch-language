@@ -95,8 +95,12 @@ export function tokenize(source: string): Token[] {
 		}
 
 		if (current === '{') {
+			const lineEnd = source.slice(offset).search(/\r|\n/);
+			const endOfLine = lineEnd === -1 ? source.length : offset + lineEnd;
 			const closingBrace = source.indexOf('}', offset + 1);
-			emit(TokenKind.Comment, closingBrace === -1 ? source.length : closingBrace + 1);
+			const isStandaloneNestingMarker = (source.startsWith('{>', offset) || source.startsWith('{<', offset))
+				&& (closingBrace === -1 || closingBrace > endOfLine);
+			emit(TokenKind.Comment, isStandaloneNestingMarker ? endOfLine : closingBrace === -1 ? source.length : closingBrace + 1);
 			continue;
 		}
 

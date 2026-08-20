@@ -2114,6 +2114,11 @@ export const KNOWN_FUNCTIONS: readonly KnownFunction[] = [
 		"sourceComment": "Hermes Own functions 1"
 	},
 	{
+		"name": "xHerDebug",
+		"category": "Hermes helper",
+		"sourceComment": "Hermes Own functions 1"
+	},
+	{
 		"name": "xHerGATEWAYSettings",
 		"category": "Hermes helper",
 		"sourceComment": "Hermes Own functions 1"

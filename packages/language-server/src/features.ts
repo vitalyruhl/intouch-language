@@ -51,8 +51,8 @@ function completionKind(kind: string): CompletionItemKind {
 	}
 }
 
-export function diagnosticsFor(document: TextDocument): Diagnostic[] {
-	return analyzeQuickScript(document.getText()).diagnostics.map(item => ({
+export function diagnosticsFor(document: TextDocument, knownFunctionNames?: Iterable<string>): Diagnostic[] {
+	return analyzeQuickScript(document.getText(), { knownFunctionNames }).diagnostics.map(item => ({
 		code: item.code,
 		message: item.message,
 		range: item.range,

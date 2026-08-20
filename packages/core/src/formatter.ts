@@ -91,10 +91,19 @@ export function formatQuickScriptLexically(source: string, options: FormatOption
 
 	const output: string[] = [];
 	let skipWhitespace = false;
+	let preserveStandaloneDirectiveContent = false;
 	for (let index = 0; index < tokens.length; index += 1) {
 		const token = tokens[index];
 		if (token.kind === TokenKind.EOF) {
 			break;
+		}
+		const standaloneDirective = token.kind === TokenKind.Comment ? token.lexeme.trim() : undefined;
+		if (standaloneDirective === '{<' || standaloneDirective === '{<}') {
+			preserveStandaloneDirectiveContent = false;
+		}
+		if (preserveStandaloneDirectiveContent) {
+			output.push(token.lexeme);
+			continue;
 		}
 		if (token.kind === TokenKind.Newline) {
 			trimHorizontalWhitespace(output);
@@ -169,6 +178,9 @@ export function formatQuickScriptLexically(source: string, options: FormatOption
 				appendSingleSpace(output);
 			}
 			output.push(token.lexeme);
+			if (standaloneDirective === '{>') {
+				preserveStandaloneDirectiveContent = true;
+			}
 			if (next !== undefined && (next.kind === TokenKind.Identifier || next.kind === TokenKind.Keyword || next.kind === TokenKind.Datatype)) {
 				output.push(' ');
 				skipWhitespace = true;

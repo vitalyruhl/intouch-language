@@ -17,7 +17,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 			{ scheme: 'file', language: 'intouch' },
 			{ scheme: 'untitled', language: 'intouch' },
 		],
-		synchronize: { configurationSection: 'VBI' },
+		synchronize: {
+			configurationSection: 'VBI',
+			fileEvents: vscode.workspace.createFileSystemWatcher('**/*.{vbi,vi}'),
+		},
 	};
 
 	client = new LanguageClient(

@@ -1,5 +1,8 @@
 import * as assert from 'assert';
 
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { TextDocument } from 'vscode-languageserver-textdocument';
 
 import {
@@ -13,6 +16,12 @@ import {
 	symbolsFor,
 } from '../src/features';
 import { readSettings } from '../src/settings';
+import { WorkspaceFunctionIndex } from '../src/workspaceFunctions';
+
+function formattedText(document: TextDocument, settings = {}): string {
+	const [edit] = formattingEdits(document, settings);
+	return edit === undefined ? document.getText() : edit.newText;
+}
 
 suite('QuickScript language server features', () => {
 	const document = TextDocument.create(
@@ -73,5 +82,100 @@ suite('QuickScript language server features', () => {
 			insertSpaces: false,
 			indentSize: 3,
 		});
+	});
+
+	test('formats the established comment nesting fixture through the language-server formatter entrypoint', () => {
+		const fixtureDirectory = path.resolve(__dirname, '../../../src/test/suite/testfiles');
+		const source = fs.readFileSync(path.join(fixtureDirectory, '05.comment_rules.nesting.test.vbi'), 'utf8');
+		const expected = fs.readFileSync(path.join(fixtureDirectory, '05.comment_rules.nesting.tobe.vbi'), 'utf8');
+		const document = TextDocument.create('file:///nesting.vbi', 'intouch', 1, source);
+		const settings = { indentSize: 4, insertSpaces: true };
+
+		const once = formattedText(document, settings);
+		const twice = formattedText(TextDocument.create(document.uri, 'intouch', 2, once), settings);
+
+		assert.strictEqual(once, expected);
+		assert.strictEqual(twice, expected);
+	});
+
+	test('keeps extra comment nesting across blank lines through the language-server formatter entrypoint', () => {
+		const source = [
+			'{>',
+			'Script:',
+			'',
+			'Type: QuickFunction',
+			'',
+			'Name: GetFullTopic',
+			'',
+			'Parameters:',
+			'',
+			'Message Topic',
+			'',
+			'Usage:',
+			'',
+			'CALL GetFullTopic( ... );',
+			'',
+			'{<}',
+		].join('\r\n');
+		const expected = [
+			'{>',
+			'    Script:',
+			'',
+			'    Type: QuickFunction',
+			'',
+			'    Name: GetFullTopic',
+			'',
+			'    Parameters:',
+			'',
+			'    Message Topic',
+			'',
+			'    Usage:',
+			'',
+			'    CALL GetFullTopic( ... );',
+			'',
+			'{<}',
+		].join('\r\n');
+		const document = TextDocument.create('file:///hil-nesting.vbi', 'intouch', 1, source);
+
+		const once = formattedText(document, { indentSize: 4, insertSpaces: true });
+		const twice = formattedText(TextDocument.create(document.uri, 'intouch', 2, once), { indentSize: 4, insertSpaces: true });
+
+		assert.strictEqual(once, expected);
+		assert.strictEqual(twice, expected);
+	});
+
+	test('diagnoses unresolved CALL and expression functions while resolving catalogs and QuickFunctions', () => {
+		const source = [
+			'CALL xHerDebuga(Funkt + " ", 40);',
+			'a = StringLaft(Test, 4);',
+			'a = StringLeft(Test, StringInString(Test, ".", 1, 0) - 1);',
+			'CALL xHerDebug(Funkt, 40);',
+			'{>',
+			'Type: QuickFunction',
+			'Name: GetFullTopic',
+			'{<}',
+			'CALL GetFullTopic();',
+			'CALL GetFullTopica();',
+		].join('\n');
+		const document = TextDocument.create('file:///functions.vbi', 'intouch', 1, source);
+		const diagnostics = diagnosticsFor(document);
+		const unknown = diagnostics.filter(diagnostic => diagnostic.code === 'unknown-function');
+
+		assert.deepStrictEqual(unknown.map(diagnostic => [diagnostic.range.start.line, diagnostic.range.start.character]), [
+			[0, 5],
+			[1, 4],
+			[9, 5],
+		]);
+		assert.ok(unknown.every(diagnostic => diagnostic.severity === 2));
+	});
+
+	test('resolves QuickFunctions from open workspace documents case-insensitively', () => {
+		const definitions = TextDocument.create('file:///definitions.vi', 'intouch', 1, 'Type: QuickFunction\nName: WorkspaceFunction');
+		const caller = TextDocument.create('file:///caller.vbi', 'intouch', 1, 'CALL workspacefunction();\nCALL WorkspaceFunctio();');
+		const workspace = new WorkspaceFunctionIndex();
+		workspace.updateDocument(definitions);
+
+		const diagnostics = diagnosticsFor(caller, workspace.knownFunctionNames()).filter(diagnostic => diagnostic.code === 'unknown-function');
+		assert.deepStrictEqual(diagnostics.map(diagnostic => diagnostic.range.start), [{ line: 1, character: 5 }]);
 	});
 });
