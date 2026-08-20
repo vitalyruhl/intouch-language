@@ -66,5 +66,37 @@ and completion remain available, and removing the error clears the diagnostic.
 ## Result recording
 
 Record the tested file types, representative constructs, any formatter diff,
-and pass/fail status. Do not change the extension version, merge, publish, or
-release until the user confirms this HIL gate.
+and pass/fail status. Do not merge, publish, tag, or release until the user
+confirms this HIL gate. A HIL correction round may explicitly require a new
+locally committed patch version for its uniquely identifiable VSIX artifact.
+
+## 2026-08-20 manual HIL round 1
+
+Status: `MANUAL HIL ROUND 1: FAIL – FIXABLE FINDINGS`.
+
+- F1 LOW: The visible copyright range still ended in 2025.
+- F2 HIGH: Standalone `{>` / `{<}` comment-nesting markers caused the tokenizer
+  to treat the enclosed content as one brace comment, so the formatter skipped
+  the required extra indentation.
+- F3 HIGH: Unknown `CALL` targets were not resolved or diagnosed.
+- F4 HIGH: Unknown function calls in expressions were not resolved or
+  diagnosed.
+
+Confirmed checks from the manual run:
+
+- PASS: language id is `intouch`.
+- PASS: the language-server diagnostic pipeline is active.
+- PASS: unknown datatype diagnostics are visible.
+- PASS: general formatting outside extra nesting looked plausible in the
+  sampled file.
+
+The local fix build for the retest uses package version `1.5.1` and the
+expected file name `intouch-language-1.5.1.vsix`. This is an HIL artifact only:
+there is no tag, publish, Marketplace release, GitHub release, or merge to
+`main`.
+
+Artifact created on 2026-08-20:
+
+- Path: `intouch-language-1.5.1.vsix`
+- Size: 221154 bytes
+- SHA-256: `5A2394245744E0790AD9151F513A4F62E1A8DCE9F497BE733F569D0764435428`

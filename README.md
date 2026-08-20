@@ -287,6 +287,6 @@ Become a patron, by simply clicking on this button (**very appreciated!**):
 
 ## Copyright
 
-`2021-2025 (c)Vitaly Ruhl`
+`2021-2026 (c)Vitaly Ruhl`
 
 License: GNU General Public License v3.0
