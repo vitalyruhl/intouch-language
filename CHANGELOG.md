@@ -5,6 +5,13 @@
 <!-- markdownlint-disable MD013 -->
 <!-- markdownlint-disable MD025 -->
 
+### V1.5.1
+
+- Added the editor-independent QuickScript source model, token model, and tokenizer foundation.
+- Added focused formatter behavior baselines and `.vbi`/`.vi` tokenizer fixtures.
+- Refreshed the compatible development toolchain and tightened VSIX packaging exclusions.
+- Kept formatter, grammar, snippets, and extension runtime behavior unchanged.
+
 ### V1.4.0
 
 - 29.11.2022 VitalyRuhl
