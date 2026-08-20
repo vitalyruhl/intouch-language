@@ -5,6 +5,17 @@
 <!-- markdownlint-disable MD013 -->
 <!-- markdownlint-disable MD025 -->
 
+## Unreleased
+
+- Replace the legacy formatter lexers with the shared QuickScript tokenizer and
+  recoverable structure parser.
+- Add a native language server with diagnostics, symbols, completion, hover,
+  and document-local definition/reference support.
+- Route VS Code formatting through the language client while preserving the
+  existing grammar, snippets, theme, and formatter command.
+- Add editor-independent core tests, language-server protocol smoke tests, and
+  a manual `.vbi`/`.vi` HIL gate.
+
 ### V1.4.0
 
 - 29.11.2022 VitalyRuhl

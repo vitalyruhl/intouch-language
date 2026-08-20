@@ -9,51 +9,50 @@ semantic approximation.
 
 ## Current repository evidence
 
-The current language knowledge is distributed deliberately across the extension:
+Language knowledge is divided by responsibility:
 
-- `syntaxes/intouch.tmLanguage.json`: lexical highlighting patterns, built-in
-  functions, data types, dot fields, and language scopes.
-- `src/const.ts`: formatter keywords and operators.
-- `src/nestingdef.ts` and `src/formatCore.ts`: block and indentation behavior.
-- `language-configuration.json` and `snippets/vbi.json`: editor behavior and
-  authoring templates.
-- `src/test/suite/testfiles/`: formatter fixtures that capture supported
-  formatting behavior.
+- `syntaxes/intouch.tmLanguage.json` provides lexical highlighting patterns,
+  built-in functions, Hermes helpers, dot fields, and presentation scopes.
+- `packages/core/src/languageData.ts` provides canonical lexical keywords,
+  datatypes, operators, and punctuation.
+- `packages/core/src/tokenizer.ts` and `parser.ts` provide canonical lexical
+  and structural interpretation.
+- `packages/core/src/generatedFunctionCatalog.ts` is generated from the
+  TextMate grammar for completion and hover; it is not edited manually.
+- `language-configuration.json` and `snippets/vbi.json` provide editor behavior
+  and authoring templates.
+- core tests and `src/test/suite/testfiles/` capture parser and formatter
+  behavior, including incomplete input and real-world formatting cases.
 
-The runtime vendor documentation remains authoritative when it conflicts with
-repository evidence. Any semantic uncertainty is an escalation point; do not
-guess from a similar language.
+Runtime vendor documentation remains authoritative when it conflicts with
+repository evidence. Semantic uncertainty is an escalation point; do not guess
+from a similar language.
 
 ## Tooling boundary
 
-Serena excludes QuickScript until a native InTouch language server exists.
-ProjectAtlas can index these files as neutral text for repository navigation
-and lexical search only. Neither tool currently supplies QuickScript symbols,
-definitions, references, or diagnostics.
+Serena excludes QuickScript because it does not natively support this language.
+ProjectAtlas may index `.vbi` and `.vi` as neutral text for repository
+navigation and lexical search. The extension's native language server supplies
+QuickScript symbols, document-local definitions/references, completion, hover,
+formatting, and diagnostics.
 
-## Target architecture
-
-The approved target is:
+## Implemented architecture
 
 ```text
-packages/
-  core/
-  language-server/
-  vscode-extension/
+packages/core -> packages/language-server -> src/extension.ts
 ```
 
-`packages/core` now establishes the editor-independent source and tokenizer
-boundary. The language server must also remain independent of the VS Code API.
-`packages/language-server` and `packages/vscode-extension` are still planned;
-no language-server implementation or transport exists yet.
+`packages/core` owns the editor-independent tokenizer, recoverable parser,
+formatter, and semantic model. `packages/language-server` exposes those
+features through LSP without depending on the VS Code API. `src/extension.ts`
+is a thin VS Code language client.
 
-The core tokenizer is the canonical lexical interpretation for every future
-consumer. The structure parser, formatter, diagnostics, and language server
-must reuse its lossless tokens instead of implementing independent string,
-comment, keyword, operator, or whitespace recognition.
+The tokenizer is the only lexical interpretation. The parser is the only block
+and statement interpretation. Formatter and semantics reuse those models rather
+than implementing independent string, comment, keyword, operator, whitespace,
+or nesting recognition.
 
-The formatter is a direct core consumer, not a language-server consumer. Its
-planned editor-independent engine will serve both a thin VS Code formatter
-adapter and later LSP formatting. Migration happens first at the lexical layer
-and then, after a formatting-capable structure parser exists, at the block and
-indentation layer.
+The formatter directly consumes core tokens and parser structure. The language
+server exposes the same engine through LSP formatting, and the VS Code client
+uses that standard request. TextMate grammar, snippets, and themes remain
+secondary presentation assets rather than semantic parsers.
