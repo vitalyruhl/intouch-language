@@ -1,69 +1,49 @@
 ### VSIX Ignore (bundled) ###
-# Keep only runtime bundle (dist), grammar, themes, snippets, language config, images used by marketplace, license, readme.
+# Ship only the runtime bundle and user-facing extension assets.
 
-# Exclude development sources & build output not needed after bundling
-src/
-out/
-backup/
-scripts/
-
-# Node modules removed because code is bundled
-node_modules/
-
-# Dev / workspace meta
-.git/
-.github/
-.vscode/
-.vscode-test/
-workspace.code-workspace
+# Local agent, index, workspace, and repository metadata
+.agents/**
+.git/**
+.github/**
+.projectatlas/**
+.serena/**
+.vscode/**
+.vscode-test/**
+.gitignore
+.vscodeignore
+AGENTS.md
+TODO.md
 launch.json
 renovate.json
 settings.json
-TODO.md
-tsconfig.json
 tslint.json
+workspace.code-workspace
+
+# Development sources, tests, documentation, and build metadata
+.Temp/**
+LanguageDefinition/**
+backup/**
+docs/**
+node_modules/**
+other/**
+out/**
+scripts/**
+src/**
+temp/**
+eslint.config.mjs
 package-lock.json
+syntaxes/schema.json
+tsconfig.json
 
-# Tests & fixtures
-src/test/
-**/*.test.vbi
-**/*.tobe.vbi
-
-# Exclude all heavy/readme showcase images (served via GitHub raw links in README)
+# Marketplace images are hosted externally; retain only the extension icon.
 images/**
 !images/logo.png
 
-# Exclude full LanguageDefinition directory (no language docs / assets in VSIX per request)
-LanguageDefinition/**
-
-# Misc archives / binaries
+# Generated and archival artifacts
+dist/**/*.map
 *.7z
-*.zip
-*.zap*
-*.iso
 *.exe
-
-# Existing packaged files
+*.iso
 *.vsix
-
-# Temp folders
-temp/
-other/
-
-# Ignore all source maps except allow dist maps (help debugging if user enables)
-**/*.map
-!dist/*.map
-
-# Keep dist bundle
-!dist/**
-
-# Allow essential files
-!README.md
-!LICENSE
-!package.json
-!language-configuration.json
-!syntaxes/**
-!themes/**
-!snippets/**
-!images/logo.png
-
+*.zap*
+*.zip

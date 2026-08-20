@@ -143,7 +143,8 @@
 					"type": "boolean",
 					"default": true,
 					"markdownDescription": "Replace tabs with spaces."
-				},"VBI.formatter.Misc.IndentSize": {
+				},
+				"VBI.formatter.Misc.IndentSize": {
 					"type": "number",
 					"default": 4,
 					"minimum": 1,
@@ -182,23 +183,20 @@
 		}
 	},
 	"devDependencies": {
-		"esbuild": "^0.25.10",
-		"@types/glob": "^9.0.0",
 		"@types/mocha": "^10.0.10",
-		"@types/node": "^24.5.2",
-		"@types/vscode": "^1.104.0",
-		"@typescript-eslint/eslint-plugin": "^8.44.1",
-		"@typescript-eslint/parser": "^8.44.1",
+		"@types/node": "^24.13.3",
+		"@types/vscode": "1.104.0",
+		"@typescript-eslint/eslint-plugin": "^8.67.0",
+		"@typescript-eslint/parser": "^8.67.0",
 		"@vscode/test-electron": "^2.5.2",
-		"color": "^5.0.2",
-		"cross-env": "^10.0.0",
-		"eslint": "^9.36.0",
-		"glob": "^11.1.0",
-		"mocha": "^11.7.2",
-		"nodemon": "^3.1.10",
-		"rimraf": "^6.0.1",
-		"source-map-support": "^0.5.21",
-		"typescript": "^5.9.2"
+		"color": "^5.0.3",
+		"esbuild": "^0.28.2",
+		"eslint": "^9.39.5",
+		"glob": "^13.0.6",
+		"mocha": "^11.8.0",
+		"nodemon": "^3.1.14",
+		"rimraf": "^6.1.3",
+		"typescript": "^5.9.3"
 	},
 	"__metadata": {
 		"id": "834eb420-2978-4100-b7de-2430fc88e429",
