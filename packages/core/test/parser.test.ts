@@ -1,4 +1,6 @@
 import * as assert from 'assert';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { parseQuickScript } from '../src/parser';
 
@@ -95,5 +97,91 @@ suite('QuickScript structure parser', () => {
 		].join('\n'));
 
 		assert.ok(!document.diagnostics.some(item => item.code === 'missing-semicolon'));
+	});
+
+	test('accepts the documented statement and expression productions', () => {
+		const sources = [
+			'DIM First, Second AS REAL;',
+			'TABINDEX = (TABINDEX + 1) * 2;',
+			'STATION2:S09BNOnline = NOT (Value == 0 OR Ready == FALSE);',
+			'CALL Run(StringMid(TextValue, 1, 2));',
+			'LogMessage("ready");',
+			'StartApp SYS_ToolsPath + "\\Scheduler.exe";',
+			'Show "Overview";',
+			'IF INDEX == cpuen THEN EXIT FOR; ENDIF;',
+			'FOR I = 1 TO StringLen(TextValue) STEP 2\nNEXT;',
+			'WHILE First < Second\nFirst = First + 1;\nNEXT;',
+			'RETURN Temp_Return;',
+		];
+
+		for (const source of sources) {
+			assert.deepStrictEqual(parseQuickScript(source).diagnostics, [], source);
+		}
+	});
+
+	test('keeps representative repository corpora diagnostic-clean', () => {
+		const fixtures = [
+			path.resolve(__dirname, '../../../packages/core/test/fixtures/representative.vbi'),
+			path.resolve(__dirname, '../../../src/test/suite/testfiles/04.indentation.basic.nesting.tobe.vbi'),
+			path.resolve(__dirname, '../../../src/test/suite/testfiles/05.comment_rules.nesting.tobe.vbi'),
+			path.resolve(__dirname, '../../../src/test/suite/testfiles/06.region.nesting.tobe.vbi'),
+			path.resolve(__dirname, '../../../src/test/suite/testfiles/07.instance.highlight.tobe.vbi'),
+		];
+
+		for (const fixture of fixtures) {
+			const diagnostics = parseQuickScript(fs.readFileSync(fixture, 'utf8')).diagnostics;
+			assert.deepStrictEqual(diagnostics, [], fixture);
+		}
+	});
+
+	test('derives focused negative diagnostics from grammar expectations', () => {
+		const cases: Array<{
+			production: string;
+			source: string;
+			code: string;
+			start: { line: number; character: number };
+		}> = [
+			{ production: 'DIM terminator', source: 'DIM X AS INTEGER', code: 'missing-semicolon', start: { line: 0, character: 16 } },
+			{ production: 'DIM identifier', source: 'DIM AS INTEGER;', code: 'missing-identifier', start: { line: 0, character: 3 } },
+			{ production: 'DIM AS', source: 'DIM X INTEGER;', code: 'missing-as', start: { line: 0, character: 13 } },
+			{ production: 'assignment terminator', source: 'X = X + 1', code: 'missing-semicolon', start: { line: 0, character: 9 } },
+			{ production: 'statement kind', source: 'X + X + 1;', code: 'expected-assignment', start: { line: 0, character: 0 } },
+			{ production: 'IF terminator', source: 'IF X == 1 THEN;\nENDIF;', code: 'unexpected-semicolon', start: { line: 0, character: 14 } },
+			{ production: 'IF THEN', source: 'IF X == 1\nENDIF;', code: 'missing-then', start: { line: 0, character: 9 } },
+			{ production: 'FOR assignment operator', source: 'FOR I == 1 TO 10\nNEXT;', code: 'expected-equals', start: { line: 0, character: 6 } },
+			{ production: 'FOR TO', source: 'FOR I = 1 10\nNEXT;', code: 'missing-to', start: { line: 0, character: 12 } },
+			{ production: 'FOR variable', source: 'FOR = 1 TO 10\nNEXT;', code: 'missing-loop-variable', start: { line: 0, character: 4 } },
+			{ production: 'CALL delimiter', source: 'CALL Foo(1; ', code: 'unclosed-delimiter', start: { line: 0, character: 10 } },
+			{ production: 'block end', source: 'NEXT;', code: 'invalid-nesting', start: { line: 0, character: 0 } },
+			{ production: 'block closer', source: 'IF Ready THEN', code: 'missing-endif', start: { line: 0, character: 0 } },
+			{ production: 'unknown declaration', source: 'DI X AS INTEGER;', code: 'invalid-statement', start: { line: 0, character: 0 } },
+		];
+
+		for (const item of cases) {
+			const found = parseQuickScript(item.source).diagnostics.find(candidate => candidate.code === item.code);
+			assert.ok(found, `${item.production}: expected ${item.code}`);
+			assert.deepStrictEqual(found.range.start, item.start, item.production);
+		}
+	});
+
+	test('recovers malformed loop-shaped statements without a NEXT cascade', () => {
+		const document = parseQuickScript('FR I = 1 TO 10\nCALL Run(I);\nNEXT;');
+
+		assert.ok(document.diagnostics.some(item => item.code === 'invalid-statement' && item.range.start.line === 0));
+		assert.ok(!document.diagnostics.some(item => item.code === 'invalid-nesting'));
+	});
+
+	test('applies deterministic grammar mutations to valid statements', () => {
+		const mutations = [
+			{ source: 'X = X + 1;', mutate: (value: string) => value.replace(/;$/, ''), code: 'missing-semicolon' },
+			{ source: 'FOR I = 1 TO 10\nNEXT;', mutate: (value: string) => value.replace('I =', 'I =='), code: 'expected-equals' },
+			{ source: 'IF Ready THEN\nENDIF;', mutate: (value: string) => value.replace(' THEN', ''), code: 'missing-then' },
+			{ source: 'CALL Run(I);', mutate: (value: string) => value.replace(')', ''), code: 'unclosed-delimiter' },
+		];
+
+		for (const mutation of mutations) {
+			assert.deepStrictEqual(parseQuickScript(mutation.source).diagnostics, [], mutation.source);
+			assert.ok(parseQuickScript(mutation.mutate(mutation.source)).diagnostics.some(item => item.code === mutation.code));
+		}
 	});
 });

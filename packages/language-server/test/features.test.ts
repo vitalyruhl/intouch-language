@@ -220,4 +220,26 @@ suite('QuickScript language server features', () => {
 		);
 		assert.ok(!diagnostics.some(item => item.code === 'invalid-nesting' && item.range.start.line === 4));
 	});
+
+	test('publishes the grammar-derived HIL round 3 diagnostics at primary tokens', () => {
+		const document = TextDocument.create('file:///hil-round-3.vbi', 'intouch', 1, [
+			'TABINDEX = TABINDEX + 1',
+			'IF Ready THEN;',
+			'ENDIF;',
+			'FOR TABINDEX == TABINDEX TO StringLen(TEXT9)',
+			'NEXT;',
+			'TABINDEX + TABINDEX + 1;',
+		].join('\n'));
+		const diagnostics = diagnosticsFor(document);
+
+		assert.deepStrictEqual(
+			diagnostics.map(item => [item.code, item.range.start]),
+			[
+				['missing-semicolon', { line: 0, character: 23 }],
+				['unexpected-semicolon', { line: 1, character: 13 }],
+				['expected-equals', { line: 3, character: 13 }],
+				['expected-assignment', { line: 5, character: 0 }],
+			],
+		);
+	});
 });
