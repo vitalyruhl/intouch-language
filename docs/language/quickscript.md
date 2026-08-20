@@ -28,6 +28,10 @@ Runtime vendor documentation remains authoritative when it conflicts with
 repository evidence. Semantic uncertainty is an escalation point; do not guess
 from a similar language.
 
+The implemented statement, expression, terminator, and recovery contract is
+defined in [QuickScript Grammar](quickscript-grammar.md). This scope document
+describes ownership and architecture; it does not define a second grammar.
+
 ## Tooling boundary
 
 Serena excludes QuickScript because it does not natively support this language.
