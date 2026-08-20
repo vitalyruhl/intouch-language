@@ -17,6 +17,25 @@ consumer is introduced.
 No parser, language server, LSP transport, semantic definition/reference
 provider, or diagnostics provider exists yet.
 
+The target dependency direction is:
+
+```text
+QuickScript source
+        |
+        v
+packages/core tokenizer and structure model
+        |----------------------|
+        v                      v
+QuickScript formatter     language server
+        |
+        v
+VS Code formatter adapter
+```
+
+The formatter and language server are independent core consumers. The language
+server is not an intermediary for formatting, and VS Code remains a client
+adapter rather than a language-semantics layer.
+
 ## Migration inventory
 
 | Current source | Current responsibility | Future target module | Dependencies | Risk |
@@ -37,7 +56,9 @@ provider, or diagnostics provider exists yet.
 
 The core now owns the typed lexical sets needed by the tokenizer: control
 keywords, data types, operators, and punctuation. Matching is case-insensitive
-while tokens preserve the original source text.
+while tokens preserve the original source text. The tokenizer is the canonical
+lexical interpretation that the future parser, formatter, diagnostics, and
+language server must consume; those components must not add parallel lexers.
 
 The formatter constants and TextMate grammar remain compatibility sources for
 their existing consumers. The grammar's large InTouch and Hermes function
@@ -59,24 +80,48 @@ canonical language model.
 - The tokenizer emits identifiers, keywords, data types, numbers, strings,
   operators, punctuation, comments, whitespace, newlines, unknown input, and a
   zero-width EOF token.
+- Concatenating every non-EOF lexeme reconstructs the original source exactly;
+  fixture invariants enforce this for both `.vbi` and `.vi` input.
 - Double-quoted strings, brace comments, apostrophe line comments, established
   identifier forms, and decimal numbers are based on repository grammar,
   formatter, and fixture evidence.
+- Block metadata such as `{>`, `{<`, `{#`, `{region`, and `{endregion` remains
+  losslessly available in comment lexemes for later formatting decisions.
 - Unclosed strings/comments and unknown characters remain tokenizable; parser
   diagnostics are intentionally deferred.
 
 ## Formatter coupling
 
-`src/formatCore.ts` still owns keyword uppercasing, operator/whitespace
-normalization, comment/string preservation, and nesting indentation. The new
-tokenizer models some of the same lexical boundaries, but the production
-formatter does not consume it yet. Replacing the formatter's ordered mutation
-pipeline now would combine lexical extraction with a behavior-sensitive
-rewrite.
+`src/formatCore.ts` is a legacy implementation, not the future formatting
+contract. Its ordered mutations currently mix lexical protection, structural
+heuristics, and output decisions. The production formatter does not consume
+core tokens yet because replacing all three responsibilities in the tokenizer
+milestone would be a behavior-sensitive rewrite.
 
-A later formatter migration can reuse core tokens after it has targeted
-equivalence tests for text reconstruction and formatting edits. Existing
-characterization tests and golden fixtures remain the compatibility gate.
+| Current component | Current responsibility | Responsibility type | Future target |
+| --- | --- | --- | --- |
+| `preFormat` orchestration | Applies ordered keyword, operator, punctuation, and whitespace mutations | Mixed lexical and output | Token-aware QuickScript formatter engine consuming core tokens |
+| String and comment protection in `preFormat` | Prevents regex formatting inside quoted or commented text | Lexical | Core `String` and `Comment` tokens with original ranges |
+| Keyword and operator recognition in `preFormat` | Finds case-insensitive words and longest operators | Lexical | Core token kinds and language data |
+| Whitespace normalization | Adjusts spaces, tabs, semicolons, and trailing whitespace | Output | Formatter rules over lossless whitespace/newline tokens |
+| `formatNestings` | Infers indentation from lines, keywords, and configured comment markers | Structural and output | Structure-parser blocks plus formatter indentation rules |
+| Block keyword recognition | Detects `IF`/`ELSE`/`ENDIF`, `FOR`/`NEXT`, `WHILE`, and comment blocks | Structural | Shared core structure model derived from tokens |
+| Output generation | Rebuilds a formatted source string for the VS Code edit | Output | Editor-independent `formatQuickScript(source, options)` result |
+| `src/functions.ts` formatting entry | Reads VS Code settings and creates `TextEdit` values | Editor adapter | Thin VS Code adapter over the shared formatter engine |
+
+Migration is planned in two controlled stages:
+
+1. Lexical formatter integration: use core string, comment, keyword, operator,
+   punctuation, whitespace, newline, and source-range information so
+   `preFormat` no longer performs a second lexical analysis.
+2. Structural formatter integration: after the structure parser is stable,
+   drive nesting and indentation from shared `DIM`, `IF`/`ELSE`/`ENDIF`,
+   `FOR`/`NEXT`, `WHILE`, `CALL`, block, and scope information.
+
+Existing characterization tests and golden fixtures protect already-correct
+behavior; they do not declare every historical formatter result optimal. Later
+improvements may replace poor legacy output when their intended behavior is
+covered by focused tests.
 
 ## Diagnostics and semantic navigation
 
@@ -88,10 +133,17 @@ symbols, definitions, and references be implemented.
 
 ## Recommended next autonomous block
 
-1. Add a QuickScript structure parser over core tokens for `DIM`,
-   `IF`/`ELSE`/`ENDIF`, `FOR`/`NEXT`, and `CALL`.
-2. Model local scopes without introducing editor or transport dependencies.
-3. Add the first parser-based diagnostics only after recovery behavior is
-   tested for incomplete source.
-4. Continue to defer language-server transport, definitions, references,
-   completion, and hover until the parser contract is stable.
+The next block is **Core Integration + Structure Parser + Formatter Refactor**,
+split into safe internal phases when needed:
+
+1. Prepare tokenizer integration in the formatter and remove duplicated
+   lexical protection from `preFormat` behind focused equivalence tests.
+2. Add a formatting-capable QuickScript structure parser over core tokens for
+   `DIM`, `IF`/`ELSE`/`ENDIF`, `FOR`/`NEXT`, `WHILE`, and `CALL`.
+3. Establish shared block, statement, nesting, and local-scope information.
+4. Move formatter nesting and indentation incrementally onto that structure.
+5. Add focused expectations for known weak formatter cases instead of
+   preserving them as accidental contracts.
+6. Only then extend symbols and parser-based diagnostics; continue to defer
+   LSP transport, definitions, references, completion, and hover until the
+   shared parser and formatter contracts are stable.

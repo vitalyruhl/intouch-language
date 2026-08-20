@@ -46,3 +46,14 @@ packages/
 boundary. The language server must also remain independent of the VS Code API.
 `packages/language-server` and `packages/vscode-extension` are still planned;
 no language-server implementation or transport exists yet.
+
+The core tokenizer is the canonical lexical interpretation for every future
+consumer. The structure parser, formatter, diagnostics, and language server
+must reuse its lossless tokens instead of implementing independent string,
+comment, keyword, operator, or whitespace recognition.
+
+The formatter is a direct core consumer, not a language-server consumer. Its
+planned editor-independent engine will serve both a thin VS Code formatter
+adapter and later LSP formatting. Migration happens first at the lexical layer
+and then, after a formatting-capable structure parser exists, at the block and
+indentation layer.
