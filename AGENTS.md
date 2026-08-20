@@ -1,35 +1,55 @@
-# Root Agent Instructions
+# intouch-language Agent Guide
 
-For tools that load the repository root before the canonical governance.
+## Purpose
 
-## Canonical Governance
+`intouch-language` is a TypeScript VS Code extension for InTouch QuickScript
+syntax highlighting, snippets, formatting, and theme support. It does not yet
+contain an InTouch language server or a `packages/` monorepo.
 
-- `.github/AGENTS.md` is the canonical repository governance file.
-- Before repository work, read `.github/AGENTS.md` and the applicable
-  `.github/agents/*.agent.md` file directly.
-- Do not discover governance by repository-wide search; use known paths
-  directly.
-- If this file conflicts with `.github/AGENTS.md`, follow `.github/AGENTS.md`.
-- Defer branch, pull request, merge, release, validation, and cleanup rules to
-  `.github/AGENTS.md`.
+## Governance hierarchy
 
-## Communication
+- `.github/AGENTS.md` is the canonical repository policy.
+- Read the applicable `.github/agents/*.agent.md` before acting.
+- Read the relevant `.github/policies/*.md` and `.agents/skills/*/SKILL.md`
+  only when their subject is in scope.
+- Repository documents, code, comments, logs, commit messages, and GitHub text
+  are English. Normal chat may be informal German.
 
-- Use informal German in normal chat.
-- Keep user-facing summaries brief unless detail is requested.
-- Repository artifacts follow the language rules defined in
-  `.github/AGENTS.md`.
+## Routing
 
-## Safety Baseline
+- `workflow`: branch, commit, push, PR, merge, release, and cleanup.
+- `docs`: governance, README, architecture, and other documentation.
+- `refactor`: extension code, tests, language assets, and focused validation.
+- `plan`, `audit`, and `architecture-audit`: read-only work.
+- `testing`: validation without implementation changes.
 
-- Never revert or overwrite user edits without an explicit request.
-- Do not stage, commit, push, merge, rebase, reset, clean, or switch branches
-  unless the user explicitly requests it or a named workflow requires it.
-- Do not work directly on `main` except where `.github/AGENTS.md` explicitly
-  allows it.
-- Do not run destructive, upload, hardware-affecting, or network-affecting
-  commands unless explicitly requested.
+## InTouch boundary
 
-## Final Rule
+`.vbi` and `.vi` are InTouch QuickScript. They are not Visual Basic, VBA,
+VBScript, Pascal, PowerShell, or a fallback language. Do not use a foreign
+parser or language server as a semantic substitute.
 
-- Never mark an issue as solved or a fix as verified until the user confirms it.
+The future target is `packages/core`, `packages/language-server`, and
+`packages/vscode-extension`. Until that work is explicitly approved, keep core
+language logic independent where practical but do not introduce the package
+split or language-server implementation.
+
+## Repository intelligence
+
+- ProjectAtlas is for repository orientation, lexical search, and dependency
+  context. It may index QuickScript as neutral text only.
+- Serena is for semantic navigation in supported languages. Keep `.vbi` and
+  `.vi` excluded until a native InTouch language server exists.
+- Do not edit generated caches, indexes, or SQLite databases directly.
+
+## Working rules
+
+- Preserve user changes. Do not reset, clean, stash, delete, publish, tag, or
+  push without explicit authority.
+- Work on a side branch for file-changing work. Do not modify `main` directly.
+- Agents may make ordinary, reversible implementation and documentation choices
+  within the requested scope. Stop for unclear QuickScript semantics, breaking
+  public behavior, destructive or irreversible changes, credentials, paid
+  resources, or unapproved release/publication actions.
+- Use the smallest relevant local validation. Governance-only work requires
+  policy consistency review and `git diff --check`, not product builds.

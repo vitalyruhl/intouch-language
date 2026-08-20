@@ -126,6 +126,17 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 > Save your code as `.vbi` or `.vi` for automatic language recognition.
 
+## Development and agent workflow
+
+Repository governance starts at [AGENTS.md](AGENTS.md). QuickScript language
+boundaries and the planned language-server architecture are documented in
+[docs/language/quickscript.md](docs/language/quickscript.md) and
+[docs/architecture/intouch-core-preparation.md](docs/architecture/intouch-core-preparation.md).
+
+The current extension does not include a language server. Until a native
+InTouch language server exists, `.vbi` and `.vi` are not semantically analysed
+by a foreign language server.
+
 ---
 
 > Better-Comment Plugin
