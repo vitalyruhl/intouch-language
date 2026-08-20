@@ -1,4 +1,5 @@
 import {
+	FileChangeType,
 	ProposedFeatures,
 	createConnection,
 } from 'vscode-languageserver/node';
@@ -6,7 +7,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument';
 import { TextDocuments } from 'vscode-languageserver';
 import { promises as fs } from 'node:fs';
 import * as path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
 	ServerSettings,
@@ -20,18 +21,18 @@ import {
 	symbolsFor,
 } from './features';
 import { formattingSettings, readSettings } from './settings';
-import { WorkspaceFunctionIndex } from './workspaceFunctions';
+import { WorkspaceDocumentSource, WorkspaceSymbolIndex } from './workspaceSymbols';
 
 const connection = createConnection(ProposedFeatures.all);
 const documents = new TextDocuments(TextDocument);
-const workspaceFunctions = new WorkspaceFunctionIndex();
+const workspaceSymbols = new WorkspaceSymbolIndex();
 let settings: ServerSettings = {};
 let workspaceFolders: string[] = [];
 
 function publishDiagnostics(document: TextDocument): void {
 	connection.sendDiagnostics({
 		uri: document.uri,
-		diagnostics: diagnosticsFor(document, workspaceFunctions.knownFunctionNames(), settings),
+		diagnostics: diagnosticsFor(document, workspaceSymbols, settings),
 	});
 }
 
@@ -41,8 +42,8 @@ function republishOpenDocuments(): void {
 	}
 }
 
-async function quickFunctionSources(folder: string): Promise<string[]> {
-	const sources: string[] = [];
+async function quickScriptSources(folder: string): Promise<WorkspaceDocumentSource[]> {
+	const sources: WorkspaceDocumentSource[] = [];
 	const entries = await fs.readdir(folder, { withFileTypes: true });
 	for (const entry of entries) {
 		if (entry.name === '.git' || entry.name === 'node_modules') {
@@ -50,31 +51,31 @@ async function quickFunctionSources(folder: string): Promise<string[]> {
 		}
 		const candidate = path.join(folder, entry.name);
 		if (entry.isDirectory()) {
-			sources.push(...await quickFunctionSources(candidate));
-		} else if (entry.isFile() && /\.vbi?$/i.test(entry.name)) {
-			sources.push(await fs.readFile(candidate, 'utf8'));
+			sources.push(...await quickScriptSources(candidate));
+		} else if (entry.isFile() && /\.(?:vbi|vi)$/i.test(entry.name)) {
+			sources.push({ uri: pathToFileURL(candidate).toString(), text: await fs.readFile(candidate, 'utf8') });
 		}
 	}
 	return sources;
 }
 
-async function refreshWorkspaceFunctions(folders: readonly string[]): Promise<void> {
+async function refreshWorkspaceSymbols(folders: readonly string[]): Promise<void> {
 	try {
-		const sources = (await Promise.all(folders.map(quickFunctionSources))).flat();
-		workspaceFunctions.replaceWorkspaceSources(sources);
+		const sources = (await Promise.all(folders.map(quickScriptSources))).flat();
+		workspaceSymbols.replaceWorkspaceDocuments(sources);
 		republishOpenDocuments();
 	} catch {
 		// Keep diagnostics available for open documents when a workspace file cannot be read.
 	}
 }
 
-connection.onInitialize(params => {
+connection.onInitialize(async params => {
 	const folders = params.workspaceFolders?.map(folder => folder.uri)
 		?? (params.rootUri === null || params.rootUri === undefined ? [] : [params.rootUri]);
 	workspaceFolders = folders
 		.filter(uri => uri.startsWith('file:'))
 		.map(uri => fileURLToPath(uri));
-	void refreshWorkspaceFunctions(workspaceFolders);
+	await refreshWorkspaceSymbols(workspaceFolders);
 	return serverCapabilities();
 });
 connection.onInitialized(async () => {
@@ -86,19 +87,32 @@ connection.onDidChangeConfiguration(change => {
 	settings = readSettings(change.settings);
 	republishOpenDocuments();
 });
-connection.onDidChangeWatchedFiles(() => {
-	void refreshWorkspaceFunctions(workspaceFolders);
+connection.onDidChangeWatchedFiles(change => {
+	void (async () => {
+		for (const file of change.changes.filter(candidate => /\.(?:vbi|vi)$/i.test(candidate.uri))) {
+			if (file.type === FileChangeType.Deleted) {
+				workspaceSymbols.removeWorkspaceDocument(file.uri);
+				continue;
+			}
+			try {
+				workspaceSymbols.updateWorkspaceDocument({ uri: file.uri, text: await fs.readFile(fileURLToPath(file.uri), 'utf8') });
+			} catch {
+				workspaceSymbols.removeWorkspaceDocument(file.uri);
+			}
+		}
+		republishOpenDocuments();
+	})();
 });
 documents.onDidOpen(change => {
-	workspaceFunctions.updateDocument(change.document);
-	publishDiagnostics(change.document);
+	workspaceSymbols.updateDocument(change.document);
+	republishOpenDocuments();
 });
 documents.onDidChangeContent(change => {
-	workspaceFunctions.updateDocument(change.document);
-	publishDiagnostics(change.document);
+	workspaceSymbols.updateDocument(change.document);
+	republishOpenDocuments();
 });
 documents.onDidClose(change => {
-	workspaceFunctions.removeDocument(change.document.uri);
+	workspaceSymbols.removeDocument(change.document.uri);
 	connection.sendDiagnostics({ uri: change.document.uri, diagnostics: [] });
 	republishOpenDocuments();
 });
@@ -113,19 +127,19 @@ connection.onDocumentSymbol(params => {
 });
 connection.onDefinition(params => {
 	const document = documents.get(params.textDocument.uri);
-	return document === undefined ? undefined : definitionFor(document, params.position);
+	return document === undefined ? undefined : definitionFor(document, params.position, workspaceSymbols);
 });
 connection.onReferences(params => {
 	const document = documents.get(params.textDocument.uri);
-	return document === undefined ? [] : referencesFor(document, params.position, params.context.includeDeclaration);
+	return document === undefined ? [] : referencesFor(document, params.position, params.context.includeDeclaration, workspaceSymbols);
 });
 connection.onCompletion(params => {
 	const document = documents.get(params.textDocument.uri);
-	return document === undefined ? [] : completionsFor(document);
+	return document === undefined ? [] : completionsFor(document, workspaceSymbols);
 });
 connection.onHover(params => {
 	const document = documents.get(params.textDocument.uri);
-	return document === undefined ? undefined : hoverFor(document, params.position);
+	return document === undefined ? undefined : hoverFor(document, params.position, workspaceSymbols);
 });
 connection.onShutdown(() => undefined);
 
