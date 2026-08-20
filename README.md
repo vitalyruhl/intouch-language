@@ -195,11 +195,6 @@ The following items are either recently resolved or planned but not yet implemen
 
 # What's new in Intouch-Language
 
-### V1.5.1
-
-- Added an editor-independent QuickScript tokenizer foundation for future language intelligence.
-- Refreshed the development toolchain and package validation while preserving current extension behavior.
-
 ### V1.5.0
 
 - Added deeper multiline IF continuation indentation (base + 2) keeping THEN line aligned with expression
