@@ -15,5 +15,8 @@
 		"temp",
 		".vscode-test",
 		"scripts"
+	],
+	"include": [
+		"src/**/*.ts"
 	]
 }
