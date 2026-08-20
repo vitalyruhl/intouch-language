@@ -99,6 +99,62 @@ suite('QuickScript structure parser', () => {
 		assert.ok(!document.diagnostics.some(item => item.code === 'missing-semicolon'));
 	});
 
+	test('treats brace, apostrophe, and metadata comments as syntax trivia', () => {
+		const sources = [
+			[
+				'{',
+				'Version history:',
+				'DIM X AS FALSCH;',
+				'CALL NichtVorhanden();',
+				'FR I = 1 TO 10',
+				'IF X THEN;',
+				'TABINDEX + TABINDEX + 1;',
+				'}',
+			].join('\n'),
+			"' DIM X AS FALSCH; CALL NichtVorhanden();",
+			'{> Version Name Usage CALL DIM}',
+			'{< Version Name Usage CALL DIM}',
+			'{# Version Name Usage CALL DIM}',
+			'{region Version Name Usage CALL DIM}',
+			'{endregion Version Name Usage CALL DIM}',
+		];
+
+		for (const source of sources) {
+			assert.deepStrictEqual(parseQuickScript(source).diagnostics, [], source);
+		}
+	});
+
+	test('accepts CALL expressions in assignments, arguments, and multiline calls', () => {
+		const sources = [
+			'CALL Foo();',
+			'X = CALL Foo();',
+			'Object.Field = CALL Foo();',
+			'X = Bar(CALL Foo());',
+			'X = CALL Foo(Bar(1), Y);',
+			'CALL Foo(CALL Bar());',
+			[
+				'TAB_HandF.Reference = CALL SetReferenceBool(',
+				'    tTopic,',
+				'    BYTE + 20,',
+				'    BitS1',
+				');',
+			].join('\n'),
+			[
+				'tTopic = StringLower(',
+				'    CALL GetSplittByIndex(',
+				'        TAB_AAFF.Reference,',
+				'        ".",',
+				'        1',
+				'    )',
+				');',
+			].join('\n'),
+		];
+
+		for (const source of sources) {
+			assert.deepStrictEqual(parseQuickScript(source).diagnostics, [], source);
+		}
+	});
+
 	test('accepts the documented statement and expression productions', () => {
 		const sources = [
 			'DIM First, Second AS REAL;',

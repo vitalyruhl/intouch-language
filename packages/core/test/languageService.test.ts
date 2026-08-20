@@ -21,6 +21,10 @@ suite('QuickScript language service', () => {
 	test('returns hover only for facts backed by language or document data', () => {
 		assert.strictEqual(hoverAt(model, { line: 0, character: 5 })?.detail, 'Local INTEGER variable');
 		assert.match(hoverAt(model, { line: 2, character: 8 })?.detail ?? '', /IT-functions/);
+		assert.match(
+			hoverAt(analyzeQuickScript('Value = CALL GetSplittByIndex(Source, ".", 1);'), { line: 0, character: 15 })?.detail ?? '',
+			/Hermes Own functions/,
+		);
 		assert.strictEqual(hoverAt(analyzeQuickScript('UnknownName;'), { line: 0, character: 2 }), undefined);
 	});
 

@@ -170,6 +170,50 @@ suite('QuickScript language server features', () => {
 		assert.ok(unknown.every(diagnostic => diagnostic.severity === 2));
 	});
 
+	test('isolates code diagnostics from brace, apostrophe, and metadata comments', () => {
+		const source = [
+			'{',
+			'Version history:',
+			'DIM X AS FALSCH;',
+			'CALL NichtVorhanden();',
+			'FR I = 1 TO 10',
+			'IF X THEN;',
+			'TABINDEX + TABINDEX + 1;',
+			'}',
+			"' DIM Y AS FALSCH; CALL AuchNichtVorhanden();",
+			'{> Version Name Usage CALL DIM MetaNichtVorhanden()}',
+		].join('\n');
+		const commented = TextDocument.create('file:///comment-diagnostics.vbi', 'intouch', 1, source);
+
+		assert.deepStrictEqual(diagnosticsFor(commented), []);
+	});
+
+	test('publishes only semantic diagnostics for syntactically valid CALL expressions', () => {
+		const source = [
+			'TAB_HandF.Reference = CALL SetReferenceBool(tTopic, 1, BitS1);',
+			'tTopic = StringLower(CALL GetSplittByIndex(TAB_AAFF.Reference, ".", 1));',
+			'Value = CALL GetSplittByIndeXx(Source, ".", 1);',
+		].join('\n');
+		const calls = TextDocument.create('file:///call-expressions.vbi', 'intouch', 1, source);
+
+		assert.deepStrictEqual(diagnosticsFor(calls).map(item => [item.code, item.range.start]), [
+			['unknown-function', { line: 2, character: 13 }],
+		]);
+		assert.ok(hoverFor(calls, { line: 1, character: 34 }));
+		assert.ok(completionsFor(calls).some(item => item.label === 'GetSplittByIndex'));
+	});
+
+	test('uses existing definition and references for CALL expression targets', () => {
+		const source = [
+			'DIM LocalCallable AS INTEGER;',
+			'Value = CALL LocalCallable();',
+		].join('\n');
+		const calls = TextDocument.create('file:///call-expression-navigation.vbi', 'intouch', 1, source);
+
+		assert.deepStrictEqual(definitionFor(calls, { line: 1, character: 15 })?.range.start, { line: 0, character: 4 });
+		assert.strictEqual(referencesFor(calls, { line: 1, character: 15 }, true).length, 2);
+	});
+
 	test('resolves QuickFunctions from open workspace documents case-insensitively', () => {
 		const definitions = TextDocument.create('file:///definitions.vi', 'intouch', 1, 'Type: QuickFunction\nName: WorkspaceFunction');
 		const caller = TextDocument.create('file:///caller.vbi', 'intouch', 1, 'CALL workspacefunction();\nCALL WorkspaceFunctio();');

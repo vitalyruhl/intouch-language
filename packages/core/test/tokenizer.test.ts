@@ -90,6 +90,24 @@ suite('QuickScript tokenizer', () => {
 		assert.deepStrictEqual(call?.range.start, { line: 6, character: 0 });
 	});
 
+	test('keeps invalid-looking multiline QuickScript inside one comment token', () => {
+		const source = [
+			'{',
+			'Version history:',
+			'DIM X AS FALSCH;',
+			'CALL NichtVorhanden();',
+			'FR I = 1 TO 10',
+			'IF X THEN;',
+			'TABINDEX + TABINDEX + 1;',
+			'}',
+		].join('\n');
+		const content = tokenize(source).filter(token => token.kind !== TokenKind.EOF);
+
+		assert.strictEqual(content.length, 1);
+		assert.strictEqual(content[0].kind, TokenKind.Comment);
+		assert.strictEqual(content[0].lexeme, source);
+	});
+
 	test('keeps standalone comment nesting markers on their own line', () => {
 		const tokens = tokenize('{>\nScript:\n{<}');
 		const comments = tokens.filter(token => token.kind === TokenKind.Comment);
