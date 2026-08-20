@@ -85,3 +85,33 @@ document and workspace. The generated entries retain their catalog category;
 workspace declarations remain a separate source. Configurable activation of
 additional project-specific catalogs is planned rather than inferred from
 individual call sites.
+
+## Diagnostic layers
+
+Diagnostics retain three separate responsibilities:
+
+- syntax diagnostics report invalid QuickScript structure or expressions;
+- semantic diagnostics report invalid language facts such as unknown datatypes
+  or unresolved call targets;
+- quality diagnostics report technically valid names that are less portable or
+  maintainable.
+
+The initial quality codes are:
+
+- `quickscript.naming.nonAsciiIdentifier` for non-ASCII characters in semantic
+  identifiers, including QuickFunction and parameter metadata;
+- `quickscript.naming.windowWhitespace` for whitespace in a literal window name;
+- `quickscript.naming.windowNonAscii` for non-ASCII characters in a literal
+  window name.
+
+Window rules apply only when the literal is the window argument of a documented
+InTouch window operation. Ordinary strings and all comments remain isolated.
+The rules do not rename symbols or affect formatting, hover, completion,
+definition, or references.
+
+Each rule defaults to `warning` and accepts `off`, `hint`, `information`,
+`warning`, or `error` through these existing `VBI` settings:
+
+- `VBI.diagnostics.naming.nonAsciiIdentifiers`;
+- `VBI.diagnostics.naming.windowWhitespace`;
+- `VBI.diagnostics.naming.windowNonAscii`.

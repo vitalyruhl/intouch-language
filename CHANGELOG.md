@@ -21,6 +21,8 @@
   QuickFunctions without reclassifying project helpers as native InTouch built-ins.
 - Accept corpus-evidenced Unicode and digit-prefixed identifiers, numeric
   dotfields, and multiline `IF` continuation forms.
+- Add configurable QuickScript quality diagnostics for non-ASCII identifiers
+  and problematic literal window names without changing language validity.
 
 ### V1.4.0
 

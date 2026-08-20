@@ -7,7 +7,8 @@ QuickScript source
         |
         v
 packages/core
-  tokenizer -> parser -> symbols/diagnostics/language features
+  tokenizer -> parser -> semantics -> quality diagnostics
+                              -> language features
         |          |
         |          +-> structural formatter
         |                  |
@@ -58,7 +59,21 @@ Core diagnostics currently cover:
 - missing `ENDIF` and `NEXT`;
 - invalid block nesting and duplicate `ELSE`;
 - duplicate local `DIM` declarations;
-- unknown `DIM` datatypes.
+- unknown `DIM` datatypes;
+- unresolved function calls.
+
+Quality diagnostics are a separate post-semantic layer. They report technically
+valid but less portable or maintainable names and never change parser validity,
+symbols, navigation, or formatter output. Quality diagnostics use
+`intouch-quality` as their LSP source, while syntax and semantic diagnostics
+continue to use `intouch-language`.
+
+The initial quality rules cover non-ASCII identifiers and literal InTouch
+window names containing whitespace or non-ASCII characters. Identifier
+candidates come from the semantic model, including local and external uses plus
+QuickFunction and parameter declarations extracted from metadata comment
+tokens. Window strings are inspected only as arguments of documented window
+commands/functions.
 
 The language service provides document symbols, local definition and reference
 results, completion, and hover. Completion includes QuickScript keywords and
@@ -87,11 +102,10 @@ snippets and the theme remain declarative VS Code assets.
 - Formatting is document-wide; selection/range formatting is not advertised.
 - Definition and references are document-local and require a proven `DIM`
   declaration.
-- QuickScript function declarations are not invented because repository
-  evidence models each file as a script/function body rather than declaring a
-  function in source syntax.
-- Project-wide symbol indexing and cross-file call-target resolution are not
-  implemented.
+- QuickFunction metadata supports workspace call-target resolution but does not
+  invent executable declaration syntax or cross-file navigation ranges.
+- Project-wide variable symbol indexing and cross-file variable navigation are
+  not implemented.
 - `.vbi` and `.vi` remain excluded from Serena semantic indexing; the native
   language server provides their semantics.
 
