@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 
+import { KNOWN_FUNCTIONS } from '../src/generatedFunctionCatalog';
 import { analyzeQuickScript, definitionAt, referencesAt } from '../src/semantics';
 
 suite('QuickScript semantic model', () => {
@@ -38,6 +39,18 @@ suite('QuickScript semantic model', () => {
 				'TABINDEX + TABINDEX + 1;',
 				'}',
 			].join('\n'),
+			[
+				'{>',
+				'Script:',
+				'Type: QuickFunction',
+				'Name: Test',
+				'',
+				'Version history:',
+				'DIM X AS FALSCH;',
+				'CALL NichtVorhanden();',
+				'FR I = 1 TO 10',
+				'{<}',
+			].join('\n'),
 			"' DIM X AS FALSCH; CALL NichtVorhanden();",
 			'{> Version Name Usage CALL DIM NichtVorhanden()}',
 		];
@@ -45,6 +58,33 @@ suite('QuickScript semantic model', () => {
 		for (const source of sources) {
 			assert.deepStrictEqual(analyzeQuickScript(source).diagnostics, [], source);
 		}
+	});
+
+	test('keeps diagnostics active between same-line-closed nesting markers', () => {
+		const model = analyzeQuickScript([
+			'{> following code shall be nested}',
+			'DIM X AS FALSCH;',
+			'CALL NichtVorhanden();',
+			'{<-------------------------------------------}',
+		].join('\n'));
+
+		assert.deepStrictEqual(model.diagnostics.map(item => item.code), ['unknown-datatype', 'unknown-function']);
+	});
+
+	test('classifies ground-program functions as Hermes helpers without accepting misspellings', () => {
+		const catalogEntries = ['xHerDebugL', 'Alarmkommentare', 'AppButonsConfig']
+			.map(name => KNOWN_FUNCTIONS.find(item => item.name === name));
+		const model = analyzeQuickScript('CALL xHerDebugL("ok", 10);\nCALL xHerDebugLX("ok", 10);');
+
+		assert.deepStrictEqual(catalogEntries.map(item => item?.category), [
+			'Hermes helper',
+			'Hermes helper',
+			'Hermes helper',
+		]);
+		assert.deepStrictEqual(
+			model.diagnostics.filter(item => item.code === 'unknown-function').map(item => item.range.start),
+			[{ line: 1, character: 5 }],
+		);
 	});
 
 	test('separates CALL expression syntax from known-function resolution', () => {

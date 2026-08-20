@@ -230,7 +230,7 @@ class ExpressionParser {
 			}
 			if (value === '.' || value === '->' || value === ':') {
 				this.position += 1;
-				if (!this.isName(this.tokens[this.position])) {
+				if (!this.isMemberName(this.tokens[this.position])) {
 					this.issue = { code: 'missing-expression', message: `Expected an identifier after '${value}'.`, token: this.tokens[this.position] };
 					return;
 				}
@@ -329,6 +329,10 @@ class ExpressionParser {
 
 	private isName(token: Token | undefined): boolean {
 		return token?.kind === TokenKind.Identifier || this.isCallableKeyword(token);
+	}
+
+	private isMemberName(token: Token | undefined): boolean {
+		return token?.kind === TokenKind.Number || this.isName(token);
 	}
 
 	private isCallableKeyword(token: Token | undefined): boolean {
@@ -657,7 +661,8 @@ class StatementParser {
 		if (tokens.length === 0 || tokens[0].kind !== TokenKind.Identifier) return false;
 		let index = 1;
 		while (index < tokens.length) {
-			if (['.', '->', ':'].includes(tokens[index].lexeme) && tokens[index + 1]?.kind === TokenKind.Identifier) {
+			if (['.', '->', ':'].includes(tokens[index].lexeme)
+				&& [TokenKind.Identifier, TokenKind.Number].includes(tokens[index + 1]?.kind)) {
 				index += 2;
 				continue;
 			}
@@ -710,8 +715,13 @@ function continuationEnd(tokensByLine: readonly Token[][], startLine: number): n
 	const delimiterEnd = delimiterContinuationEnd(tokensByLine, startLine);
 	if (delimiterEnd > startLine) return delimiterEnd;
 	const first = tokensByLine[startLine];
-	if (keyword(first[0]) !== 'IF' || first.some(token => keyword(token) === 'THEN')) return startLine;
-	if (!['AND', 'OR', 'NOT'].includes(keyword(first[first.length - 1]) ?? '')) return startLine;
+	const startsIf = keyword(first[0]) === 'IF';
+	const startsElseIf = keyword(first[0]) === 'ELSE' && keyword(first[1]) === 'IF';
+	if ((!startsIf && !startsElseIf) || first.some(token => keyword(token) === 'THEN')) return startLine;
+	const bareIf = startsIf && first.length === 1;
+	const trailingContinuation = ['AND', 'OR', 'NOT'].includes(keyword(first[first.length - 1]) ?? '');
+	const leadingContinuation = ['AND', 'OR'].includes(keyword(tokensByLine[startLine + 1]?.[0]) ?? '');
+	if (!bareIf && !trailingContinuation && !leadingContinuation) return startLine;
 	for (let line = startLine + 1; line < tokensByLine.length; line += 1) {
 		if (tokensByLine[line].some(token => keyword(token) === 'THEN')) return line;
 	}

@@ -99,7 +99,7 @@ suite('QuickScript language server features', () => {
 		assert.strictEqual(twice, expected);
 	});
 
-	test('keeps extra comment nesting across blank lines through the language-server formatter entrypoint', () => {
+	test('formats a multiline metadata comment across blank lines through the language-server entrypoint', () => {
 		const source = [
 			'{>',
 			'Script:',
@@ -143,6 +143,44 @@ suite('QuickScript language server features', () => {
 
 		assert.strictEqual(once, expected);
 		assert.strictEqual(twice, expected);
+	});
+
+	test('isolates the exact real QuickFunction headers through the LSP diagnostic pipeline', () => {
+		const source = [
+			'{>',
+			'    Script:',
+			'    Type: QuickFunction',
+			'    Name: TABHER012EA',
+			'',
+			'    Parameters:',
+			'    No formal parameters.',
+			'',
+			'    Usage:',
+			'    CALL TABHER012EA( );',
+			'{<}',
+			'',
+			'{>',
+			'    Version history:',
+			'    V2.0.0 16.10.2020 ViRu Irgend etwas passt da vorn und Hinten nicht!',
+			'    V2.1.0 03.02.2022 ViRu Typ (typ + 10 = ohne PLS --> PLSActive AS Memory Discrete --> Als Globale Variable festlegen!)',
+			'    V2.2.0 30.10.2024 ViRu debug mit xHerDebugL',
+			'{<}',
+		].join('\r\n');
+		const document = TextDocument.create('file:///TABHER012EA.vbi', 'intouch', 1, source);
+
+		assert.deepStrictEqual(diagnosticsFor(document), []);
+	});
+
+	test('keeps LSP diagnostics active between same-line-closed nesting markers', () => {
+		const source = [
+			'{> following code shall be nested}',
+			'DIM X AS FALSCH;',
+			'CALL NichtVorhanden();',
+			'{<-------------------------------------------}',
+		].join('\n');
+		const document = TextDocument.create('file:///nested-code.vbi', 'intouch', 1, source);
+
+		assert.deepStrictEqual(diagnosticsFor(document).map(item => item.code), ['unknown-datatype', 'unknown-function']);
 	});
 
 	test('diagnoses unresolved CALL and expression functions while resolving catalogs and QuickFunctions', () => {
@@ -214,13 +252,18 @@ suite('QuickScript language server features', () => {
 		assert.strictEqual(referencesFor(calls, { line: 1, character: 15 }, true).length, 2);
 	});
 
-	test('resolves QuickFunctions from open workspace documents case-insensitively', () => {
+	test('resolves project functions only when the workspace declares them', () => {
 		const definitions = TextDocument.create('file:///definitions.vi', 'intouch', 1, 'Type: QuickFunction\nName: WorkspaceFunction');
 		const caller = TextDocument.create('file:///caller.vbi', 'intouch', 1, 'CALL workspacefunction();\nCALL WorkspaceFunctio();');
 		const workspace = new WorkspaceFunctionIndex();
+		const isolated = diagnosticsFor(caller).filter(diagnostic => diagnostic.code === 'unknown-function');
 		workspace.updateDocument(definitions);
 
 		const diagnostics = diagnosticsFor(caller, workspace.knownFunctionNames()).filter(diagnostic => diagnostic.code === 'unknown-function');
+		assert.deepStrictEqual(isolated.map(diagnostic => diagnostic.range.start), [
+			{ line: 0, character: 5 },
+			{ line: 1, character: 5 },
+		]);
 		assert.deepStrictEqual(diagnostics.map(diagnostic => diagnostic.range.start), [{ line: 1, character: 5 }]);
 	});
 

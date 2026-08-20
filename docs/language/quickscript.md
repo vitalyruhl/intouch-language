@@ -18,7 +18,9 @@ Language knowledge is divided by responsibility:
 - `packages/core/src/tokenizer.ts` and `parser.ts` provide canonical lexical
   and structural interpretation.
 - `packages/core/src/generatedFunctionCatalog.ts` is generated from the
-  TextMate grammar for completion and hover; it is not edited manually.
+  TextMate grammar for completion, hover, and known-function diagnostics; it
+  preserves the distinction between native InTouch functions and Hermes
+  helpers and is not edited manually.
 - `language-configuration.json` and `snippets/vbi.json` provide editor behavior
   and authoring templates.
 - core tests and `src/test/suite/testfiles/` capture parser and formatter
@@ -68,6 +70,18 @@ formatter calculates the opening line's original and structural target indent,
 then applies that same delta to every physical line through the closing brace.
 Relative indentation and comment text are otherwise preserved.
 
-The configured `{>` / `{<}`, `{#`, `{region`, and `{endregion}` forms remain
-formatter directives with their existing nesting behavior. They are not
-reclassified as normal multiline comments.
+Brace-comment closure takes lexical priority over formatter metadata. A marker
+such as `{> following code shall be nested}` that contains `}` on its physical
+line is one closed comment token, so its nesting directive can affect the real
+QuickScript lines that follow. A marker such as `{>` without `}` on that line
+opens a multiline brace comment through the next `}`. Its complete span,
+including a later `{<}` closing line, is comment trivia and cannot contribute
+parser or semantic diagnostics. The formatter indents that metadata comment as
+one block while preserving relative indentation inside it.
+
+Known callable resolution combines the generated native InTouch and Hermes
+catalog entries with QuickFunction declarations discovered in the current
+document and workspace. The generated entries retain their catalog category;
+workspace declarations remain a separate source. Configurable activation of
+additional project-specific catalogs is planned rather than inferred from
+individual call sites.

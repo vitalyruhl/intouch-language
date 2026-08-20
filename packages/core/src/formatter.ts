@@ -177,7 +177,9 @@ export function formatQuickScriptLexically(source: string, options: FormatOption
 
 		if (token.kind === TokenKind.Comment) {
 			const previous = previousSignificant(tokens, index);
-			if (previous?.kind === TokenKind.Keyword && previous.lexeme.toUpperCase() === 'THEN') {
+			if (previous?.kind === TokenKind.Keyword
+				&& previous.lexeme.toUpperCase() === 'THEN'
+				&& previous.range.end.line === token.range.start.line) {
 				appendSingleSpace(output);
 			}
 			output.push(token.lexeme);
@@ -235,6 +237,9 @@ interface MultilineCommentShift {
 	endLine: number;
 	originalIndent: string;
 	targetIndent: string;
+	contentOriginalIndent?: string;
+	contentTargetIndent?: string;
+	alignClosingLine?: boolean;
 }
 
 function isFormatterDirective(line: string, options: FormatOptions): boolean {
@@ -246,21 +251,53 @@ function isFormatterDirective(line: string, options: FormatOptions): boolean {
 		|| matchesDirective(line, options.regionBlockCodeExclude ?? '{#');
 }
 
-function multilineCommentStarts(source: string, options: FormatOptions): Map<number, Token> {
-	const starts = new Map<number, Token>();
+interface MultilineCommentStart {
+	token: Token;
+	directive: boolean;
+	contentIndent: string;
+}
+
+function sharedContentIndent(comment: string): string {
+	const physicalLines = comment.split(/\r\n|\r|\n/);
+	const lines = physicalLines.slice(1, comment.endsWith('}') ? -1 : undefined).filter(line => line.trim().length > 0);
+	if (lines.length === 0) return '';
+	let shared = lines[0].match(/^[ \t]*/)?.[0] ?? '';
+	for (const line of lines.slice(1)) {
+		const leading = line.match(/^[ \t]*/)?.[0] ?? '';
+		while (shared.length > 0 && !leading.startsWith(shared)) shared = shared.slice(0, -1);
+	}
+	return shared;
+}
+
+function multilineCommentStarts(source: string, options: FormatOptions): Map<number, MultilineCommentStart> {
+	const starts = new Map<number, MultilineCommentStart>();
 	for (const token of tokenize(source)) {
 		if (token.kind !== TokenKind.Comment || token.range.end.line <= token.range.start.line) continue;
 		const lineStart = source.lastIndexOf('\n', token.span.start - 1) + 1;
 		const beforeComment = source.slice(lineStart, token.span.start);
 		const trimmed = token.lexeme.trimStart();
-		if (/^[ \t]*$/.test(beforeComment) && trimmed.startsWith('{') && !isFormatterDirective(trimmed, options)) {
-			starts.set(token.range.start.line, token);
+		if (/^[ \t]*$/.test(beforeComment) && trimmed.startsWith('{')) {
+			starts.set(token.range.start.line, {
+				token,
+				directive: isFormatterDirective(trimmed, options),
+				contentIndent: sharedContentIndent(token.lexeme),
+			});
 		}
 	}
 	return starts;
 }
 
-function shiftCommentLine(line: string, shift: MultilineCommentShift): string {
+function shiftCommentLine(line: string, shift: MultilineCommentShift, lineNumber: number): string {
+	if (line.trim().length === 0) return '';
+	if (shift.contentTargetIndent !== undefined && shift.contentOriginalIndent !== undefined) {
+		if (shift.alignClosingLine === true && lineNumber === shift.endLine) {
+			return shift.targetIndent + line.trimStart();
+		}
+		if (line.startsWith(shift.contentOriginalIndent)) {
+			return shift.contentTargetIndent + line.slice(shift.contentOriginalIndent.length);
+		}
+		return shift.contentTargetIndent + line.trimStart();
+	}
 	if (line.startsWith(shift.originalIndent)) {
 		return shift.targetIndent + line.slice(shift.originalIndent.length);
 	}
@@ -294,14 +331,14 @@ export function formatQuickScriptStructure(source: string, options: FormatOption
 			if (original.trim().length === 0) {
 				if (options.removeEmptyLinesInComments !== true) {
 					blankCount = 0;
-					output.push(shiftCommentLine(original, commentShift));
+					output.push(shiftCommentLine(original, commentShift, lineNumber));
 				} else {
 					blankCount += 1;
 					if (blankCount <= maximumBlankLines) output.push('');
 				}
 			} else {
 				blankCount = 0;
-				output.push(shiftCommentLine(original, commentShift));
+				output.push(shiftCommentLine(original, commentShift, lineNumber));
 			}
 			if (lineNumber === commentShift.endLine) commentShift = undefined;
 			continue;
@@ -336,7 +373,14 @@ export function formatQuickScriptStructure(source: string, options: FormatOption
 			const originalIndent = original.match(/^[ \t]*/)?.[0] ?? '';
 			const targetIndent = indent.repeat(depth);
 			output.push(targetIndent + original.slice(originalIndent.length));
-			commentShift = { endLine: multilineComment.range.end.line, originalIndent, targetIndent };
+			commentShift = {
+				endLine: multilineComment.token.range.end.line,
+				originalIndent,
+				targetIndent,
+				contentOriginalIndent: multilineComment.directive ? multilineComment.contentIndent : undefined,
+				contentTargetIndent: multilineComment.directive ? targetIndent + indent : undefined,
+				alignClosingLine: multilineComment.directive && multilineComment.token.lexeme.endsWith('}'),
+			};
 		} else if (structure?.preserveIndent) {
 			output.push(original);
 		} else {
@@ -345,7 +389,7 @@ export function formatQuickScriptStructure(source: string, options: FormatOption
 
 		const opensDirective = matchesDirective(trimmed, options.blockCodeBegin ?? '{>')
 			|| matchesDirective(trimmed, options.regionBlockCodeBegin ?? '{region');
-		if (opensDirective) {
+		if (opensDirective && multilineComment?.directive !== true) {
 			directiveDepth += 1;
 		}
 	}
@@ -357,5 +401,6 @@ export function formatQuickScriptStructure(source: string, options: FormatOption
 /** Format QuickScript through the canonical tokenizer and structure parser. */
 export function formatQuickScript(source: string, options: FormatOptions = {}): FormatResult {
 	const lexical = formatQuickScriptLexically(source, options);
-	return formatQuickScriptStructure(lexical.text, options);
+	const structured = formatQuickScriptStructure(lexical.text, options);
+	return { ...structured, changed: structured.text !== source };
 }

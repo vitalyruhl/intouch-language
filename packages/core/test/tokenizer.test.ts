@@ -55,6 +55,14 @@ suite('QuickScript tokenizer', () => {
 		);
 	});
 
+	test('keeps Unicode letters and numbers inside QuickScript identifiers', () => {
+		const tokens = significant(tokenize('Größe2 = Außentemperatur_1 + 123Pump.Name + 2-3;'));
+		const identifiers = tokens.filter(token => token.kind === TokenKind.Identifier);
+
+		assert.deepStrictEqual(identifiers.map(token => token.lexeme), ['Größe2', 'Außentemperatur_1', '123Pump', 'Name']);
+		assert.ok(tokens.some(token => token.kind === TokenKind.Operator && token.lexeme === '-'));
+	});
+
 	test('keeps syntax-looking text inside strings and comments', () => {
 		const source = 'Empty = ""; Message = "IF {not a comment} then"; { IF a >= 1 }\n\' NEXT is a comment';
 		const tokens = tokenize(source);
@@ -108,12 +116,44 @@ suite('QuickScript tokenizer', () => {
 		assert.strictEqual(content[0].lexeme, source);
 	});
 
-	test('keeps standalone comment nesting markers on their own line', () => {
-		const tokens = tokenize('{>\nScript:\n{<}');
+	test('keeps an unclosed metadata opener through the later closing brace in one comment token', () => {
+		const source = [
+			'{>',
+			'Script:',
+			'Type: QuickFunction',
+			'Name: Test',
+			'',
+			'Version history:',
+			'DIM X AS FALSCH;',
+			'CALL NichtVorhanden();',
+			'FR I = 1 TO 10',
+			'{<}',
+		].join('\n');
+		const content = tokenize(source).filter(token => token.kind !== TokenKind.EOF);
+
+		assert.strictEqual(content.length, 1);
+		assert.strictEqual(content[0].kind, TokenKind.Comment);
+		assert.strictEqual(content[0].lexeme, source);
+		assert.strictEqual(content.map(token => token.lexeme).join(''), source);
+	});
+
+	test('keeps code between same-line-closed nesting markers as QuickScript tokens', () => {
+		const source = [
+			'{> following code shall be nested}',
+			'DIM X AS FALSCH;',
+			'CALL NichtVorhanden();',
+			'{<-------------------------------------------}',
+		].join('\n');
+		const tokens = tokenize(source);
 		const comments = tokens.filter(token => token.kind === TokenKind.Comment);
 
-		assert.deepStrictEqual(comments.map(token => token.lexeme), ['{>', '{<}']);
-		assert.ok(tokens.some(token => token.lexeme === 'Script'));
+		assert.deepStrictEqual(comments.map(token => token.lexeme), [
+			'{> following code shall be nested}',
+			'{<-------------------------------------------}',
+		]);
+		assert.ok(tokens.some(token => token.kind === TokenKind.Keyword && token.lexeme === 'DIM'));
+		assert.ok(tokens.some(token => token.kind === TokenKind.Keyword && token.lexeme === 'CALL'));
+		assert.strictEqual(tokens.slice(0, -1).map(token => token.lexeme).join(''), source);
 	});
 
 	test('matches operators longest-first and recognizes QuickScript punctuation', () => {

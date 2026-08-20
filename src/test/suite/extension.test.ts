@@ -3,6 +3,29 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
+async function waitForDiagnosticCode(uri: vscode.Uri, code: string): Promise<readonly vscode.Diagnostic[]> {
+	const find = (): readonly vscode.Diagnostic[] | undefined => {
+		const diagnostics = vscode.languages.getDiagnostics(uri);
+		return diagnostics.some(diagnostic => diagnostic.code === code) ? diagnostics : undefined;
+	};
+	const current = find();
+	if (current !== undefined) return current;
+	return new Promise((resolve, reject) => {
+		let subscription: vscode.Disposable | undefined;
+		const timeout = setTimeout(() => {
+			subscription?.dispose();
+			reject(new Error(`Timed out waiting for diagnostic '${code}'.`));
+		}, 10000);
+		subscription = vscode.languages.onDidChangeDiagnostics(event => {
+			if (!event.uris.some(changed => changed.toString() === uri.toString())) return;
+			const diagnostics = find();
+			if (diagnostics === undefined) return;
+			clearTimeout(timeout);
+			subscription?.dispose();
+			resolve(diagnostics);
+		});
+	});
+}
 
 suite('Extension Test Suite', () => {
 	vscode.window.showInformationMessage('Start all tests.');
@@ -63,5 +86,31 @@ suite('Extension Test Suite', () => {
 		);
 		assert.ok(secondEdits === undefined || secondEdits.length === 0);
 		assert.strictEqual(document.getText(), expected);
+	});
+
+	test('isolates a real multiline metadata header through the production language client', async () => {
+		const extension = vscode.extensions.getExtension('Vitaly-ruhl.intouch-language');
+		assert.ok(extension);
+		await extension.activate();
+		const source = [
+			'{>',
+			'    Script:',
+			'    Type: QuickFunction',
+			'    Name: TABHER012EA',
+			'',
+			'    Parameters:',
+			'    No formal parameters.',
+			'',
+			'    Usage:',
+			'    CALL TABHER012EA( );',
+			'{<}',
+			'DIM X AS FALSCH;',
+		].join('\n');
+		const document = await vscode.workspace.openTextDocument({ language: 'intouch', content: source });
+		const diagnostics = await waitForDiagnosticCode(document.uri, 'unknown-datatype');
+
+		assert.deepStrictEqual(diagnostics.map(diagnostic => [diagnostic.code, diagnostic.range.start.line]), [
+			['unknown-datatype', 11],
+		]);
 	});
 });

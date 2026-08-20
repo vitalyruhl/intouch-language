@@ -15,6 +15,12 @@
   existing grammar, snippets, theme, and formatter command.
 - Add editor-independent core tests, language-server protocol smoke tests, and
   a manual `.vbi`/`.vi` HIL gate.
+- Keep unclosed `{>` metadata blocks inside one multiline brace-comment token
+  while preserving diagnostics between same-line-closed nesting markers.
+- Complete the generated Hermes helper catalog from the validated ground-program
+  QuickFunctions without reclassifying project helpers as native InTouch built-ins.
+- Accept corpus-evidenced Unicode and digit-prefixed identifiers, numeric
+  dotfields, and multiline `IF` continuation forms.
 
 ### V1.4.0
 

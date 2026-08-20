@@ -130,7 +130,7 @@
         },
 
         {
-          "match": "(?i:\\s*\\b(GetSplittByIndex|HerGATEWAYanzeigeAktualisieren|HerGATEWAYtriggerFreigabe|HerGATEWAYueberwachen|SetReferenceBool|SetReferenceByte|SetReferenceDINT|SetReferenceDINTs|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord|SetVarInputBoolsch|SetVarToggleBoolsch|BDEDatenLesen|BDEDatenSpeichern|BDEDatenSuchen|BDESchichtSchreiben|BDESchichtwerteDatenOK|BDESchichtwerteZuweisen|BDETageswerteDatenOK|BDETageswerteSchreiben|BDETageswerteZuweisen|BZBetriebsstunden|BZZaehlerAbfragen|ExterneModuleUeberwachen|FUWerte|GetSplittByIndex|HerBACKUP|HerProViewStart|HideAllPLS|KonfigLesen|KonfigSpeichern|QFFilter|QFFilterRegler15Schritt|QFLuftwerte|QFRinne|SessionUserInfoAkt|Sollwertaenderung|StatusExtApp|StatusleistenInfofelder|SWReal|wwalmdbtrigger|xAnlagenConfig|xBZVZSettings|xGatawaySettings|xHerDebug|xHerGATEWAYSettings|xLoggingConfig|xSetDateiPfade|xSetSQLConfig|xSetTSStation|xSetUhrzeitserver)\\b\\s*)",
+          "match": "(?i:\\s*\\b(GetSplittByIndex|HerGATEWAYanzeigeAktualisieren|HerGATEWAYtriggerFreigabe|HerGATEWAYueberwachen|SetReferenceBool|SetReferenceByte|SetReferenceDINT|SetReferenceDINTs|SetReferenceMerkerByte|SetReferenceReal|SetReferenceString|SetReferenceWord|SetVarInputBoolsch|SetVarToggleBoolsch|BDEDatenLesen|BDEDatenSpeichern|BDEDatenSuchen|BDESchichtSchreiben|BDESchichtwerteDatenOK|BDESchichtwerteZuweisen|BDETageswerteDatenOK|BDETageswerteSchreiben|BDETageswerteZuweisen|BZBetriebsstunden|BZZaehlerAbfragen|ExterneModuleUeberwachen|FUWerte|GetSplittByIndex|HerBACKUP|HerProViewStart|HideAllPLS|KonfigLesen|KonfigSpeichern|QFFilter|QFFilterRegler15Schritt|QFLuftwerte|QFRinne|SessionUserInfoAkt|Sollwertaenderung|StatusExtApp|StatusleistenInfofelder|SWReal|wwalmdbtrigger|xAnlagenConfig|xBZVZSettings|xGatawaySettings|xHerDebug|xHerDebugL|xHerGATEWAYSettings|xLoggingConfig|xSetDateiPfade|xSetSQLConfig|xSetTSStation|xSetUhrzeitserver)\\b\\s*)",
           "name": "keyword.other",
           "comment": "Hermes Own functions 1"
         },
@@ -138,6 +138,11 @@
           "match": "(?i:\\s*\\b(xSTATION9BiosName|xSTATION8BiosName|xSTATION7BiosName|xSTATION6BiosName|xSTATION5BiosName|xSTATION4BiosName|xSTATION3BiosName|xSTATION2BiosName|xSTATION1BiosName)\\b\\s*)",
           "name": "support.function",
           "comment": "Hermes Own functions 2"
+        },
+        {
+          "match": "(?i:\\s*\\b(Alarmkommentare|APAntriebStatistik|APMonatAktualisierenZaehler1|APMonatAktualisierenZaehler2|APMonatAktualisierenZaehler3|ApplicomToUAReference|APTagAktualisierenZaehler1|APTagAktualisierenZaehler2|APTagAktualisierenZaehler3|APZaehlerAbfragen|BZMonatAktualisierenZaehler1|BZMonatAktualisierenZaehler2|BZMonatAktualisierenZaehler3|BZTagAktualisierenZaehler1|BZTagAktualisierenZaehler2|BZTagAktualisierenZaehler3|GetFullTopic|HDWExport|HerGATEWAYStatusLesen|Hubbodensteuerung|loadVarFromDB|MADatum|MAKurvenAbfragen|MAKurvenProfileAbfragen|Mouse|OnlineHilfeAufrufen|Scripsnippets_Intouch|SetReferenceINT|SetSMELAccessname|SetTopicTest|SMELCPUPopup|SMELEditorAufrufen|SMELInfo|SMELInfoView|SMELSQL|SmelUpdateDB|SMELUpdateDBWTaV|SMELUpdateDBWTnV|SpecialAccessChangeGUI|SpecialAccessChangePw|SpecialAccessCheckGUI|SpeciallAccessCheckPw|sysuhrzeitsynchron|TABAntrieb|TABCommentTo2z|TABHER012AZ|TABHER012AZS|TABHER012EA|TABHER012EAF|TABHER012EAFB|TABHER012EAS|TABHER062|TABResetPLSReferences|TABWILO|VZMonatAktualisierenZaehler1|VZMonatAktualisierenZaehler2|VZMonatAktualisierenZaehler3|VZTagAktualisierenZaehler1|VZTagAktualisierenZaehler2|VZTagAktualisierenZaehler3|VZVerbrauchsdaten|VZZaehlerAbfragen|WBBetriebsstunden|WVVerbrauchsdaten|xKonfigSpeichern|AppButonsConfig|HerProViewStartV|StartEP2|StartEP3|WebCPUaufrufen|xAT01Config|xAT02Config|xAT03Config|xAT04Config|xAT05Config|xAT06Config|xAT07Config|xAT08Config|xAT09Config|xAT10Config|xHerGatewayStart|xLogoffOnTSMaster|xLogoutFromStationTS|xSetDeverloper|xSetupDeploymentMode)\\b\\s*)",
+          "name": "support.function",
+          "comment": "Hermes ground-program QuickFunctions"
         }
       ]
     },

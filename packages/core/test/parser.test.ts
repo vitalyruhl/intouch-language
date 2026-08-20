@@ -45,6 +45,42 @@ suite('QuickScript structure parser', () => {
 		assert.deepStrictEqual(document.diagnostics, []);
 	});
 
+	test('parses corpus-evidenced multiline IF continuations', () => {
+		const sources = [
+			[
+				'IF',
+				'    Ready == 1 OR',
+				'    Waiting == 1 THEN',
+				'Value = 1;',
+				'ENDIF;',
+			].join('\n'),
+			[
+				'IF Ready == 1 THEN',
+				'ELSE IF Waiting == 1 OR',
+				'    Starting == 1 THEN',
+				'Value = 2;',
+				'ENDIF; ENDIF;',
+			].join('\n'),
+			[
+				'IF (First > 0)',
+				'    OR (Second > 0)',
+				'    OR (Third > 0) THEN',
+				'Value = 3;',
+				'ENDIF;',
+			].join('\n'),
+		];
+
+		for (const source of sources) {
+			assert.deepStrictEqual(parseQuickScript(source).diagnostics, [], source);
+		}
+	});
+
+	test('accepts numeric dotfields and digit-prefixed tag names', () => {
+		const source = 'IF Parameter.08 == 0 THEN Value = 123Pump.Name; ENDIF;';
+
+		assert.deepStrictEqual(parseQuickScript(source).diagnostics, []);
+	});
+
 	test('supports multiple DIM names and repository-evidenced WHILE/NEXT blocks', () => {
 		const document = parseQuickScript('DIM First, Second AS REAL;\nWHILE First < Second\nFirst = First + 1;\nNEXT;');
 
@@ -111,6 +147,18 @@ suite('QuickScript structure parser', () => {
 				'TABINDEX + TABINDEX + 1;',
 				'}',
 			].join('\n'),
+			[
+				'{>',
+				'Script:',
+				'Type: QuickFunction',
+				'Name: Test',
+				'',
+				'Version history:',
+				'DIM X AS FALSCH;',
+				'CALL NichtVorhanden();',
+				'FR I = 1 TO 10',
+				'{<}',
+			].join('\n'),
 			"' DIM X AS FALSCH; CALL NichtVorhanden();",
 			'{> Version Name Usage CALL DIM}',
 			'{< Version Name Usage CALL DIM}',
@@ -122,6 +170,19 @@ suite('QuickScript structure parser', () => {
 		for (const source of sources) {
 			assert.deepStrictEqual(parseQuickScript(source).diagnostics, [], source);
 		}
+	});
+
+	test('parses code between same-line-closed nesting markers', () => {
+		const source = [
+			'{> following code shall be nested}',
+			'DIM X AS FALSCH;',
+			'CALL NichtVorhanden();',
+			'{<-------------------------------------------}',
+		].join('\n');
+		const document = parseQuickScript(source);
+
+		assert.deepStrictEqual(document.statements.map(statement => statement.kind), ['dim', 'call']);
+		assert.deepStrictEqual(document.diagnostics.map(item => item.code), ['unknown-datatype']);
 	});
 
 	test('accepts CALL expressions in assignments, arguments, and multiline calls', () => {

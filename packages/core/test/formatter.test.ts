@@ -53,6 +53,7 @@ suite('QuickScript lexical formatter', () => {
 			'ENDIF;',
 		].join('\r\n'));
 		assert.strictEqual(twice.text, once.text);
+		assert.strictEqual(twice.changed, false);
 	});
 
 	test('preserves multiline comment blank lines unless explicitly configured', () => {
@@ -119,20 +120,70 @@ suite('QuickScript lexical formatter', () => {
 		assert.strictEqual(twice, once);
 	});
 
-	test('keeps configured comment directives separate from normal comment blocks', () => {
+	test('does not treat a later multiline comment as inline content of a preceding THEN', () => {
+		const source = [
+			'IF Ready THEN',
+			'',
+			'        {',
+			'        Documentation:',
+			'            Relative detail',
+			'        }',
+			'ENDIF;',
+		].join('\n');
+		const expected = [
+			'IF Ready THEN',
+			'',
+			'    {',
+			'    Documentation:',
+			'        Relative detail',
+			'    }',
+			'ENDIF;',
+		].join('\r\n');
+		const once = formatQuickScript(source).text;
+
+		assert.strictEqual(once, expected);
+		assert.strictEqual(formatQuickScript(once).text, once);
+	});
+
+	test('formats a multiline metadata comment as one relative-indentation block', () => {
 		const source = [
 			'{>',
-			'    { nested comment',
-			'        relative text',
-			'    }',
-			'{<-------------------------------------------}',
-			'{region sample}',
-			'{endregion}',
+			'        Script:',
+			'            Relative detail',
+			'',
+			'        Version history:',
+			'{<}',
 		].join('\n');
 		const once = formatQuickScript(source).text;
 
-		assert.ok(once.includes('{>\r\n    { nested comment\r\n        relative text\r\n    }'));
-		assert.ok(once.endsWith('{<-------------------------------------------}\r\n{region sample}\r\n{endregion}'));
+		assert.strictEqual(once, [
+			'{>',
+			'    Script:',
+			'        Relative detail',
+			'',
+			'    Version history:',
+			'{<}',
+		].join('\r\n'));
+		assert.strictEqual(formatQuickScript(once).text, once);
+	});
+
+	test('keeps the real QuickFunction header stable and idempotent as one multiline comment', () => {
+		const source = [
+			'{>',
+			'    Script:',
+			'    Type: QuickFunction',
+			'    Name: TABHER012EA',
+			'',
+			'    Parameters:',
+			'    No formal parameters.',
+			'',
+			'    Usage:',
+			'    CALL TABHER012EA( );',
+			'{<}',
+		].join('\n');
+		const once = formatQuickScript(source).text;
+
+		assert.strictEqual(once, source.replace(/\n/g, '\r\n'));
 		assert.strictEqual(formatQuickScript(once).text, once);
 	});
 

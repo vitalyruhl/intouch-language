@@ -3,11 +3,11 @@ import { Position } from './source';
 import { Token, TokenKind } from './token';
 
 function isIdentifierStart(character: string | undefined): boolean {
-	return character !== undefined && /[A-Za-z_$#]/.test(character);
+	return character !== undefined && /[\p{L}_$#]/u.test(character);
 }
 
 function isIdentifierPart(character: string | undefined): boolean {
-	return character !== undefined && /[A-Za-z0-9_$#]/.test(character);
+	return character !== undefined && /[\p{L}\p{N}_$#]/u.test(character);
 }
 
 function isDigit(character: string | undefined): boolean {
@@ -95,12 +95,8 @@ export function tokenize(source: string): Token[] {
 		}
 
 		if (current === '{') {
-			const lineEnd = source.slice(offset).search(/\r|\n/);
-			const endOfLine = lineEnd === -1 ? source.length : offset + lineEnd;
 			const closingBrace = source.indexOf('}', offset + 1);
-			const isStandaloneNestingMarker = (source.startsWith('{>', offset) || source.startsWith('{<', offset))
-				&& (closingBrace === -1 || closingBrace > endOfLine);
-			emit(TokenKind.Comment, isStandaloneNestingMarker ? endOfLine : closingBrace === -1 ? source.length : closingBrace + 1);
+			emit(TokenKind.Comment, closingBrace === -1 ? source.length : closingBrace + 1);
 			continue;
 		}
 
@@ -123,6 +119,12 @@ export function tokenize(source: string): Token[] {
 				while (isDigit(source[end])) {
 					end += 1;
 				}
+			} else if (isIdentifierPart(source[end]) || (source[end] === '-' && isIdentifierStart(source[end + 1]))) {
+				while (isIdentifierPart(source[end]) || (source[end] === '-' && isIdentifierPart(source[end + 1]))) {
+					end += 1;
+				}
+				emit(TokenKind.Identifier, end);
+				continue;
 			}
 			emit(TokenKind.Number, end);
 			continue;
