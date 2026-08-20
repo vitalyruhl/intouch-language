@@ -63,7 +63,8 @@ InTouch, Hermes, or workspace QuickFunction is a separate semantic diagnostic.
 document          = { statement | comment } ;
 
 statement         = dimStatement | assignment | callStatement |
-                    directCallStatement | ifHeader | elseHeader | endifStatement |
+                    directCallStatement | commandStatement |
+                    ifHeader | elseHeader | endifStatement |
                     forHeader | nextStatement | whileHeader | exitForStatement |
                     returnStatement ;
 
@@ -71,9 +72,12 @@ dimStatement      = "DIM", identifier, { ",", identifier }, "AS", datatype, ";" 
 assignment        = assignable, "=", expression, ";" ;
 callStatement     = "CALL", callable, "(", [ arguments ], ")", ";" ;
 directCallStatement = callable, "(", [ arguments ], ")", ";" ;
+commandStatement  = commandName, expression, ";" ;
 arguments         = expression, { ",", expression } ;
 assignable        = identifier, { memberSuffix | indexSuffix } ;
 callable          = identifier, { memberSuffix } ;
+commandName       = "ACTIVATEAPP" | "HIDE" | "PLAYSOUND" | "SENDKEYS" |
+                    "SHOW" | "STARTAPP" ;
 
 ifHeader          = "IF", expression, "THEN" ;
 elseHeader        = "ELSE" ;
@@ -99,12 +103,15 @@ in `AND`, `OR`, or `NOT`.
 A function call may be used as a statement with or without `CALL`, as shown by
 the repository corpus. Other bare expressions are not statements. In
 particular, `X + X + 1;` is invalid while `X = X + 1;` is an assignment.
+The listed classic command statements use the repository-evidenced
+parenthesis-free form; the same names may still use normal call syntax when
+followed by `(`.
 
 ## Terminators
 
 | Production | Required terminator |
 | --- | --- |
-| `DIM`, assignment, `CALL`, direct call, `EXIT FOR`, `RETURN` | `;` |
+| `DIM`, assignment, `CALL`, direct call, command, `EXIT FOR`, `RETURN` | `;` |
 | `ENDIF`, `NEXT` | `;` |
 | `IF ... THEN`, `ELSE`, `FOR ... TO ... [STEP ...]`, `WHILE ...` | none |
 
@@ -133,4 +140,3 @@ and does not change expression syntax.
   only the precedence groups documented above are parsed.
 - The grammar validates syntax and nesting but does not perform type checking,
   overload resolution, constant folding, or runtime tag validation.
-
