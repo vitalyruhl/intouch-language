@@ -1,0 +1,12 @@
+{
+	"name": "@intouch-language/language-server",
+	"private": true,
+	"description": "Editor-independent QuickScript language server",
+	"main": "../../../out/language-server/src/server.js",
+	"types": "../../../out/language-server/src/server.d.ts",
+	"dependencies": {
+		"@intouch-language/core": "*",
+		"vscode-languageserver": "^10.1.0",
+		"vscode-languageserver-textdocument": "^1.0.12"
+	}
+}

@@ -1,9 +1,9 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
-// Use the same formatting pipeline as the real editor command: preFormat -> formatNestings -> empty line normalization.
-const fo = require('../../formats');
-const functions = require('../../functions');
+// Use the same editor-independent formatting pipeline as the language server.
+const fo = require('./formatterTestSupport');
+const functions = require('./formatterTestSupport');
 let config = functions.getConfig();
 
 // Automatically validate every pair *.test.vbi -> *.tobe.vbi in testfiles folder.
@@ -43,21 +43,7 @@ suite('formatter fixture pairs (*.test.vbi -> *.tobe.vbi)', () => {
       const input = fs.readFileSync(testPath, 'utf8');
       const expected = fs.readFileSync(expectedPath, 'utf8');
 
-      // Stage 1: keyword/operator spacing & semicolon/trailing whitespace normalization
-  let stage1 = fo.preFormat(input, config);
-      // Stage 2: nesting / indentation logic
-      let stage2 = fo.formatNestings(stage1, config);
-      // Stage 3: replicate empty line reduction exactly like functions.format()
-      const nEL: number = (config.allowedNumberOfEmptyLines || 1) + 1.0;
-      if (config.RemoveEmptyLines) {
-        let regex: RegExp;
-        if (config.EmptyLinesAlsoInComment) {
-          regex = new RegExp(`(?![^{]*})(^[\t]*$\r?\n){${nEL},}`, 'gm');
-        } else {
-          regex = new RegExp(`(^[\t]*$\r?\n){${nEL},}`, 'gm');
-        }
-        stage2 = stage2.replace(regex, '\r\n');
-      }
+      const stage2 = fo.fullFormatPipeline(input, config);
 
       // Normalize both sides to CRLF + trim potential trailing spaces (fixtures canonicalized with CRLF)
       const normalize = (s: string) => s

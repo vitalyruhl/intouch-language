@@ -7,7 +7,7 @@ function isIdentifierStart(character: string | undefined): boolean {
 }
 
 function isIdentifierPart(character: string | undefined): boolean {
-	return character !== undefined && /[A-Za-z0-9_$#-]/.test(character);
+	return character !== undefined && /[A-Za-z0-9_$#]/.test(character);
 }
 
 function isDigit(character: string | undefined): boolean {
@@ -83,9 +83,7 @@ export function tokenize(source: string): Token[] {
 		if (current === '"') {
 			let end = offset + 1;
 			while (end < source.length && source[end] !== '\r' && source[end] !== '\n') {
-				if (source[end] === '\\' && end + 1 < source.length && source[end + 1] !== '\r' && source[end + 1] !== '\n') {
-					end += 2;
-				} else if (source[end] === '"') {
+				if (source[end] === '"') {
 					end += 1;
 					break;
 				} else {
@@ -128,10 +126,7 @@ export function tokenize(source: string): Token[] {
 
 		if (isIdentifierStart(current)) {
 			let end = offset + 1;
-			while (isIdentifierPart(source[end])) {
-				if (source[end] === '-' && source[end + 1] === '>') {
-					break;
-				}
+			while (isIdentifierPart(source[end]) || (source[end] === '-' && isIdentifierPart(source[end + 1]))) {
 				end += 1;
 			}
 			emit(classifyWord(source.slice(offset, end)), end);

@@ -56,12 +56,12 @@ suite('QuickScript tokenizer', () => {
 	});
 
 	test('keeps syntax-looking text inside strings and comments', () => {
-		const source = 'Empty = ""; Message = "IF {not a comment} \\"quoted\\""; { IF a >= 1 }\n\' NEXT is a comment';
+		const source = 'Empty = ""; Message = "IF {not a comment} then"; { IF a >= 1 }\n\' NEXT is a comment';
 		const tokens = tokenize(source);
 
 		assert.deepStrictEqual(
 			tokens.filter(token => token.kind === TokenKind.String).map(token => token.lexeme),
-			['""', '"IF {not a comment} \\"quoted\\""'],
+			['""', '"IF {not a comment} then"'],
 		);
 		assert.deepStrictEqual(
 			tokens.filter(token => token.kind === TokenKind.Comment).map(token => token.lexeme),

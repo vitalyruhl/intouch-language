@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"lib": ["es2021"],
+		"module": "Node16",
+		"moduleResolution": "Node16",
+		"outDir": "../../out/language-server",
+		"rootDir": ".",
+		"sourceMap": true,
+		"strict": true,
+		"target": "es2021",
+		"types": ["mocha", "node"]
+	},
+	"include": ["src/**/*.ts", "test/**/*.ts"]
+}

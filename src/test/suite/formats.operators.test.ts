@@ -1,6 +1,6 @@
 import * as assert from 'assert';
-const fo = require('../../formats');
-const functions = require('../../functions');
+const fo = require('./formatterTestSupport');
+const functions = require('./formatterTestSupport');
 let config = functions.getConfig();
 
 suite('test formats.ts - double operators spacing', () => {

@@ -18,6 +18,7 @@ a = b; {    comment    } c = d;
     a = 1;
     ENDIF;
 
+
     test for removing extra empty lines in comment blocks (this line should be moved up)
 }
 

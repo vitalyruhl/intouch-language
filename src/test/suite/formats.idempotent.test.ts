@@ -1,8 +1,8 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
-const fo = require('../../formats');
-const functions = require('../../functions');
+const fo = require('./formatterTestSupport');
+const functions = require('./formatterTestSupport');
 const config = functions.getConfig();
 
 /*

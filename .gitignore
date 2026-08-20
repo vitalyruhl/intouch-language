@@ -18,8 +18,7 @@ all-agents-combined.md
 #formatter
 #.vscode/**
 typings/**
-out/test/**
-/out/core/
+/out/
 #src/**
 **/*.map
 

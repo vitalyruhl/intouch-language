@@ -1,32 +1,41 @@
 'use strict';
 
+import * as path from 'path';
 import * as vscode from 'vscode';
-import { formatTE } from './functions';
+import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 
-export function activate(context: vscode.ExtensionContext) {
-	vscode.commands.registerCommand('vbi-format', () => {
-		const { activeTextEditor } = vscode.window;
-		if (activeTextEditor) { 
-			//&& activeTextEditor.document.languageId === 'intouch'
-			const { document } = activeTextEditor;
-			let start = new vscode.Position(0, 0);
-			let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
-			let r = new vscode.Range(start, end);
-			return formatTE(r);
-		}
-	});
+let client: LanguageClient | undefined;
 
-	//https://vscode-docs.readthedocs.io/en/latest/extensionAPI/vscode-api/
-	vscode.languages.registerDocumentFormattingEditProvider({ scheme: 'file', language: 'intouch' }, {
-		provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
-			const { activeTextEditor } = vscode.window;
-			let start = new vscode.Position(0, 0);
-			let end = new vscode.Position(document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length);
-			let r = new vscode.Range(start, end);
-			return formatTE(r);
-		}
-	});
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+	const serverModule = context.asAbsolutePath(path.join('dist', 'server.js'));
+	const serverOptions: ServerOptions = {
+		run: { module: serverModule, transport: TransportKind.ipc },
+		debug: { module: serverModule, transport: TransportKind.ipc },
+	};
+	const clientOptions: LanguageClientOptions = {
+		documentSelector: [
+			{ scheme: 'file', language: 'intouch' },
+			{ scheme: 'untitled', language: 'intouch' },
+		],
+		synchronize: { configurationSection: 'VBI' },
+	};
+
+	client = new LanguageClient(
+		'intouchLanguageServer',
+		'InTouch QuickScript Language Server',
+		serverOptions,
+		clientOptions,
+	);
+	context.subscriptions.push(client);
+	context.subscriptions.push(vscode.commands.registerCommand('vbi-format', async () => {
+		await vscode.commands.executeCommand('editor.action.formatDocument');
+	}));
+	await client.start();
 }
 
-//It will be invoked on deactivation
-export function deactivate() { }
+export async function deactivate(): Promise<void> {
+	if (client !== undefined) {
+		await client.stop();
+		client = undefined;
+	}
+}

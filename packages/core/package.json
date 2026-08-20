@@ -1,5 +1,7 @@
 {
 	"name": "@intouch-language/core",
 	"private": true,
-	"description": "Editor-independent QuickScript language primitives"
+	"description": "Editor-independent QuickScript language primitives",
+	"main": "../../../out/core/src/index.js",
+	"types": "../../../out/core/src/index.d.ts"
 }

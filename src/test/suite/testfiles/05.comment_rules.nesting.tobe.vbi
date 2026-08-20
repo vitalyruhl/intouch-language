@@ -7,7 +7,7 @@
         ANLAGE = StringTrim(SYS_S7CPU_name, 3);
         wcAddItem("WUAuswahl", ANLAGE);
 
-        LogMessage("DEBUG: " + StringLeft(SYS_TopicTemp, 4)+ " / " + SYS_S7CPU_anlagenteil);
+        LogMessage("DEBUG: " + StringLeft(SYS_TopicTemp, 4) + " / " + SYS_S7CPU_anlagenteil);
         IF StringLeft(SYS_TopicTemp, 4) == SYS_S7CPU_anlagenteil THEN
             WU_AuswahlTemp = SYS_S7CPU_name;
         ENDIF;

@@ -1,7 +1,6 @@
 import * as assert from 'assert';
 
-import { formatNestings, preFormat } from '../../formats';
-import { getConfig } from '../../functions';
+import { formatNestings, getConfig, preFormat } from './formatterTestSupport';
 
 const config = getConfig();
 
