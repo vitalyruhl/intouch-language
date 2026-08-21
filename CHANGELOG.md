@@ -5,6 +5,10 @@
 <!-- markdownlint-disable MD013 -->
 <!-- markdownlint-disable MD025 -->
 
+## 1.6.1
+
+- Refresh compatible development dependencies and update the TypeScript build configuration.
+
 ## 1.5.0 - 1.6.0
 
 - Replace the legacy formatter lexers with the shared QuickScript tokenizer and

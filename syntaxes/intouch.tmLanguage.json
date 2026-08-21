@@ -8,12 +8,12 @@
   "foldingStopMarker": "(?i:({endregion|endif;|(^\\s*//\\s*#?endregion\\b))(\\s*.*$|\\b))",
   "patterns": [
     { "include": "#comments" },
+    { "include": "#var_declaration" },
     { "include": "#keywords" },
     { "include": "#dotfields" },
     { "include": "#strings" },
     { "include": "#systemVariables" },
     { "include": "#variables" },
-    { "include": "#var_declaration" },
     { "include": "#numbers_simple" },
     { "include": "#several" }
   ],
@@ -223,7 +223,7 @@
 
     "line_comment_new": {
       "name": "comment",
-      "namee": "punctuation.definition.comment.vbi",
+      "name": "punctuation.definition.comment.vbi",
       "begin": "'",
       "end": ".*$"
     },

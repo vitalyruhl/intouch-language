@@ -10,9 +10,8 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
-        # Node 14 & 15 are EOL and Node 14 is not available on macOS arm64 (caused the error).
-        # Test against current active LTS (18) and latest LTS (20). Add 22.x later if needed.
-        node-version: [18.x, 20.x]
+        # Secure test dependencies require Node 20 or later; test supported LTS releases.
+        node-version: [22.x, 24.x]
     runs-on: ${{ matrix.os }} 
 
     steps:

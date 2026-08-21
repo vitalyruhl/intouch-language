@@ -8,7 +8,7 @@
 
 <p align="center">
   <br />
-  <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/logo.png" alt="Intouch-Language Logo" width="10%" /></a>
+  <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/logo.png" alt="Intouch-Language Logo" width="10%" /></a>
 </p>
 
 <!-- Badges with SVG removed for Marketplace guidelines. Optional: add PNG variants if needed. -->
@@ -18,7 +18,7 @@
 
 # QuickScript (Intouch-Language)
 
-- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides native QuickScript language-server support for `.vbi` and `.vi` files, including formatting, diagnostics, document metadata, QuickFunction discovery, cross-file definition and references, hover, completion, and document symbols. It also includes the Intouch Dark theme.
+- **Intouch-Language** is an open source extension for **Visual Studio Code** (**Not official!**). It provides native QuickScript language-server support for `.vbi` and `.vi` files, including formatting, diagnostics, document metadata, QuickFunction discovery, cross-file definition and references, hover, completion, and document symbols. It also includes the Intouch Dark theme.
 - **Intouch** is a programming language for AVEVA (Wonderware) SCADA Intouch Applications.
 
 ## QuickScript Language Server
@@ -42,7 +42,7 @@ private project catalogs are not bundled with the public extension.
 <table align="center" width="100%" border="0">
   <tr>
     <td align="center" border="0">
-    <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/example.gif" alt="Example" width="60%" /></a>
+    <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/example.gif" alt="Example" width="60%" /></a>
     </td>
   </tr>
 </table>
@@ -50,53 +50,19 @@ private project catalogs are not bundled with the public extension.
 <br>
 <br>
 
-# New Theme
+# Intouch Dark Theme
 
-NOTE: The default VS Code theme does not color much. Switch to intouch theme (installed by this extension) or use a theme like one of the following to benefit from the changes:
-
-- [Material Theme](https://marketplace.visualstudio.com/items?itemName=Equinusocio.vsc-material-theme)
-- [XD Theme](https://marketplace.visualstudio.com/items?itemName=jeff-hykin.xd-theme)
-- [Noctis](https://marketplace.visualstudio.com/items?itemName=liviuschera.noctis)
-- [Kary Pro Colors](https://marketplace.visualstudio.com/items?itemName=karyfoundation.theme-karyfoundation-themes)
-- [One Monokai Theme](https://marketplace.visualstudio.com/items?itemName=azemoh.one-monokai)
-- [Winteriscoming](https://marketplace.visualstudio.com/items?itemName=johnpapa.winteriscoming)
-- [Popping and Locking](https://marketplace.visualstudio.com/items?itemName=hedinne.popping-and-locking-vscode)
-- [Syntax Highlight Theme](https://marketplace.visualstudio.com/items?itemName=peaceshi.syntax-highlight)
-- [Default Theme Enhanced](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-themes)
-
-<br>
-<br>
-
-## Example different themes
-
-<table align="center" width="100%" border="0">
-  <tr>
-    <td align="center" border="0">
-    <p>Intouch Theme Dark</p>
-    <a title="Intouch Theme Dark" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/intouchTheme.jpg" alt="Intouch Theme Dark" width="60%" /></a>
-    </td>
-    <td align="center" border="0">
-    <p>VSC Theme Dark+</p>
-    <a title="VSC Theme Dark+" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/VSC_Dark_Plus.jpg" alt="VSC Theme Dark+" width="60%" /></a>
-    </td>
-    </tr>
-    <tr>
-    <td align="center" border="0">
-    <p>Material Theme Darker</p>
-    <a title="Material Theme Darker" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/Material_Theme_Darker.jpg" alt="Material Theme Darker" width="60%" /></a>
-    </td>
-    <td align="center" border="0">
-    <p>VSC Theme Light</p>
-    <a title="VSC Theme Light" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/VSC_Light.jpg" alt="VSC Theme Light" width="60%" /></a>
-    </td>
-  </tr>
-</table>
+Built-in VS Code themes work with the standard TextMate scopes provided by
+the extension. Intouch Dark offers stronger QuickScript differentiation when
+you want more specialized contrast. The current language server provides no
+semantic tokens; highlighting is currently based on the TextMate grammar.
 
 <br>
 <br>
 
 # Installation
 
+- Prerequisite: Node.js 20 or later.
 - Standard Installation:
   - Install it in ext.-manager (type Intouch) or from
     [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
