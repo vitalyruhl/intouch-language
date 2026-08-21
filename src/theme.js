@@ -17,8 +17,11 @@ function getTheme({ style, name }) {
 
   const workbenchForeground = primer.gray[5];
   const editorForeground = primer.gray[8];
+  const workbenchBorder = primer.white[0];
+  const badgeForeground = primer.black[0];
 
   return {
+    "$schema": "https://raw.githubusercontent.com/microsoft/vscode/main/extensions/theme-defaults/schemas/color-theme.json",
     name: "Intouch Dark",
     colors: {
       focusBorder: primer.blue[3],
@@ -39,15 +42,15 @@ function getTheme({ style, name }) {
       "button.hoverBackground": primer.green[3],
 
       "checkbox.background": primer.gray[2],
-      "checkbox.border": primer.white,
+      "checkbox.border": workbenchBorder,
 
       "dropdown.background": primer.gray[1],
-      "dropdown.border": primer.white,
+      "dropdown.border": workbenchBorder,
       "dropdown.foreground": workbenchForeground,
       "dropdown.listBackground": primer.gray[0],
 
       "input.background": primer.gray[1],
-      "input.border": primer.white,
+      "input.border": workbenchBorder,
       "input.foreground": workbenchForeground,
       "input.placeholderForeground": primer.gray[5],
 
@@ -60,23 +63,23 @@ function getTheme({ style, name }) {
       "titleBar.activeBackground": primer.gray[0],
       "titleBar.inactiveForeground": primer.gray[5],
       "titleBar.inactiveBackground": "#1f2428",
-      "titleBar.border": primer.white,
+      "titleBar.border": workbenchBorder,
 
       "activityBar.foreground": workbenchForeground,
       "activityBar.inactiveForeground": primer.gray[4],
       "activityBar.background": primer.gray[0],
-      "activityBarBadge.foreground": primer.black,
+      "activityBarBadge.foreground": badgeForeground,
       "activityBarBadge.background": primer.blue[4],
       "activityBar.activeBorder": "#f9826c",
-      "activityBar.border": primer.white,
+      "activityBar.border": workbenchBorder,
 
       "sideBar.foreground": primer.gray[6],
       "sideBar.background": "#1f2428",
-      "sideBar.border": primer.white,
+      "sideBar.border": workbenchBorder,
       "sideBarTitle.foreground": workbenchForeground,
       "sideBarSectionHeader.foreground": workbenchForeground,
       "sideBarSectionHeader.background": "#1f2428",
-      "sideBarSectionHeader.border": primer.white,
+      "sideBarSectionHeader.border": workbenchBorder,
 
       "list.hoverForeground": workbenchForeground,
       "list.inactiveSelectionForeground": workbenchForeground,
@@ -93,7 +96,7 @@ function getTheme({ style, name }) {
       "notificationCenterHeader.background": primer.gray[0],
       "notifications.foreground": workbenchForeground,
       "notifications.background": primer.gray[1],
-      "notifications.border": primer.white,
+      "notifications.border": workbenchBorder,
       "notificationsErrorIcon.foreground": primer.red[5],
       "notificationsWarningIcon.foreground": primer.orange[6],
       "notificationsInfoIcon.foreground": primer.blue[6],
@@ -105,15 +108,15 @@ function getTheme({ style, name }) {
 
       "statusBar.foreground": primer.gray[6],
       "statusBar.background": primer.gray[0],
-      "statusBar.border": primer.white,
+      "statusBar.border": workbenchBorder,
       "statusBar.noFolderBackground": primer.gray[0],
       "statusBar.debuggingBackground": auto("#f9826c"),
-      "statusBar.debuggingForeground": primer.black,
+      "statusBar.debuggingForeground": badgeForeground,
       "statusBarItem.prominentBackground": "#282e34",
 
       "editorGroupHeader.tabsBackground": "#1f2428",
-      "editorGroupHeader.tabsBorder": primer.white,
-      "editorGroup.border": primer.white,
+      "editorGroupHeader.tabsBorder": workbenchBorder,
+      "editorGroup.border": workbenchBorder,
 
       "tab.activeForeground": workbenchForeground,
       "tab.inactiveForeground": primer.gray[5],
@@ -121,8 +124,8 @@ function getTheme({ style, name }) {
       "tab.activeBackground": primer.gray[0],
       "tab.hoverBackground": primer.gray[0],
       "tab.unfocusedHoverBackground": primer.gray[0],
-      "tab.border": primer.white,
-      "tab.unfocusedActiveBorderTop": primer.white,
+      "tab.border": workbenchBorder,
+      "tab.unfocusedActiveBorderTop": workbenchBorder,
       "tab.activeBorder": primer.gray[0],
       "tab.unfocusedActiveBorder": primer.gray[0],
       "tab.activeBorderTop": "#f9826c",
@@ -139,8 +142,8 @@ function getTheme({ style, name }) {
       "editor.lineHighlightBackground": "#2b3036",
       "editorLineNumber.foreground": primer.gray[2],
       "editorLineNumber.activeForeground": editorForeground,
-      "editorIndentGuide.background": primer.gray[1],
-      "editorIndentGuide.activeBackground": primer.gray[2],
+      "editorIndentGuide.background1": primer.gray[1],
+      "editorIndentGuide.activeBackground1": primer.gray[2],
       "editorWhitespace.foreground": primer.gray[2],
       "editorCursor.foreground": primer.blue[7],
 
@@ -168,10 +171,10 @@ function getTheme({ style, name }) {
       "scrollbarSlider.background": "#6a737d33",
       "scrollbarSlider.hoverBackground": "#6a737d44",
       "scrollbarSlider.activeBackground": "#6a737d88",
-      "editorOverviewRuler.border": primer.white,
+      "editorOverviewRuler.border": workbenchBorder,
 
       "panel.background": "#1f2428",
-      "panel.border": primer.white,
+      "panel.border": workbenchBorder,
       "panelTitle.activeBorder": "#f9826c",
       "panelTitle.activeForeground": workbenchForeground,
       "panelTitle.inactiveForeground": primer.gray[5],
@@ -198,8 +201,6 @@ function getTheme({ style, name }) {
 
       "settings.headerForeground": workbenchForeground,
       "settings.modifiedItemIndicator": primer.blue[4],
-      "welcomePage.buttonBackground": primer.gray[1],
-      "welcomePage.buttonHoverBackground": primer.gray[2],
     },
     semanticHighlighting: true,
     tokenColors: [
@@ -224,13 +225,6 @@ function getTheme({ style, name }) {
           foreground: primer.purple[6],
         },
       },
-      {
-        scope: "entity.modifires",
-        settings: {
-          foreground: primer.red[4],
-        },
-      },
-      
       {
         scope: "entity.name.tag",
         settings: {
@@ -465,7 +459,6 @@ function getTheme({ style, name }) {
           fontStyle: "italic underline",
           background: primer.red[6],
           foreground: primer.gray[0],
-          content: "^M",
         },
       },
       {
@@ -497,7 +490,6 @@ function getTheme({ style, name }) {
           "string.regexp.character-class",
           "string.regexp constant.character.escape",
           "string.regexp source.ruby.embedded",
-          "string.regexp string.regexp.arbitrary-repitition",
         ],
         settings: {
           foreground: primer.blue[8],

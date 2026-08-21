@@ -18,7 +18,7 @@
 
 # QuickScript (Intouch-Language)
 
-- **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides native QuickScript language-server support for `.vbi` and `.vi` files, including formatting, diagnostics, document metadata, QuickFunction discovery, cross-file definition and references, hover, completion, and document symbols. It also includes the Intouch Dark theme.
+- **Intouch-Language** is an open source extension for **Visual Studio Code** (**Not official!**). It provides native QuickScript language-server support for `.vbi` and `.vi` files, including formatting, diagnostics, document metadata, QuickFunction discovery, cross-file definition and references, hover, completion, and document symbols. It also includes the Intouch Dark theme.
 - **Intouch** is a programming language for AVEVA (Wonderware) SCADA Intouch Applications.
 
 ## QuickScript Language Server
@@ -52,17 +52,10 @@ private project catalogs are not bundled with the public extension.
 
 # New Theme
 
-NOTE: The default VS Code theme does not color much. Switch to intouch theme (installed by this extension) or use a theme like one of the following to benefit from the changes:
-
-- [Material Theme](https://marketplace.visualstudio.com/items?itemName=Equinusocio.vsc-material-theme)
-- [XD Theme](https://marketplace.visualstudio.com/items?itemName=jeff-hykin.xd-theme)
-- [Noctis](https://marketplace.visualstudio.com/items?itemName=liviuschera.noctis)
-- [Kary Pro Colors](https://marketplace.visualstudio.com/items?itemName=karyfoundation.theme-karyfoundation-themes)
-- [One Monokai Theme](https://marketplace.visualstudio.com/items?itemName=azemoh.one-monokai)
-- [Winteriscoming](https://marketplace.visualstudio.com/items?itemName=johnpapa.winteriscoming)
-- [Popping and Locking](https://marketplace.visualstudio.com/items?itemName=hedinne.popping-and-locking-vscode)
-- [Syntax Highlight Theme](https://marketplace.visualstudio.com/items?itemName=peaceshi.syntax-highlight)
-- [Default Theme Enhanced](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-themes)
+Built-in VS Code themes work with the standard TextMate scopes provided by
+the extension. Intouch Dark offers stronger QuickScript differentiation when
+you want more specialized contrast. The current language server provides no
+semantic tokens; highlighting is currently based on the TextMate grammar.
 
 <br>
 <br>
