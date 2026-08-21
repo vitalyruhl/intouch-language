@@ -50,7 +50,7 @@ private project catalogs are not bundled with the public extension.
 <br>
 <br>
 
-# New Theme
+# Intouch Dark Theme
 
 Built-in VS Code themes work with the standard TextMate scopes provided by
 the extension. Intouch Dark offers stronger QuickScript differentiation when
@@ -60,36 +60,9 @@ semantic tokens; highlighting is currently based on the TextMate grammar.
 <br>
 <br>
 
-## Example different themes
-
-<table align="center" width="100%" border="0">
-  <tr>
-    <td align="center" border="0">
-    <p>Intouch Theme Dark</p>
-    <a title="Intouch Theme Dark" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/intouchTheme.jpg" alt="Intouch Theme Dark" width="60%" /></a>
-    </td>
-    <td align="center" border="0">
-    <p>VSC Theme Dark+</p>
-    <a title="VSC Theme Dark+" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/VSC_Dark_Plus.jpg" alt="VSC Theme Dark+" width="60%" /></a>
-    </td>
-    </tr>
-    <tr>
-    <td align="center" border="0">
-    <p>Material Theme Darker</p>
-    <a title="Material Theme Darker" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/Material_Theme_Darker.jpg" alt="Material Theme Darker" width="60%" /></a>
-    </td>
-    <td align="center" border="0">
-    <p>VSC Theme Light</p>
-    <a title="VSC Theme Light" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/VSC_Light.jpg" alt="VSC Theme Light" width="60%" /></a>
-    </td>
-  </tr>
-</table>
-
-<br>
-<br>
-
 # Installation
 
+- Prerequisite: Node.js 20 or later.
 - Standard Installation:
   - Install it in ext.-manager (type Intouch) or from
     [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=Vitaly-ruhl.intouch-language)
