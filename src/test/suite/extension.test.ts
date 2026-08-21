@@ -1,5 +1,6 @@
 import * as assert from 'assert';
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
@@ -122,9 +123,7 @@ suite('Extension Test Suite', () => {
 		const extension = vscode.extensions.getExtension('Vitaly-ruhl.intouch-language');
 		assert.ok(extension);
 		await extension.activate();
-		const localTemporaryRoot = path.resolve(extension.extensionPath, '.pio');
-		const workspacePath = path.join(localTemporaryRoot, `metadata-host-${process.pid}-${Date.now()}`);
-		fs.mkdirSync(workspacePath, { recursive: true });
+		const workspacePath = fs.mkdtempSync(path.join(os.tmpdir(), 'intouch-language-metadata-host-'));
 		const definitionPath = path.join(workspacePath, 'SomethingCompletelyDifferent.vbi');
 		const callerPath = path.join(workspacePath, 'caller.vbi');
 		const nestedCallerPath = path.join(workspacePath, 'nested-caller.vi');
@@ -178,9 +177,8 @@ suite('Extension Test Suite', () => {
 			assert.match(completion?.items.find(item => item.label === 'HostFunction')?.detail ?? '', /Production host function/);
 			assert.ok(!vscode.languages.getDiagnostics(callerDocument.uri).some(diagnostic => diagnostic.code === 'unknown-function'));
 		} finally {
-			const resolvedWorkspace = path.resolve(workspacePath);
-			assert.ok(resolvedWorkspace.startsWith(`${localTemporaryRoot}${path.sep}`));
-			fs.rmSync(resolvedWorkspace, { recursive: true, force: true });
+			assert.ok(path.resolve(workspacePath).startsWith(path.resolve(os.tmpdir()) + path.sep));
+			fs.rmSync(workspacePath, { recursive: true, force: true });
 		}
 	});
 

@@ -125,5 +125,4 @@ snippets and the theme remain declarative VS Code assets.
 
 The automated implementation is considered ready for manual HIL only after
 compile, core tests, protocol tests, VS Code extension-host tests, lint,
-prepublish bundling, VSIX packaging, and repository freshness checks pass. The
-manual procedure is documented in [Manual QuickScript HIL](../testing/manual-hil.md).
+prepublish bundling, VSIX packaging, and repository freshness checks pass.

@@ -1,6 +1,7 @@
 import * as assert from 'assert';
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 import { pathToFileURL } from 'url';
 
@@ -19,9 +20,7 @@ function applyFormattingEdits(source: string, edits: readonly TextEdit[]): strin
 suite('QuickScript language server protocol', () => {
 	test('handles lifecycle, synchronization, and representative requests without VS Code', async function () {
 		this.timeout(10_000);
-		const localTemporaryRoot = path.resolve(process.cwd(), '.pio');
-		fs.mkdirSync(localTemporaryRoot, { recursive: true });
-		const workspacePath = fs.mkdtempSync(path.join(localTemporaryRoot, 'metadata-protocol-'));
+		const workspacePath = fs.mkdtempSync(path.join(os.tmpdir(), 'intouch-language-metadata-protocol-'));
 		const definitionPath = path.join(workspacePath, 'SomethingCompletelyDifferent.vbi');
 		const callerPath = path.join(workspacePath, 'caller.vbi');
 		const nestedCallerPath = path.join(workspacePath, 'nested-caller.vi');
@@ -263,9 +262,8 @@ suite('QuickScript language server protocol', () => {
 			if (!child.killed && child.exitCode === null) {
 				child.kill();
 			}
-			const resolvedWorkspace = path.resolve(workspacePath);
-			assert.ok(resolvedWorkspace.startsWith(`${localTemporaryRoot}${path.sep}`));
-			fs.rmSync(resolvedWorkspace, { recursive: true, force: true });
+			assert.ok(path.resolve(workspacePath).startsWith(path.resolve(os.tmpdir()) + path.sep));
+			fs.rmSync(workspacePath, { recursive: true, force: true });
 		}
 	});
 });

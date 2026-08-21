@@ -10,11 +10,9 @@ The grammar is based, in descending order of authority, on:
 
 1. AVEVA InTouch and System Platform documentation for QuickScript statement
    termination, brace comments, control structures, and operator families;
-2. repository QuickScript in `LanguageDefinition/test.vbi` and the `.vbi` / `.vi`
-   formatter fixtures;
-3. `packages/core/src/languageData.ts`, `syntaxes/intouch.tmLanguage.json`, and
+2. `packages/core/src/languageData.ts`, `syntaxes/intouch.tmLanguage.json`, and
    `snippets/vbi.json`;
-4. parser, formatter, language-server, and behavior-baseline tests.
+3. parser, formatter, language-server, and behavior-baseline tests.
 
 The AVEVA QuickScript .NET manuals also describe `FOR EACH`, `ELSEIF`,
 `TRY`/`CATCH`, and a `WHILE` form. Those constructs are not assumed to be valid

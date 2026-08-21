@@ -16,7 +16,7 @@
 <br>
 <br>
 
-# Intouch-Language
+# QuickScript (Intouch-Language)
 
 - **Intouch-Language** is an open source extension created for **Visual Studio Code** (**Not official!**). It provides native QuickScript language-server support for `.vbi` and `.vi` files, including formatting, diagnostics, document metadata, QuickFunction discovery, cross-file definition and references, hover, completion, and document symbols. It also includes the Intouch Dark theme.
 - **Intouch** is a programming language for AVEVA (Wonderware) SCADA Intouch Applications.
@@ -27,23 +27,15 @@ The extension includes a native, editor-independent QuickScript language
 server for `.vbi` and `.vi` files. It provides:
 
 - Parser-based formatting and diagnostics.
-- Comment-based document metadata for QuickFunctions, Windows, Applications,
+- Comment-based document metadata for QuickFunctions, Windows, Application-Script,
   DataChanges, Conditions, and KeyScripts.
 - Workspace QuickFunction discovery with cross-file definition and references.
 - Hover, completion, and document symbols.
 - Window event support for `OnShow`, `WhileRunning`, and `OnClose`.
-- Non-callable Application, DataChange, Condition, and KeyScript symbols.
+- Non-callable Application-Script, DataChange, Condition, and KeyScript symbols.
 
 Project-specific QuickFunctions are discovered from the current workspace;
 private project catalogs are not bundled with the public extension.
-
-<p align="center" bgcolor:=#3f3f3f>
-  <br />
-  <a title="Intouch" href="https://factorysoftware.de/"><img src="https://factorysoftware.de/resources/uploads/2020/02/wonderware-germany-austria-footer.png" alt="Intouch" /></a>
-</p>
-
-<br>
-<br>
 
 # Example
 
@@ -142,10 +134,9 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
 
 > Save your code as `.vbi` or `.vi` for automatic language recognition.
 
-## Development and agent workflow
+## QuickScript language
 
-Repository governance starts at [AGENTS.md](AGENTS.md). QuickScript language
-boundaries and the language-server architecture are documented in
+QuickScript language boundaries and the language-server architecture are documented in
 [docs/language/quickscript.md](docs/language/quickscript.md) and
 [docs/architecture/intouch-core-preparation.md](docs/architecture/intouch-core-preparation.md).
 The supported comment-based script metadata convention is documented in
@@ -153,20 +144,9 @@ The supported comment-based script metadata convention is documented in
 
 The extension uses its own QuickScript language server for `.vbi` and `.vi`.
 Formatting and semantic features share the editor-independent core tokenizer
-and parser. Manual validation against real project files remains the release
-gate; see [Manual QuickScript HIL](docs/testing/manual-hil.md).
+and parser.
 
 ---
-
-> Better-Comment Plugin
-
-- [Use this Branch (beta) from github - it works on all Languages](https://github.com/aaron-bond/better-comments/tree/all-languages)
-
-<p align="center">
-  <br />
-  <hr />
-  <br />
-</p>
 
 ### Enjoy!
 
@@ -181,9 +161,6 @@ gate; see [Manual QuickScript HIL](docs/testing/manual-hil.md).
 
 The following items are either recently resolved or planned but not yet implemented:
 
-- PLANNED: Range (selection) formatting. Current command formats the entire document.
-- Diagnostics cover unclosed or invalid block nesting, duplicate local `DIM`
-  declarations, and unknown datatypes.
 - Formatting uses the shared tokenizer and recoverable structure parser.
 - Definition and references are document-local for variables and cross-file for
   metadata-declared workspace QuickFunctions; project-wide variable indexing
@@ -191,32 +168,13 @@ The following items are either recently resolved or planned but not yet implemen
 - NOTE: Multiline IF continuation indentation intentionally uses base + 2 spaces before THEN; THEN line stays aligned with expression by design.
 - NOTE: Spacing inside string literals and single-line brace comments is preserved intentionally; only outer code regions are normalized.
 
-
-- **Formatter**
-  - Issues
-    - no issues
-  - Planned features
-    - Format selected range (currently formats entire document)
-
-<br>
-
-- **Syntax-highlighting**
-  - No issues
-  - Planned features
-    - Add static code diagnostics for common errors
-
-<br>
-
-- **Snippets**
-  - No issues
-  - No planned features
-
-<br>
-<br>
-
 ---
 
 # What's new in Intouch-Language
+
+### 1.6.0
+
+- Add Language Server Protocol (LSP) support for VS Code formatting while preserving the existing grammar, snippets, theme, and formatter command.
 
 ### V1.5.0
 
@@ -227,48 +185,24 @@ The following items are either recently resolved or planned but not yet implemen
 - General whitespace normalization (trailing whitespace removal, internal multi-space collapse outside strings/comments)
 
 
-### V1.4.1-V1.4.3
+### V1.1.0-V1.4.3
 
 - Add math / intrinsic style functions for uppercasing in formatter: sqr, sin, cos, tan, atn, exp, log, int, frac, round, rnd, sqrt
-- bugfix in formatter for '>=' operator
-- bugfix in deletion of last line in file
-- update dependencies
-
-
-### V1.4.0
-
 - Correct some bugs in regex for syntax-highlighting
 - Theme -> Add more compatibility to other languages
 - Add more compatibility to other Themes (e.g. material-theme)
-
-### V1.3.0
-
 - Add own dark theme based on [GitHub (Dark Classic) VS Code theme](https://github.com/BerriJ/github-vscode-theme-dark-classic) from BerriJ
-- Some bugfixes in regex for Keywords
-
-### V1.2.1 - V1.2.4
-
-- Update dependencies
-- Bugfix on snippets
 - Bugfix trailing whitespace before `-`
-
-### V1.2.0
-
 - Add folding between `{region xxxx}` and `{endregion xxxx}`
 - Add Nesting between `{region xxxx}` and `{endregion xxxx}`
 - Auto closing brackets in strings and comments.
-- Remove unused dependency with dependabot alert.
 - Add wordPattern and indentationRules into language configuration.
 - <fix bug - issue #13, formatter formats dashed variable `foo-bar` --> `foo - bar`
-
-### V1.1.0 - V1.1.1
-
 - Add Code-Blocks for Nesting and Folding in code without keywords Start:`{>`, End:`{<`
 - Add **Snippet** cb# : add new Code-Block
 - Add **Snippet** for# : add for-next-block
 - Add **Snippet** func# : add new empty Function
-- Correct some spelling mistakes
-- Remove debugging settings
+
 
 ### V1.0.0
 
@@ -283,14 +217,14 @@ The following items are either recently resolved or planned but not yet implemen
 
 <table align="center" width="100%" border="0" bgcolor:=#3f3f3f>
 <tr align="center">
-<td align="center">  
+<td align="center">
 if you prefer a one-time donation
 
 [![donate-Paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://paypal.me/FamilieRuhl)
 
 </td>
 
-<td align="center">  
+<td align="center">
 Become a patron, by simply clicking on this button (**very appreciated!**):
 
 [![Become a patron](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/join/6555448/checkout?ru=undefined)
