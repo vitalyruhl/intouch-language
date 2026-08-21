@@ -8,7 +8,7 @@
 
 <p align="center">
   <br />
-  <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/logo.png" alt="Intouch-Language Logo" width="10%" /></a>
+  <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/logo.png" alt="Intouch-Language Logo" width="10%" /></a>
 </p>
 
 <!-- Badges with SVG removed for Marketplace guidelines. Optional: add PNG variants if needed. -->
@@ -42,7 +42,7 @@ private project catalogs are not bundled with the public extension.
 <table align="center" width="100%" border="0">
   <tr>
     <td align="center" border="0">
-    <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/example.gif" alt="Example" width="60%" /></a>
+    <a title="Intouch-Language" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/example.gif" alt="Example" width="60%" /></a>
     </td>
   </tr>
 </table>
@@ -73,21 +73,21 @@ NOTE: The default VS Code theme does not color much. Switch to intouch theme (in
   <tr>
     <td align="center" border="0">
     <p>Intouch Theme Dark</p>
-    <a title="Intouch Theme Dark" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/intouchTheme.jpg" alt="Intouch Theme Dark" width="60%" /></a>
+    <a title="Intouch Theme Dark" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/intouchTheme.jpg" alt="Intouch Theme Dark" width="60%" /></a>
     </td>
     <td align="center" border="0">
     <p>VSC Theme Dark+</p>
-    <a title="VSC Theme Dark+" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/VSC_Dark_Plus.jpg" alt="VSC Theme Dark+" width="60%" /></a>
+    <a title="VSC Theme Dark+" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/VSC_Dark_Plus.jpg" alt="VSC Theme Dark+" width="60%" /></a>
     </td>
     </tr>
     <tr>
     <td align="center" border="0">
     <p>Material Theme Darker</p>
-    <a title="Material Theme Darker" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/Material_Theme_Darker.jpg" alt="Material Theme Darker" width="60%" /></a>
+    <a title="Material Theme Darker" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/Material_Theme_Darker.jpg" alt="Material Theme Darker" width="60%" /></a>
     </td>
     <td align="center" border="0">
     <p>VSC Theme Light</p>
-    <a title="VSC Theme Light" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/master/images/VSC_Light.jpg" alt="VSC Theme Light" width="60%" /></a>
+    <a title="VSC Theme Light" href="https://github.com/vitalyruhl/intouch-language"><img src="https://raw.githubusercontent.com/vitalyruhl/intouch-language/main/images/VSC_Light.jpg" alt="VSC Theme Light" width="60%" /></a>
     </td>
   </tr>
 </table>

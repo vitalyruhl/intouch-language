@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/schema#",
     "id": "448eaf8e-6bd4-4b72-b6cd-9af578a789d2",
-    "link": "https://raw.githubusercontent.com/vitalyruhl/intouch-language/blob/master/syntaxes/schema.json",
+    "link": "https://raw.githubusercontent.com/vitalyruhl/intouch-language/blob/main/syntaxes/schema.json",
     "$ref": "#/definitions/root",
     "definitions": {
       "root": {

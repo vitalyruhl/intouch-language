@@ -2,7 +2,7 @@
 	"name": "intouch-language",
 	"displayName": "Intouch-Language and Formatter for VSCode. (c)2021-2026 vitalyruhl",
 	"description": "Native InTouch QuickScript language server, formatter and diagnostics for VS Code",
-	"version": "1.6.0",
+	"version": "1.6.1",
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
@@ -160,19 +160,37 @@
 				},
 				"VBI.diagnostics.naming.nonAsciiIdentifiers": {
 					"type": "string",
-					"enum": ["off", "hint", "information", "warning", "error"],
+					"enum": [
+						"off",
+						"hint",
+						"information",
+						"warning",
+						"error"
+					],
 					"default": "warning",
 					"markdownDescription": "Severity for non-ASCII identifier quality diagnostics."
 				},
 				"VBI.diagnostics.naming.windowWhitespace": {
 					"type": "string",
-					"enum": ["off", "hint", "information", "warning", "error"],
+					"enum": [
+						"off",
+						"hint",
+						"information",
+						"warning",
+						"error"
+					],
 					"default": "warning",
 					"markdownDescription": "Severity for whitespace in literal InTouch window names."
 				},
 				"VBI.diagnostics.naming.windowNonAscii": {
 					"type": "string",
-					"enum": ["off", "hint", "information", "warning", "error"],
+					"enum": [
+						"off",
+						"hint",
+						"information",
+						"warning",
+						"error"
+					],
 					"default": "warning",
 					"markdownDescription": "Severity for non-ASCII characters in literal InTouch window names."
 				}
@@ -219,19 +237,19 @@
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.10",
-		"@types/node": "^24.13.3",
+		"@types/node": "^25.9.5",
 		"@types/vscode": "1.104.0",
 		"@typescript-eslint/eslint-plugin": "^8.67.0",
 		"@typescript-eslint/parser": "^8.67.0",
-		"@vscode/test-electron": "^2.5.2",
+		"@vscode/test-electron": "^3.1.0",
 		"color": "^5.0.3",
 		"esbuild": "^0.28.2",
-		"eslint": "^9.39.5",
+		"eslint": "^10.8.1",
 		"glob": "^13.0.6",
 		"mocha": "^11.8.0",
 		"nodemon": "^3.1.14",
 		"rimraf": "^6.1.3",
-		"typescript": "^5.9.3"
+		"typescript": "^6.0.3"
 	},
 	"__metadata": {
 		"id": "834eb420-2978-4100-b7de-2430fc88e429",
