@@ -9,5 +9,5 @@ description = "Serena adapter for the InTouch QuickScript language server"
 requires-python = ">=3.11"
 dependencies = ["serena-agent"]
 
-[project.entry-points."serena.language_servers"]
+[project.entry-points."solidlsp.language_server_registration"]
 quickscript = "intouch_language_serena.adapter:register"

@@ -6,7 +6,7 @@ This directory contains the thin Serena/SolidLSP integration for the InTouch Qui
 
 ```text
 Serena
-  -> Python entry point: serena.language_servers / quickscript
+  -> Python entry point: solidlsp.language_server_registration / quickscript
   -> QuickScript Serena adapter
   -> node dist/server.js --stdio
 ```
@@ -18,10 +18,10 @@ Serena discovers the installed adapter, registers the `quickscript` language-ser
 Install the adapter into Serena's virtual environment in editable mode:
 
 ```powershell
-uv pip install --python <serena-venv-python> -e integrations/serena
+uv pip install --python <serena-venv-python> --no-deps -e <path-to-this-intouch-language-repository>/integrations/serena
 ```
 
-Run this command from the Serena repository, or replace `integrations/serena` with its path when running it from another directory. The adapter package depends on `serena-agent`; use the Serena checkout containing the external-adapter support rather than an unchanged stock Serena installation.
+Run it from any directory. For PR #1988 validation, use Serena commit `2f7946ded11a0e2dd467da8042c3521b3d209642`; an unchanged stock Serena installation does not provide the required registration API.
 
 ## Serena Configuration
 
@@ -36,6 +36,8 @@ The adapter resolves the server entry point in this order:
 
 1. `ls_specific_settings.quickscript.ls_path`
 2. `INTOUCH_LANGUAGE_SERVER_PATH`
+
+At PR #1988 commit `2f7946ded11a0e2dd467da8042c3521b3d209642`, Serena's settings lookup does not correctly match external IDs to string-keyed project settings. Therefore the configured `ls_specific_settings.quickscript.ls_path` path is currently not effective end-to-end; use `INTOUCH_LANGUAGE_SERVER_PATH` as the tested workaround. No Serena core patch is included here.
 
 For example:
 
@@ -55,7 +57,7 @@ The built `dist/server.js` must exist, and Node.js must be available on `PATH`.
 
 ## Smoke Testing
 
-Start Serena with a project containing `.vbi` or `.vi` files. Serena should discover the adapter, start `node dist/server.js --stdio`, and route document symbols, definitions, and references through the LSP. An isolated fixture can legitimately return zero definitions or references when it has no resolvable cross-file targets.
+Start Serena with a project containing `.vbi` or `.vi` files. Serena should discover the adapter, start `node dist/server.js --stdio`, and route document symbols, definitions, and references through the LSP. An isolated fixture can legitimately return zero definitions or references when it has no resolvable cross-file targets. Run the focused adapter tests from this repository with `pytest integrations/serena/tests/test_adapter.py`.
 
 ## Scope and Non-Goals
 

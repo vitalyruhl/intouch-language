@@ -4,7 +4,7 @@ import os
 import shutil
 
 from solidlsp.ls import LanguageServerDependencyProvider, LanguageServerDependencyProviderSinglePath, SolidLanguageServer
-from solidlsp.ls_config import FilenameMatcher, LanguageServerConfig, register_ls
+from solidlsp.ls_config import ExternalLanguageServerId, FilenameMatcher, LanguageServerConfig, LanguageServerRegistry
 from solidlsp.settings import SolidLSPSettings
 
 
@@ -25,8 +25,7 @@ class QuickScriptLanguageServer(SolidLanguageServer):
             if isinstance(core_path, str) and core_path:
                 return core_path
             raise FileNotFoundError(
-                "Set ls_specific_settings.quickscript.ls_path or "
-                "INTOUCH_LANGUAGE_SERVER_PATH to the intouch-language server entry point."
+                "Set ls_specific_settings.quickscript.ls_path or INTOUCH_LANGUAGE_SERVER_PATH to the intouch-language server entry point."
             )
 
         def _create_launch_command(self, core_path: str) -> list[str]:
@@ -64,8 +63,10 @@ class QuickScriptLanguageServer(SolidLanguageServer):
 
 def register() -> None:
     """Register the QuickScript language-server adapter."""
-    register_ls(
-        id="quickscript",
-        matcher=FilenameMatcher(".vbi", ".vi", case_sensitive=False),
-        implementation=QuickScriptLanguageServer,
+    LanguageServerRegistry.get_instance().register(
+        ExternalLanguageServerId(
+            key="quickscript",
+            matcher=FilenameMatcher(".vbi", ".vi", case_sensitive=False),
+            implementation=QuickScriptLanguageServer,
+        )
     )
