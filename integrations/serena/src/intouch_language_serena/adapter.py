@@ -3,7 +3,8 @@
 import os
 import shutil
 
-from solidlsp.ls import LanguageServerDependencyProvider, LanguageServerDependencyProviderSinglePath, SolidLanguageServer
+from solidlsp.dependency_provider import LanguageServerDependencyProvider, LanguageServerDependencyProviderSinglePath
+from solidlsp.ls import SolidLanguageServer
 from solidlsp.ls_config import ExternalLanguageServerId, FilenameMatcher, LanguageServerConfig, LanguageServerRegistry
 from solidlsp.settings import SolidLSPSettings
 
@@ -15,7 +16,7 @@ class QuickScriptLanguageServer(SolidLanguageServer):
         super().__init__(config, repository_root_path, None, "quickscript", solidlsp_settings)
 
     def _create_dependency_provider(self) -> LanguageServerDependencyProvider:
-        return self.DependencyProvider(self._custom_settings, self._ls_resources_dir)
+        return self.DependencyProvider(self.custom_settings, self._ls_resources_dir)
 
     class DependencyProvider(LanguageServerDependencyProviderSinglePath):
         def _get_or_install_core_dependency(self) -> str:

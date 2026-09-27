@@ -21,7 +21,9 @@ Install the adapter into Serena's virtual environment in editable mode:
 uv pip install --python <serena-venv-python> --no-deps -e <path-to-this-intouch-language-repository>/integrations/serena
 ```
 
-Run it from any directory. For PR #1988 validation, use Serena commit `2f7946ded11a0e2dd467da8042c3521b3d209642`; an unchanged stock Serena installation does not provide the required registration API.
+Run it from any directory. The adapter requires Serena commit
+`403ad0a562bbc86ff5a0e26c23544dbd99235c15` or a later Serena release containing
+the merged external language-server registry from PR #1988.
 
 ## Serena Configuration
 
@@ -37,7 +39,10 @@ The adapter resolves the server entry point in this order:
 1. `ls_specific_settings.quickscript.ls_path`
 2. `INTOUCH_LANGUAGE_SERVER_PATH`
 
-At PR #1988 commit `2f7946ded11a0e2dd467da8042c3521b3d209642`, Serena's settings lookup does not correctly match external IDs to string-keyed project settings. Therefore the configured `ls_specific_settings.quickscript.ls_path` path is currently not effective end-to-end; use `INTOUCH_LANGUAGE_SERVER_PATH` as the tested workaround. No Serena core patch is included here.
+Current Serena resolves the external `quickscript` ID from string-keyed project
+settings, so the configured `ls_specific_settings.quickscript.ls_path` path is
+the primary configuration. `INTOUCH_LANGUAGE_SERVER_PATH` remains an optional
+environment fallback for local development.
 
 For example:
 

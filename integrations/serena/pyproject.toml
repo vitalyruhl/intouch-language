@@ -7,7 +7,10 @@ name = "intouch-language-serena"
 version = "0.0.0"
 description = "Serena adapter for the InTouch QuickScript language server"
 requires-python = ">=3.11"
-dependencies = ["serena-agent"]
+dependencies = ["serena-agent @ git+https://github.com/oraios/serena.git@403ad0a562bbc86ff5a0e26c23544dbd99235c15"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [project.entry-points."solidlsp.language_server_registration"]
 quickscript = "intouch_language_serena.adapter:register"

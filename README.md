@@ -18,6 +18,11 @@
 
 # QuickScript (Intouch-Language)
 
+### 1.6.2
+
+- Modernize the Serena QuickScript adapter for Serena's external language-server registry.
+- Keep the adapter responsible only for `.vbi`/`.vi` registration and launching the native QuickScript server.
+
 - **Intouch-Language** is an open source extension for **Visual Studio Code** (**Not official!**). It provides native QuickScript language-server support for `.vbi` and `.vi` files, including formatting, diagnostics, document metadata, QuickFunction discovery, cross-file definition and references, hover, completion, and document symbols. It also includes the Intouch Dark theme.
 - **Intouch** is a programming language for AVEVA (Wonderware) SCADA Intouch Applications.
 
