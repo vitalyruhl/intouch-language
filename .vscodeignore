@@ -41,6 +41,8 @@ images/**
 !images/logo.png
 
 # Generated and archival artifacts
+**/__pycache__/**
+**/.pytest_cache/**
 dist/**/*.map
 *.7z
 *.exe

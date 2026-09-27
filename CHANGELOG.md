@@ -5,6 +5,12 @@
 <!-- markdownlint-disable MD013 -->
 <!-- markdownlint-disable MD025 -->
 
+## 1.6.2
+
+- Modernize the Serena QuickScript adapter for Serena's external language-server registry.
+- Pin adapter compatibility to the upstream Serena registry implementation and document configured path support.
+- Refresh the extension dependency baseline after the Dependabot security and compatibility updates.
+
 ## 1.6.1
 
 - Refresh compatible development dependencies and update the TypeScript build configuration.

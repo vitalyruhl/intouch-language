@@ -2,7 +2,7 @@
 	"name": "intouch-language",
 	"displayName": "Intouch-Language QuickScript Support for VS Code",
 	"description": "Native InTouch QuickScript language server with formatting, diagnostics, navigation, completion, hover, document symbols, and workspace QuickFunction discovery.",
-	"version": "1.6.1",
+	"version": "1.6.2",
 	"icon": "images/logo.png",
 	"publisher": "Vitaly-ruhl",
 	"engines": {
@@ -244,7 +244,7 @@
 	"devDependencies": {
 		"@types/mocha": "^10.0.10",
 		"@types/node": "^26.5.0",
-		"@types/vscode": "1.138.0",
+		"@types/vscode": "1.104.0",
 		"@typescript-eslint/eslint-plugin": "^8.70.0",
 		"@typescript-eslint/parser": "^8.70.1",
 		"@vscode/test-electron": "^3.1.0",
